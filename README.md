@@ -33,8 +33,8 @@ getting [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) to properly r
 auto-completion options.  
 
 I eventually decided that I was better off just using [CoC](https://github.com/neoclide/coc.nvim) for my auto-completion desires.  
-It was a hassle setting up the <code>compile_flags.txt</code> file to stop breaking [CoC](https://github.com/neoclide/coc.nvim) due to too many errors but  
-I eventually got it working and I use it for most of my projects in both C & C++.
+It was a hassle setting up the <code>compile_flags.txt</code> file to stop breaking [CoC](https://github.com/neoclide/coc.nvim) due to too  
+many errors but I eventually got it working and I use it for most of my projects in both C & C++.
 
 ### How it works
 Compiling the source & header files with the <code>-shared</code> option will yield an injectable DLL file. Use any DLL injector  
