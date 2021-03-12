@@ -178,21 +178,21 @@ void NoRecoil(bool bNoRecoil)
 	struct Weapon* weapon = (LPVOID)FindDMAAddress_attached(module_base_addr + 0xA0F434, weapon_offsets, weapon_offsets_size);
 
 	uintptr_t addresses[6] = { 
-				  0x2F83BE,
-				  0x2F8409,
-				  0x2F845B,
-				  0x2F855E,
-			      0x2F84D5,
-				  0x2F8578
+                  0x2F83BE,
+                  0x2F8409,
+                  0x2F845B,
+                  0x2F855E,
+                  0x2F84D5,
+                  0x2F8578
 	};
 
 	char* original[6] = {	
                   "\xD9\x9E\x2C\x05\x00\x00",
                   "\xD9\x9E\x2C\x05\x00\x00",
-				  "\xD9\x9E\x2C\x05\x00\x00",
-				  "\xD9\x9E\x30\x05\x00\x00",
-				  "\x89\x96\x30\x05\x00\x00",
-				  "\x89\x8E\x34\x05\x00\x00"
+                  "\xD9\x9E\x2C\x05\x00\x00",
+                  "\xD9\x9E\x30\x05\x00\x00",
+                  "\x89\x96\x30\x05\x00\x00",
+                  "\x89\x8E\x34\x05\x00\x00"
 	};
 
 	char* patch = "\x90\x90\x90\x90\x90\x90";
