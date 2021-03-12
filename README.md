@@ -43,22 +43,22 @@ that you are comfortable with to inject the file. If the file was compile with t
 <code>main.c</code> set to 1, a console will launch when the DLL is successfully injected.
 
 The hacks written are:
-	- Press <code>Shift + T</code> to teleport to the last aim-down-sight (ADS) location.
-	- Press <code>G</code> to toggle PlayDead
-	- Press <code>I</code> to toggle PolterGheist \(Invisibilty & Dead Silence\)
-	- Press <code>N</code> to toggle NoRecoil (
-	- Press <code>K</code> to make all enemies in a level play dead.
+- Press <code>Shift + T</code> to teleport to the last aim-down-sight (ADS) location.
+- Press <code>G</code> to toggle PlayDead
+- Press <code>I</code> to toggle PolterGheist \(Invisibilty & Dead Silence\)
+- Press <code>N</code> to toggle NoRecoil (
+- Press <code>K</code> to make all enemies in a level play dead.
 
 ### Known issues
 I could not find a reliable 'in game' boolean value or other explicit distinction that would  
 prevent the user from attempting to execute the code in places that would crash the game.  
 These locations include:
-	- Main menu
-	- Multi-player menu
-	- All Multi-player modes
-	- Loading screen
-	- Mission select screen
-	- Special cases such as trying to teleport without first equipping weapon
+- Main menu
+- Multi-player menu
+- All Multi-player modes
+- Loading screen
+- Mission select screen
+- Special cases such as trying to teleport without first equipping weapon
 
 ### Goals
  - [x] Find reliable weapon pointer.
