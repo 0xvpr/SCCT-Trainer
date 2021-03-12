@@ -47,7 +47,7 @@ The hacks written are:
 - Press <code>G</code> to toggle PlayDead (Reduce player health to 0 without killing player)
 - Press <code>I</code> to toggle PolterGheist (Invisibilty & Dead Silence)
 - Press <code>N</code> to toggle NoRecoil
-- Press <code>K</code> to make all enemies in a level play dead.
+- Press <code>Shift + K</code> to make all enemies in a level play dead.
 
 ### Known issues
 I could not find a reliable 'in game' boolean value or other explicit distinction that would  
