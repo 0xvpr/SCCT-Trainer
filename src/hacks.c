@@ -152,7 +152,7 @@ void Silent(bool bPolterGheist)
 	char* noise_op = (LPVOID)(module_base_addr + 0x417E4F);
 
 	char* original = "\xD9\x9E\x3C\x04\x00\x00";
-	char* patch	   = "\x90\x90\x90\x90\x90\x90";
+	char* patch    = "\x90\x90\x90\x90\x90\x90";
 	size_t size    = 6;
 
 	if (bPolterGheist)
