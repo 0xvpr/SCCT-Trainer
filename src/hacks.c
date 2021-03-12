@@ -5,9 +5,9 @@
 #include "hacks.h"
 #include "mem.h"
 
-
 #define GUERRILLA	0x110F88D8
 #define PLAYER		0x110E8B50
+#define ever ;;
 
 
 /**
@@ -15,7 +15,7 @@
  * Enemies will neither sound alarms nor actively try to kill the 
  * player.
  *
- * WARNING this will break the game's state triggering mechanics
+ * WARNING: this WILL break the game's state triggering mechanics
  * and prevent the player from completing the mission.
  * 
  * @param bool
@@ -24,11 +24,11 @@
 void KillAll(bool bKillAll)
 {
 	uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
-	struct EntityList* _entity_list = *(struct EntityList**)FindDMAAddress_attached(module_base_addr + 0xA0DFEC, entity_list_offsets, 2);
+	struct EntityList* _entity_list = *(struct EntityList**)FindDMAAddress_attached(module_base_addr + 0xA0DFEC, entity_list_offsets, entity_list_offsets_size);
 
 	uint32_t entity_type;
 	int current_entity = 0;
-	while (true)
+	for (ever)
 	{
 		struct Entity* entity= _entity_list->entities[current_entity].entity;
 		if (entity->entity_type == PLAYER)
@@ -78,7 +78,7 @@ void PlayDead(bool bPlayDead, uint64_t* previous_health)
 
 /**
  * Teleports player to coordinates that the weapon
- * crosshair is currently pointing to.
+ * crosshair was last pointing to.
  * 
  * @param none
  * @return void
@@ -92,7 +92,7 @@ void TeleportToADS(void)
 
 	uint32_t entity_type;
 	int current_entity = 0;
-	while (true)
+	for (ever)
 	{
 		entity_type = _entity_list->entities[current_entity].entity->entity_type;
 		if (entity_type == PLAYER)
@@ -167,10 +167,7 @@ void Silent(bool bPolterGheist)
 }
 
 /**
- * Makes the player's sound meter never rise above 1.
- * 
- * WARNING if the player moves in zero threshold
- * environments 
+ * Zero's the weapon's aiming reticle and disables spread
  * 
  * @param bool
  * @return void
@@ -181,25 +178,25 @@ void NoRecoil(bool bNoRecoil)
 	struct Weapon* weapon = (LPVOID)FindDMAAddress_attached(module_base_addr + 0xA0F434, weapon_offsets, weapon_offsets_size);
 
 	uintptr_t addresses[6] = { 
-				   0x2F83BE,
-				   0x2F8409,
-				   0x2F845B,
-				   0x2F855E,
-				   0x2F84D5,
-				   0x2F8578
+				  0x2F83BE,
+				  0x2F8409,
+				  0x2F845B,
+				  0x2F855E,
+			      0x2F84D5,
+				  0x2F8578
 	};
 
 	char* original[6] = {	
-				   "\xD9\x9E\x2C\x05\x00\x00",
-				   "\xD9\x9E\x2C\x05\x00\x00",
-				   "\xD9\x9E\x2C\x05\x00\x00",
-				   "\xD9\x9E\x30\x05\x00\x00",
-				   "\x89\x96\x30\x05\x00\x00",
-				   "\x89\x8E\x34\x05\x00\x00"
+                  "\xD9\x9E\x2C\x05\x00\x00",
+                  "\xD9\x9E\x2C\x05\x00\x00",
+				  "\xD9\x9E\x2C\x05\x00\x00",
+				  "\xD9\x9E\x30\x05\x00\x00",
+				  "\x89\x96\x30\x05\x00\x00",
+				  "\x89\x8E\x34\x05\x00\x00"
 	};
 
 	char* patch = "\x90\x90\x90\x90\x90\x90";
-	size_t size  = 6;
+	size_t size = 6;
 
 	if (bNoRecoil)
 	{
@@ -212,8 +209,8 @@ void NoRecoil(bool bNoRecoil)
 		if (weapon != NULL)
 		{
 			weapon->minimum_reticle = 0;
-			weapon->bloom_1 = 0;
-			weapon->bloom_2 = 0;
+			weapon->bloom_1         = 0;
+			weapon->bloom_2         = 0;
 		}
 	}
 	else
