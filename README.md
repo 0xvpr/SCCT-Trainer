@@ -29,10 +29,10 @@ While cross compiling from Linux to Windows using <code>i686-win64-mingw32-gcc</
 documented, it is certainly doable. It took a bit of research just to get the compiler to compile  
 all of the various non-standard 'MS-isms' that are included in <code>windows.h</code> and <code>tlhelp32.h</code>.
 
-Another issue was that, since I exclusively edited the project in <code>nvim</code>, I had a ton of problems
+Another issue was that, since I exclusively edited the project in <code>nvim</code>, I had a ton of problems  
 getting [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) to properly recognize that I was using windows headers and give me auto-completion options.  
 I eventually decided that I was better off just using <code>CoC</code> for my auto-completion desires.  
-It was a hassle setting up the compile_flags.txt file to stop breaking CoC due to too many errors but  
+It was a hassle setting up the <code>compile_flags.txt</code> file to stop breaking <code>CoC</code> due to too many errors but  
 I eventually got it working and I use it for most of my projects in both C & C++.
 
 #### How it works
