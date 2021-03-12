@@ -1,0 +1,27 @@
+Health:
+	8 byte value
+	Starts at 450 on normal
+	starts at 150 on expert
+
+Offsets:
+	Entity:
+		x		= 0xE8
+		y		= 0xEC
+		z 		= 0xF0
+		health 	= 0x420
+
+- - - - - - -
+
+PlayerCam:
+	"splintercell3.exe" + 0x8FA4E8 + { 0xC8, 0x7CC }
+	
+EntityListAddr:
+	"splintercell3.exe" + 0xA0DFEC + { 0x78, 0x5E4 }
+	
+- - - - - - -
+
+PlayerVisibility:
+	"splintercell.exe" + 0x27F12C 
+	original_code	= 8B 86 18 15 00 00 -> mov eax, [esi + 00001518]
+	new_code		= B8 00 00 00 00 90 -> mov eax, 00000000
+	byte_length		= 6
