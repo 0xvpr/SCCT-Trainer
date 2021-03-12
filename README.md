@@ -38,10 +38,9 @@ It was a hassle setting up the <code>compile_flags.txt</code> file to stop break
 I eventually got it working and I use it for most of my projects in both C & C++.
 
 ### How it works
-Compiling the source & header files will yield an injectable DLL file located in <code>Release</code>  
-called <code>sp3.dll</code>. Use any DLL injector that you are comfortable with to inject the file.  
-if the file was compile with the <code>#define DEBUG</code> define located in <code>main.c</code> set to 1, a  
-console will launch when the DLL is successfully injected.
+Compiling the source & header files with the <code>-shared</code> option will yield an injectable DLL file. Use any DLL injector  
+that you are comfortable with to inject the file. If the file was compile with the <code>#define DEBUG</code> define located in  
+<code>main.c</code> set to 1, a console will launch when the DLL is successfully injected.
 
 The hacks written are:
 	- Press <code>Shift + T</code> to teleport to the last aim-down-sight (ADS) location.
