@@ -34,48 +34,68 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 	while (!GetAsyncKeyState(VK_END))
 	{
 		
-		// Toggle PlayDeadMode (Play Dead)
-		if ((GetAsyncKeyState('G') & 1))
+		// Toggle PlayDead
+		if (GetAsyncKeyState('G') & 1)
 		{
 			bPlayDead = !bPlayDead;
 
 			PlayDead(bPlayDead, &previous_health);
-			printf("PlayDead: %s.\n", bPlayDead ? "Enabled" : "Disabled");
+			if (DEBUG)
+			{
+				printf("PlayDead: %s.\n", bPlayDead ? "Enabled" : "Disabled");
+			}
+
 		}
 
 		// Toggle PolterGheist
-		if ((GetAsyncKeyState('I') & 1))
+		if (GetAsyncKeyState('I') & 1)
 		{
 			bPolterGheist = !bPolterGheist;
 
 			Invisibilty(bPolterGheist);
 			Silent(bPolterGheist);
-			printf("PolterGheist: %s.\n", bPolterGheist ? "Enabled" : "Disabled");
+			if (DEBUG)
+			{
+				printf("PolterGheist: %s.\n", bPolterGheist ? "Enabled" : "Disabled");
+			}
+
 		}
 
 		// Toggle No Recoil
-		if ((GetAsyncKeyState('N') & 1))
+		if (GetAsyncKeyState('N') & 1)
 		{
 			bNoRecoil = !bNoRecoil;
 
 			NoRecoil(bNoRecoil);
-			printf("NoRecoil: %s.\n", bNoRecoil ? "Enabled" : "Disabled");
+			if (DEBUG)
+			{
+				printf("NoRecoil: %s.\n", bNoRecoil ? "Enabled" : "Disabled");	
+			}
+
 		}
 
 		// Teleport to ADS
-		if ((GetAsyncKeyState(VK_LSHIFT) && GetAsyncKeyState('T') & 1))
+		if (GetAsyncKeyState(VK_LSHIFT) && GetAsyncKeyState('T') & 1)
 		{
 			TeleportToADS();
-			printf("Teleporting...\n");
+			if (DEBUG)
+			{
+				printf("Teleporting...\n");
+			}
+			
 		}
 		
 		// KillAll
-		if ((GetAsyncKeyState(VK_LSHIFT) && GetAsyncKeyState('K') & 1))
+		if (GetAsyncKeyState(VK_LSHIFT) && GetAsyncKeyState('K') & 1)
 		{
 			bKillAll = !bKillAll;
 
 			KillAll(bKillAll);
-			printf("All Enemies %s.\n", bKillAll ? "Enabled" : "Disabled");
+			if (DEBUG)
+			{
+				printf("All Enemies %s.\n", bKillAll ? "Enabled" : "Disabled");
+			}
+			
 		}
 		
 	}
