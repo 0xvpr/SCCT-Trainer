@@ -3,10 +3,10 @@ Health:
 	Starts at 450 on normal
 	Starts at 300 on hard
 	starts at 150 on expert
-	"splintercell3.exe" + 00A0F424 -> 84 -> 420 (Consistent** player health ptr)
+	"splintercell3.exe" + 0xA0F424 -> 84 -> 420 (Consistent** player health ptr)
 
 Offsets:
-	Entity:
+	Entity* Entity:
 		x_pos		= 0xE8
 		y_pos		= 0xEC
 		z_pos 		= 0xF0
@@ -14,26 +14,28 @@ Offsets:
 
 - - - - - - -
 
-PlayerCam (Broken):
-	"splintercell3.exe" + 0x008FA4E8 + { 0xC8, 0x7CC }
+PlayerCam* PlayerCam (Broken):
+	"splintercell3.exe" + 0x8FA4E8 -> 0xC8 -> 0x7CC
 	
-EntityListAddr (Broken):
-	"splintercell3.exe" + 0x00A0DFEC + { 0x78, 0x5E4 }
+EntityList* EntityListAddr (Broken):
+	"splintercell3.exe" + 0xA0DFEC -> 0x78 -> 0x5E4
 	
 - - - - - - -
 
 PlayerVisibility:
 	"splintercell.exe" + 0x27F12C 
 	original_code	= 8B 86 18 15 00 00 -> mov eax, [esi + 00001518]
-	new_code		= B8 00 00 00 00 90 -> mov eax, 00000000
+	new_code		= B8 00 00 00 00 90 -> mov eax, 00000000 nop
 	byte_length		= 6
 	
 PlayerSound:
-	splintercell3.UDareAudioSubsystem::SEC_InitSound+4AAF
-	original_code = D9 9E 3C 04 00 00 -> fstp dword ptr [esi+0000043C]
-	new_doe       = 90 90 90 90 90 90 -> nop
+	"splintercell3.exe" + 0x417E4F
+	original_code = D9 9E 3C 04 00 00 == fstp dword ptr [esi+0000043C]
+	new_doe       = 90 90 90 90 90 90 == nop nop nop nop nop nop
 	byte_length   = 6
 	
 OneShotKill (ALL):
-	splintercell3.exe+3F07C2 - C7 03 00000000 - xor [ebx],ebx (NEED TO REWRITE OP CODE)
-
+	"splintercell3.exe" + 0x3F07C2
+	original_code = 89 03  == mov [ebx], eax
+	new_code      = 31 1B  == xor [ebx], ebx
+	byte_length   = 2
