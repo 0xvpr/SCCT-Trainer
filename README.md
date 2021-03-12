@@ -4,9 +4,9 @@
 This is a repository for a Splinter Cell Chaos Theory DLL that I built entirely in C.  
 The only compiler I used throughout the project was mingw's <code>i686-w64-mingw32-gcc</code> compiler.  
 
-I challenged myself to exclusively use <code>nvim</code> as my only 'IDE' if you will. I did not like  
-the fact that most programmers on windows seem to be confined to only being familiar with the  
-<code>Visual Studio</code> ecosystem.
+I challenged myself to exclusively use <code>nvim</code> as my only 'IDE' if you will. I did not like the fact  
+that most programmers on windows seem to be confined to only being familiar with the <code>Visual Studio</code>  
+ecosystem.
 
 The main purpose of this project was to get familiar with the C language while also  
 familiarizing myself with cross platform compilation from Linux (Ubuntu 20.04 LTS)  
@@ -18,8 +18,6 @@ to Windows (10 Pro Insider Preview Build 21318.rs_prerelease.210216-1530).
   - [How it works](#how-it-works)
   - [Known issues](#known-issues)
   - [Goals](#Goals)
-  
-  
   
 ### Demonstration
 embed YouTube or place gif.
@@ -39,7 +37,7 @@ I eventually got it working and I use it for most of my projects in both C & C++
 
 ### How it works
 Compiling the source & header files with the <code>-shared</code> option will yield an injectable DLL file. Use any DLL injector  
-that you are comfortable with to inject the file. If the file was compile with the <code>#define DEBUG</code> define located in  
+that you are comfortable with to inject the file into the <code>splintercell3.exe</code>. If the file was compile with the <code>#define DEBUG</code> define located in  
 <code>main.c</code> set to 1, a console will launch when the DLL is successfully injected.
 
 The hacks written are:
