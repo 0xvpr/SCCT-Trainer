@@ -33,14 +33,14 @@ getting [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) to properly r
 auto-completion options.  
 
 I eventually decided that I was better off just using [CoC](https://github.com/neoclide/coc.nvim) for my auto-completion desires.  
-It was a hassle setting up the <code>compile_flags.txt</code> file to stop breaking [CoC](https://github.com/neoclide/coc.nvim) due to too  
-many errors but I eventually got it working and I use it for most of my projects in both C & C++.
+It was a hassle setting up the <code>compile_flags.txt</code> file to stop breaking [CoC](https://github.com/neoclide/coc.nvim) due to too many  
+errors but I eventually got it working and I use it for most of my projects in both C & C++.
 
 ### How it works
 Compiling the source & header files with the <code>-shared</code> option will yield an injectable DLL file.  
 Use any DLL injector that you are comfortable with to inject the file into the <code>splintercell3.exe</code>.  
-If the file was compile with the <code>#define DEBUG</code> define located in <code>main.c</code> set to 1,  
-a console will launch when the DLL is successfully injected.
+If the file was compile with the <code>#define DEBUG</code> define located in <code>main.c</code> set to 1, a console will  
+launch when the DLL is successfully injected.
 
 The hacks written are:
 - Press <code>Shift + T</code> to teleport to the last aim-down-sight (ADS) location.
