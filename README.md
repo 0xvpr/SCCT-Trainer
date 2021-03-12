@@ -43,10 +43,10 @@ If the file was compile with the <code>#define DEBUG</code> define located in <c
 launch when the DLL is successfully injected.
 
 The hacks written are:
-- Press <code>Shift + T</code> to teleport to the last aim-down-sight (ADS) location.
 - Press <code>G</code> to toggle PlayDead (Reduce player health to 0 without killing player)
 - Press <code>I</code> to toggle PolterGheist (Invisibilty & Dead Silence)
 - Press <code>N</code> to toggle NoRecoil
+- Press <code>Shift + T</code> to teleport to the last aim-down-sight (ADS) location.
 - Press <code>Shift + K</code> to make all enemies in a level play dead.
 
 ### Known issues
