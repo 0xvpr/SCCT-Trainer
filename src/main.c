@@ -1,8 +1,4 @@
 #include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <windows.h>
-#include <tlhelp32.h>
 
 #include "includes.h"
 

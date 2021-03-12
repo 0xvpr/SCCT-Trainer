@@ -30,4 +30,8 @@ It doesn't... from time to time at least.
 The game is 15 years old and I'm having trouble defeating it.
 
 #### Goals
-fix what's broken.
+ - [x] Find reliable weapon pointer
+ - [] Find reliable entity_list pointer
+ - [] Find reliable player_health pointer
+ - [] Find 'Death' __stdcall (__thiscall maybe?).
+ - [] Find a way to prevent PolterGheist from crashing the game.
