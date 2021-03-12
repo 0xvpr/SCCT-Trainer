@@ -36,9 +36,9 @@ I eventually decided that I was better off just using [CoC](https://github.com/n
 It was a hassle setting up the <code>compile_flags.txt</code> file to stop breaking [CoC](https://github.com/neoclide/coc.nvim) due to too many  
 errors but I eventually got it working and I use it for most of my projects in both C & C++.
 
-I originally planned to hook directx9 for an in-game GUI but getting mingw's ld to recognize <code>detours.h</code> was  
-too much work that it was really worth so it was abandoned. It seems that C++ is much better suited for these types of  
-tasks.
+I originally planned to hook directx9 for an in-game GUI but getting mingw's ld to recognize  
+<code>detours.h</code> was too much work that it was really worth so it was abandoned. It seems  
+that C++ is much better suited for these types of tasks.
 
 ### How it works
 Compiling the source & header files with the <code>-shared</code> option will yield an injectable DLL file.  
