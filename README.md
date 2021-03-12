@@ -1,12 +1,14 @@
 # Splinter Cell Chaos Theory Trainer
   
 ### Overview:
-This is a repository for a Splinter Cell Chaos Theory Trainer that I built entirely in C merely for proof of concept purposes and language exploration.  
+This is a repository for a Splinter Cell Chaos Theory Trainer that I built entirely in C  
+almost solely for proof of concept purposes and language exploration.  
+
 ### Table of Contents
-  - [Demonstration](#Demo)
-  - [What I Learned](#WhatILearned)
-  - [How it works](#HowItWorks)
-  - [Known issues](#Issues)
+  - [Demonstration](#demonstration)
+  - [What I Learned](#what-i-learned)
+  - [How it works](#how-it-works)
+  - [Known issues](#known-issues)
   - [Goals](#Goals)
   
   
@@ -14,14 +16,14 @@ This is a repository for a Splinter Cell Chaos Theory Trainer that I built entir
 #### Demonstration
 embed youtube or place gif
 
-#### What I Learned [#WhatILearned]()
+#### What I Learned
 C is hard.
 
-#### How it works [#HowItWorks]()
+#### How it works
 It doesn't... from time to time at least.
 
-#### Known issus [#Issues]()
+#### Known issues
 The game is 15 years old and I'm having trouble defeating it.
 
-#### Goals [#Goals]()
+#### Goals
 fix what's broken.
