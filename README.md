@@ -29,11 +29,11 @@ documented, it is certainly doable. It took a bit of research just to get the co
 all of the various non-standard 'MS-isms' that are included in <code>Windows.h</code> and <code>tlhelp32.h</code>.
 
 Another issue was that, since I exclusively edited the project in <code>nvim</code>, I had a ton of problems  
-getting [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe){:target="_blank"} to properly recognize that I was using Windows headers and give me  
+getting [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) to properly recognize that I was using Windows headers and give me  
 auto-completion options.  
 
-I eventually decided that I was better off just using <code>CoC</code> for my auto-completion desires.  
-It was a hassle setting up the <code>compile_flags.txt</code> file to stop breaking <code>CoC</code> due to too many errors but  
+I eventually decided that I was better off just using [CoC](https://github.com/neoclide/coc.nvim) for my auto-completion desires.  
+It was a hassle setting up the <code>compile_flags.txt</code> file to stop breaking [CoC](https://github.com/neoclide/coc.nvim) due to too many errors but  
 I eventually got it working and I use it for most of my projects in both C & C++.
 
 ### How it works
