@@ -6,8 +6,8 @@ The only compiler I used throughout the project was mingw's <code>i686-w64-mingw
 compiler.  
 
 I challenged myself to exclusively use <code>nvim</code> as my only 'IDE' if you will. I did not like  
-the fact that most programmers on Windows seem to be confined to only being familiar with  
-the <code>Visual Studio</code> ecosystem.
+the fact that most programmers on Windows seem to be confined to only being familiar  
+with the <code>Visual Studio</code> ecosystem.
 
 The main purpose of this project was to get familiar with the C language while also  
 familiarizing myself with cross platform compilation from Linux (Ubuntu 20.04 LTS)  
