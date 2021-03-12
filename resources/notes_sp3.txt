@@ -1,22 +1,24 @@
 Health:
 	8 byte value
 	Starts at 450 on normal
+	Starts at 300 on hard
 	starts at 150 on expert
+	"splintercell3.exe" + 00A0F424 -> 84 -> 420 (Consistent** player health ptr)
 
 Offsets:
 	Entity:
-		x		= 0xE8
-		y		= 0xEC
-		z 		= 0xF0
-		health 	= 0x420
+		x_pos		= 0xE8
+		y_pos		= 0xEC
+		z_pos 		= 0xF0
+		health 		= 0x420
 
 - - - - - - -
 
-PlayerCam:
-	"splintercell3.exe" + 0x8FA4E8 + { 0xC8, 0x7CC }
+PlayerCam (Broken):
+	"splintercell3.exe" + 0x008FA4E8 + { 0xC8, 0x7CC }
 	
-EntityListAddr:
-	"splintercell3.exe" + 0xA0DFEC + { 0x78, 0x5E4 }
+EntityListAddr (Broken):
+	"splintercell3.exe" + 0x00A0DFEC + { 0x78, 0x5E4 }
 	
 - - - - - - -
 
@@ -25,3 +27,12 @@ PlayerVisibility:
 	original_code	= 8B 86 18 15 00 00 -> mov eax, [esi + 00001518]
 	new_code		= B8 00 00 00 00 90 -> mov eax, 00000000
 	byte_length		= 6
+	
+PlayerSound:
+	splintercell3.UDareAudioSubsystem::SEC_InitSound+4AAF
+	original_code = D9 9E 3C 04 00 00 -> fstp dword ptr [esi+0000043C]
+	new_doe       = 90 90 90 90 90 90 -> nop
+	
+OneShotKill (ALL):
+	splintercell3.exe+3F07C2 - C7 03 00000000 - xor [ebx],ebx (NEED TO REWRITE OP CODE)
+
