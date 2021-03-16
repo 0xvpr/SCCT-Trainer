@@ -3,7 +3,7 @@
 #include "includes.h"
 
 
-#define DEBUG 1
+#define DEBUG
 
 
 bool bKillAll = false;
@@ -17,14 +17,11 @@ uint64_t previous_health = 0;
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
 	uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
+#ifdef DEBUG
 	FILE *f;
-	
-	// Debug Console
-	if (DEBUG)
-	{
-		AllocConsole();
-		freopen_s(&f, "CONOUT$", "w", stdout);
-	}
+	AllocConsole();
+	freopen_s(&f, "CONOUT$", "w", stdout);
+#endif
 
 	// Main Loop
 	while (!GetAsyncKeyState(VK_END))
@@ -36,10 +33,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 			bPlayDead = !bPlayDead;
 
 			PlayDead(bPlayDead, &previous_health);
-			if (DEBUG)
-			{
-				printf("PlayDead: %s.\n", bPlayDead ? "Enabled" : "Disabled");
-			}
+			printf("PlayDead: %s.\n", bPlayDead ? "Enabled" : "Disabled");
 
 		}
 
@@ -50,10 +44,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 
 			Invisibilty(bPolterGheist);
 			Silent(bPolterGheist);
-			if (DEBUG)
-			{
-				printf("PolterGheist: %s.\n", bPolterGheist ? "Enabled" : "Disabled");
-			}
+			printf("PolterGheist: %s.\n", bPolterGheist ? "Enabled" : "Disabled");
 
 		}
 
@@ -63,10 +54,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 			bNoRecoil = !bNoRecoil;
 
 			NoRecoil(bNoRecoil);
-			if (DEBUG)
-			{
-				printf("NoRecoil: %s.\n", bNoRecoil ? "Enabled" : "Disabled");	
-			}
+			printf("NoRecoil: %s.\n", bNoRecoil ? "Enabled" : "Disabled");	
 
 		}
 
@@ -74,10 +62,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 		if (GetAsyncKeyState(VK_LSHIFT) && GetAsyncKeyState('T') & 1)
 		{
 			TeleportToADS();
-			if (DEBUG)
-			{
-				printf("Teleporting...\n");
-			}
+			printf("Teleporting...\n");
 			
 		}
 		
@@ -87,22 +72,19 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 			bKillAll = !bKillAll;
 
 			KillAll(bKillAll);
-			if (DEBUG)
-			{
-				printf("All Enemies %s.\n", bKillAll ? "Enabled" : "Disabled");
-			}
+			printf("All Enemies %s.\n", bKillAll ? "Enabled" : "Disabled");
 			
 		}
 		
 	}
 
-	if (DEBUG)
-	{
-		fclose(f);
-		FreeConsole();
-	}
+#ifdef f
+	fclose(f);
+	FreeConsole();
+#endif
 
 	FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
+	PlaySound(TEXT("ErrorSound"), 0, SND_ASYNC);
 	return TRUE;
 }
 

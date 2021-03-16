@@ -24,13 +24,13 @@
 void KillAll(bool bKillAll)
 {
 	uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
-	struct EntityList* _entity_list = *(struct EntityList**)FindDMAAddress_attached(module_base_addr + 0xA0DFEC, entity_list_offsets, entity_list_offsets_size);
+	EntityList* _entity_list = *(EntityList**)FindDMAAddress_attached(module_base_addr + 0xA0DFEC, entity_list_offsets, entity_list_offsets_size);
 
 	uint32_t entity_type;
 	int current_entity = 0;
 	for (ever)
 	{
-		struct Entity* entity= _entity_list->entities[current_entity].entity;
+		Entity* entity= _entity_list->entities[current_entity].entity;
 		if (entity->entity_type == PLAYER)
 		{
 			break;
@@ -63,7 +63,7 @@ void KillAll(bool bKillAll)
 void PlayDead(bool bPlayDead, uint64_t* previous_health)
 {
 	uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
-	struct Entity* player = *(struct Entity**)FindDMAAddress_attached(module_base_addr + 0xA0F424, player_hp_offsets, player_hp_offsets_size);
+	Entity* player = *(Entity**)FindDMAAddress_attached(module_base_addr + 0xA0F424, player_hp_offsets, player_hp_offsets_size);
 
 	if (bPlayDead)
 	{
@@ -87,8 +87,8 @@ void TeleportToADS(void)
 {
 	uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
-	struct EntityList* _entity_list = *(struct EntityList**)FindDMAAddress_attached(module_base_addr + 0xA0DFEC, entity_list_offsets, entity_list_offsets_size);
-	struct Vec3* _ads_cam = (struct Vec3*)FindDMAAddress_attached(module_base_addr + 0x8FA4E8, cam_offsets, cam_offsets_size);
+	EntityList* _entity_list = *(EntityList**)FindDMAAddress_attached(module_base_addr + 0xA0DFEC, entity_list_offsets, entity_list_offsets_size);
+	Vec3* _ads_cam = (Vec3*)FindDMAAddress_attached(module_base_addr + 0x8FA4E8, cam_offsets, cam_offsets_size);
 
 	uint32_t entity_type;
 	int current_entity = 0;
@@ -175,7 +175,7 @@ void Silent(bool bPolterGheist)
 void NoRecoil(bool bNoRecoil)
 {
 	uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
-	struct Weapon* weapon = (LPVOID)FindDMAAddress_attached(module_base_addr + 0xA0F434, weapon_offsets, weapon_offsets_size);
+	Weapon* weapon = (LPVOID)FindDMAAddress_attached(module_base_addr + 0xA0F434, weapon_offsets, weapon_offsets_size);
 
 	uintptr_t addresses[6] = { 
                   0x2F83BE,
