@@ -3,7 +3,7 @@
 #include "includes.h"
 
 
-#define DEBUG
+// #define DEBUG
 
 
 bool bKillAll = false;
