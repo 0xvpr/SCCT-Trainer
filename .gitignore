@@ -1,0 +1,8 @@
+# Executables
+bin/**
+
+# Build Nuances
+build/**
+
+# nvim Coc clangd lsp
+compile_flags.txt

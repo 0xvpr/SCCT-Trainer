@@ -1,7 +1,7 @@
-#ifndef INCLUDES_H_
-#define INCLUDES_H_
+#ifndef _INCLUDES_H
+#define _INCLUDES_H
 
-#include "hacks.h"
-#include "entity.h"
+#include "hacks.hpp"
+#include "entity.hpp"
 
 #endif

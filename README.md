@@ -1,6 +1,10 @@
-# Splinter Cell Chaos Theory Trainer
+# Splinter Cell Chaos Theory Trainer (REVISITED)
+
+## Things Are Changing
+The Repository has been translated to CPP for extensions of the hacks current  
+capabilities. This means future support for Directx9.
   
-## Overview:
+## (OLD) Overview:
 This is a repository for a Splinter Cell Chaos Theory DLL that I built entirely in C.  
 The only compiler I used throughout the project was mingw's <code>i686-w64-mingw32-gcc</code>  
 compiler.  
@@ -49,26 +53,22 @@ launch when the DLL is successfully injected.
 The hacks written are:
 - Press <code>N</code> to toggle NoRecoil
 - Press <code>I</code> to toggle PolterGheist (Invisibilty & Dead Silence)
-- Press <code>G</code> to toggle PlayDead (Reduce player health to 0 without killing player)
-- Press <code>Shift + K</code> to make all enemies in a level play dead.
-- Press <code>Shift + T</code> to teleport to the last aim-down-sight (ADS) location.
+- --Press <code>G</code> to toggle PlayDead (Reduce player health to 0 without killing player)--
+- --Press <code>Shift + K</code> to make all enemies in a level play dead.--
+- --Press <code>Shift + T</code> to teleport to the last aim-down-sight (ADS) location.--
 
 ### Known issues
 I could not find a reliable 'in game' boolean value or other explicit distinction that would  
 prevent the user from attempting to execute the code in places that would crash the game.  
 
 These locations include:
-- Main menu
-- Multi-player menu
-- All Multi-player modes
-- Loading screen
-- Mission select screen
 - Special cases such as trying to teleport without first equipping weapon
+- Special cases such as trying to toggle no recoil without first equipping weapon
 
 ### Goals
- - [x] Find reliable weapon pointer.
+ - [x] Find reliable weapon pointer. <i>March 12, 2021</i>
  - [ ] Find reliable entity_list pointer.
  - [ ] Find reliable player_health pointer.
- - [ ] Find 'Death' __stdcall (__thiscall maybe?).
- - [ ] Find a way to prevent PolterGheist from crashing the game.
+ - [x] Find 'Death' __thiscall <i>April 30, 2021</i>
+ - [x] Find a way to prevent PolterGheist from breaking the game.<i>March 12, 2021</i>
  - [ ] Find reliable 'in game' boolean (or other explicit distinction).
