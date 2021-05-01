@@ -16,6 +16,14 @@ plus  = lambda x: print(f"[\x1B[0;32m+\x1B[0;0m] {x}") # Green plus
 minus = lambda x: print(f"[\x1B[0;31m-\x1B[0;0m] {x}") # Red minus
 
 if __name__ == "__main__":
+    if 'bin' not in os.listdir("."):
+        os.mkdir("bin")
+
+    if 'build' not in os.listdir("."):
+        os.mkdir("build")
+
+    assert "bin" in os.listdir(".")
+    assert "build" in os.listdir(".")
     minus("Attempting to clean './build'")
     for f in os.listdir(f"./build"):
         minus(f"Attempting to remove './build/{f}'")
