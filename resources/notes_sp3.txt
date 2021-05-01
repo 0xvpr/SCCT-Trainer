@@ -3,7 +3,7 @@ Health:
 	Starts at 450 on normal
 	Starts at 300 on hard
 	starts at 150 on expert
-	"splintercell3.exe" + 0xA0F424 -> 84 -> 420 (Consistent** player health ptr)
+	"splintercell3.exe" + 0xA0F424 -> 84 -> 420 (Consistent Enough** player health ptr)
 
 Offsets:
 	Entity* Entity:
