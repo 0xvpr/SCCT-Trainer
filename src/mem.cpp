@@ -1,8 +1,7 @@
-#include <windows.h>
-#include <tlhelp32.h>
-
 #include "mem.hpp"
 
+#include <windows.h>
+#include <tlhelp32.h>
 
 uintptr_t Memory::GetModuleBaseAddress(DWORD process_id, const char* modName)
 {
@@ -81,22 +80,27 @@ DWORD Memory::GetProcessIdByProcessName(const char* process_name)
 	return process_id;
 }
 
-bool Memory::Hook(void* hookedFunc,void* myFunc, int length)
+BOOL Memory::Hook(void* hookedFunc,void* myFunc, size_t size)
 {
-    if (length < 5)
+    if (size < 5)
         return false;
 
     DWORD oldProtect;
-    VirtualProtect(hookedFunc, length, PAGE_EXECUTE_READWRITE, &oldProtect);
+    VirtualProtect(hookedFunc, size, PAGE_EXECUTE_READWRITE, &oldProtect);
 
-    memset(hookedFunc, 0x90, length);
-    DWORD rel_addr = ((DWORD)myFunc - (DWORD)hookedFunc) - 5;
+    memset(hookedFunc, 0x90, size);
+    DWORD relativeAddr = ((DWORD)myFunc - (DWORD)hookedFunc) - 5;
 
-    *(BYTE*)hookedFunc = 0xE9;
-    *(DWORD*)((DWORD)hookedFunc + 1) = rel_addr;
-    VirtualProtect(hookedFunc, length, oldProtect, nullptr);
+    *(BYTE *)hookedFunc = 0xE9;
+    *(DWORD *)((DWORD)hookedFunc + 1) = relativeAddr;
+    VirtualProtect(hookedFunc, size, oldProtect, nullptr);
 
     return true;
+}
+
+BYTE* Memory::TrampolineHook(void* hookedFunc, void* myFunc, size_t size)
+{
+    return nullptr;
 }
 
 void Memory::Patch(BYTE* dst, BYTE* src, size_t size)

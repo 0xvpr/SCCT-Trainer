@@ -1,42 +1,68 @@
 #ifndef MEM_H_
 #define MEM_H_
 
-#include <cstdint>
 #include <windows.h>
 
 class Memory
 {
     public:
-        /*
+        /**
          * Returns the main entry point of a foreign executable.
+         *
+         * @param: DWORD process_id, const char* modName
+         * @rtype: uintptr_t
          */
-        uintptr_t static GetModuleBaseAddress(DWORD process_id, const char* modName);
+        static uintptr_t GetModuleBaseAddress(DWORD process_id, const char* modName);
 
-        /*
+        /**
          * Find Dynamic Memory Address of a foreign process.
+         *
+         * @param: HANDLE pHandle, uintptr_t ptr, unsigned offsets[], size_t size
+         * @rype: uintptr_t
          */
-        uintptr_t static FindDMAddress(HANDLE process_handle, uintptr_t ptr, unsigned offsets[], size_t size);
+        static uintptr_t FindDMAddress(HANDLE process_handle, uintptr_t ptr, unsigned offsets[], size_t size);
 
-        /*
+        /**
          * Find Dynamic Memory Address of an embedded process.
+         *
+         * @param: uintptr_t ptr, unsigned offsets[], size_t size
+         * @rype: uintptr_t
          */
-        uintptr_t static FindDMAddress(uintptr_t ptr, unsigned int offsets[], size_t size);
+        static uintptr_t FindDMAddress(uintptr_t ptr, unsigned offsets[], size_t size);
 
-        /*
+        /**
          * Get the process ID by using the processes name.
+         * 
+         * @param: uintptr_t ptr, unsigned offsets[], size_t size
+         * @rype: uintptr_t
          */
-        DWORD static GetProcessIdByProcessName(const char* process_name);
+        static DWORD GetProcessIdByProcessName(const char* process_name);
 
-        /*
+        /**
          * Detour any given function that has a minimum op length
          * of 5. Anything less will return false.
+         * 
+         * @param: void* hookedFunc, void* myFunc, size_t size
+         * @rype: bool
          */
-        bool static Hook(void* hookedFunc,void* myFunc, int length);
+        static BOOL Hook(void* hookedFunc, void* myFunc, size_t size);
 
-        /*
-         * Byte replacement from source to destination.
+        /**
+         * Trampoline hooks any given function that has a minimum op length
+         * of 5. Anything less will return false.
+         * 
+         * @param: void* hookedFunc, void* myFunc, size_t size
+         * @rype: BYTE*
          */
-        void static Patch(BYTE* dst, BYTE* src, size_t size);
+        static BYTE* TrampolineHook(void* hookedFunc, void* myFunc, size_t size);
+
+        /**
+         * Byte replacement from source to destination.
+         *
+         * @param: BYTE* destination, BYTE* source, size_t size
+         * @rype: void
+         */
+        static void Patch(BYTE* dst, BYTE* src, size_t size);
 };
 
 #endif

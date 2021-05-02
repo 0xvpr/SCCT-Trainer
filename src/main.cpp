@@ -1,9 +1,7 @@
-#include "includes.h"
+#include "hacks.hpp"
+#include "hook.hpp"
 
-#include <conio.h>
-#include <cstdlib>
 #include <iostream>
-
 
 #define DEBUG
 
@@ -13,8 +11,6 @@ bool bPlayDead = false;
 bool bPolterGheist = false;
 
 int previous_health = 0;
-
-uintptr_t modBaseAddr = (uintptr_t)GetModuleHandle(NULL);
 
 void __DisplayMenu(void);
 
@@ -26,10 +22,17 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 	freopen_s(&fp, "CONOUT$", "w", stdout);
 #endif
 
+
 	/* Main Loop */
     __DisplayMenu();
 	while (!GetAsyncKeyState(VK_END))
 	{
+        /* Hook Test */
+        if (GetAsyncKeyState(VK_NUMPAD5) & 1)
+        {
+            DxHook::HookEndScene();
+        }
+
         /* Toggle PlayDead */
         if (GetAsyncKeyState('G') & 1)
         {

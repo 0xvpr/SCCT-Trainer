@@ -4,8 +4,6 @@
 #include <windows.h>
 #include <tlhelp32.h>
 
-#include "entity.hpp"
-
 class Hacks
 {
     public:
@@ -16,7 +14,7 @@ class Hacks
          * This WILL break the game's state triggering
          * mechanics.
          *
-         * @param bool bKillAll
+         * @param void
          * @rtype void
          */
         static void KillAll(void);
@@ -26,7 +24,7 @@ class Hacks
          * Enemies will not shoot (hit you) nor will they sound
          * alarms.
          *
-         * @param bool bKillAll, int* previous_health
+         * @param bool bPlayDead, int* previous_health
          * @rtype void
          */
         static void PlayDead(bool bPlayDead, int* previous_health);
@@ -72,7 +70,7 @@ class Hacks
         static void Silent(bool bSilent);
 
         /* Prototype */
-        static bool KillEnt(void* pThis, int arg1);
+        static bool KillEnt(void* pThis, int source);
 };
 
 #endif
