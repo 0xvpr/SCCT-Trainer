@@ -1,5 +1,5 @@
-#ifndef MEM_H_
-#define MEM_H_
+#ifndef _MEM_HPP
+#define _MEM_HPP
 
 #include <windows.h>
 
@@ -45,7 +45,7 @@ class Memory
          * @param: void* hookedFunc, void* myFunc, size_t size
          * @rype: bool
          */
-        static BOOL Hook(void* hookedFunc, void* myFunc, size_t size);
+        static BOOL Hook(BYTE* dst, BYTE* src, size_t size);
 
         /**
          * Trampoline hooks any given function that has a minimum op length
@@ -54,7 +54,7 @@ class Memory
          * @param: void* hookedFunc, void* myFunc, size_t size
          * @rype: BYTE*
          */
-        static BYTE* TrampolineHook(void* hookedFunc, void* myFunc, size_t size);
+        static BYTE* TrampolineHook(BYTE* hookedFunc, BYTE* myFunc, size_t size);
 
         /**
          * Byte replacement from source to destination.
