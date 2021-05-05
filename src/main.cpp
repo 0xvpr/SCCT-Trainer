@@ -73,7 +73,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 
             Hacks::Afterlife(bAfterlife);
             __DisplayMenu();
-            std::cout << (bAfterlife == true ? "Disabling" : "Restoring" ) << "all enemies.\n";
+            std::cout << (bAfterlife == true ? "Disabling" : "Restoring" ) << " all enemies.\n";
             
         }
     }
@@ -111,7 +111,7 @@ void __DisplayMenu(void)
                  "Press 'U' to unlock all doors.\n\n";
 
     /* Toggle Status */
-    std::cout << "PlayDead: " << ( bPlayDead ? "Enabled" : "Disabled") << "\n";
+    std::cout << "PlayDead: "     << ( bPlayDead ? "Enabled" : "Disabled") << "\n";
     std::cout << "PolterGheist: " << ( bPolterGheist ? "Enabled" : "Disabled") << "\n";
-    std::cout << "NoRecoil: " << ( bNoRecoil ? "Enabled" : "Disabled\n\n");
+    std::cout << "NoRecoil: "     << ( bNoRecoil ? "Enabled" : "Disabled\n\n");
 }
