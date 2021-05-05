@@ -17,14 +17,14 @@ void __DisplayMenu(void);
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
     /* Console */
-	FILE *fp;
-	AllocConsole();
-	freopen_s(&fp, "CONOUT$", "w", stdout);
+    FILE* fp;
+    AllocConsole();
+    freopen_s(&fp, "CONOUT$", "w", stdout);
 
-	/* Main Loop */
+    /* Main Loop */
     __DisplayMenu();
-	while (!GetAsyncKeyState(VK_END))
-	{
+    while (!GetAsyncKeyState(VK_END))
+    {
 
         /* Toggle PolterGheist */
         if (GetAsyncKeyState('I') & 1)
@@ -53,8 +53,8 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
         {
             Hacks::TeleportToADS();
             __DisplayMenu();
-            std:: cout << "Teleporting...\n";
-            
+            std::cout << "Teleporting...\n";
+
         }
 
         /* Unlock All Doors */
@@ -62,7 +62,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
         {
             Hacks::UnlockAllDoors();
             __DisplayMenu();
-            std:: cout << "Doors Unlocked.\n";
+            std::cout << "Doors Unlocked.\n";
 
         }
 
@@ -73,34 +73,34 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 
             Hacks::Afterlife(bAfterlife);
             __DisplayMenu();
-            std::cout << (bAfterlife == true ? "Disabling" : "Restoring" ) << " all enemies.\n";
-            
+            std::cout << (bAfterlife == true ? "Disabling" : "Restoring") << " all enemies.\n";
+
         }
     }
-	PlaySound(TEXT("ErrorSound"), 0, SND_SYNC);
+    PlaySound(TEXT("ErrorSound"), 0, SND_SYNC);
 
-	fclose(fp);
-	FreeConsole();
-	FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
+    fclose(fp);
+    FreeConsole();
+    FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
 
-	return TRUE;
+    return TRUE;
 }
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
-	switch (dwReason)
-	{
-		case DLL_PROCESS_ATTACH:
-			DisableThreadLibraryCalls(hInstance);
-			CreateThread(0, 0, MainThread, hInstance, 0, 0);
-			break;
-		case DLL_PROCESS_DETACH:
-			break;
+    switch (dwReason)
+    {
+        case DLL_PROCESS_ATTACH:
+            DisableThreadLibraryCalls(hInstance);
+            CreateThread(0, 0, MainThread, hInstance, 0, 0);
+            break;
+        case DLL_PROCESS_DETACH:
+            break;
         default:
             break;
-	}
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 void __DisplayMenu(void)
@@ -111,7 +111,7 @@ void __DisplayMenu(void)
                  "Press 'U' to unlock all doors.\n\n";
 
     /* Toggle Status */
-    std::cout << "PlayDead: "     << ( bPlayDead ? "Enabled" : "Disabled") << "\n";
-    std::cout << "PolterGheist: " << ( bPolterGheist ? "Enabled" : "Disabled") << "\n";
-    std::cout << "NoRecoil: "     << ( bNoRecoil ? "Enabled" : "Disabled\n\n");
+    std::cout << "PlayDead:     " << (bPlayDead ? "Enabled" : "Disabled") << "\n";
+    std::cout << "PolterGheist: " << (bPolterGheist ? "Enabled" : "Disabled") << "\n";
+    std::cout << "NoRecoil:     " << (bNoRecoil ? "Enabled" : "Disabled\n\n");
 }
