@@ -70,6 +70,15 @@ build CMakeFiles\sp3.dir\src\mem.cpp.obj: CXX_COMPILER__sp3_RelWithDebInfo ..\..
   TARGET_COMPILE_PDB = CMakeFiles\sp3.dir\
   TARGET_PDB = sp3.pdb
 
+build CMakeFiles\sp3.dir\src\utils.cpp.obj: CXX_COMPILER__sp3_RelWithDebInfo ..\..\..\src\utils.cpp || cmake_object_order_depends_target_sp3
+  DEFINES = -Dsp3_EXPORTS
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG -std:c++17
+  INCLUDES = -I..\..\..\include
+  OBJECT_DIR = CMakeFiles\sp3.dir
+  OBJECT_FILE_DIR = CMakeFiles\sp3.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\sp3.dir\
+  TARGET_PDB = sp3.pdb
+
 
 # =============================================================================
 # Link build statements for SHARED_LIBRARY target sp3
@@ -78,7 +87,7 @@ build CMakeFiles\sp3.dir\src\mem.cpp.obj: CXX_COMPILER__sp3_RelWithDebInfo ..\..
 #############################################
 # Link the shared library sp3.dll
 
-build sp3.dll sp3.lib: CXX_SHARED_LIBRARY_LINKER__sp3_RelWithDebInfo CMakeFiles\sp3.dir\src\hacks.cpp.obj CMakeFiles\sp3.dir\src\main.cpp.obj CMakeFiles\sp3.dir\src\mem.cpp.obj
+build sp3.dll sp3.lib: CXX_SHARED_LIBRARY_LINKER__sp3_RelWithDebInfo CMakeFiles\sp3.dir\src\hacks.cpp.obj CMakeFiles\sp3.dir\src\main.cpp.obj CMakeFiles\sp3.dir\src\mem.cpp.obj CMakeFiles\sp3.dir\src\utils.cpp.obj
   LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
   LINK_FLAGS = /machine:X86 /debug /INCREMENTAL
   LINK_LIBRARIES = Winmm.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

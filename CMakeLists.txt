@@ -13,12 +13,14 @@ include_directories(include)
 
 ## Output DLL
 add_library(${EXEC} SHARED ${SOURCES})
-set_target_properties(${EXEC}
-					  PROPERTIES
-					  CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
-					  CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
-					  CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
-)
+
+## Output DIR
+#set_target_properties(${EXEC}
+#					  PROPERTIES
+#					  CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
+#					  CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
+#					  CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
+#)
 
 ## Library Files
 target_link_libraries(${EXEC} Winmm)
