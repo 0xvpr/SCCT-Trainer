@@ -42,16 +42,6 @@ struct Door
     int access;
 };
 
-struct DoorObject
-{
-    struct Door* door;
-};
-
-struct DoorList
-{
-    struct DoorObject doors[256];
-};
-
 struct Weapon
 {
 	int chamber_ammo, chamber_max_ammo, total_ammo;
