@@ -1,3 +1,0 @@
-C:/Users/teame/Google Drive/My Documents/Projects/Games/Splinter Cell Hacks/cpp/out/build/x86-Release/CMakeFiles/sp3.dir
-C:/Users/teame/Google Drive/My Documents/Projects/Games/Splinter Cell Hacks/cpp/out/build/x86-Release/CMakeFiles/edit_cache.dir
-C:/Users/teame/Google Drive/My Documents/Projects/Games/Splinter Cell Hacks/cpp/out/build/x86-Release/CMakeFiles/rebuild_cache.dir
