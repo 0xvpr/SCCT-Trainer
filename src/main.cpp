@@ -1,13 +1,13 @@
 #include "hacks.hpp"
-#include "hook.hpp"
 
 #include <iostream>
 
-#define DEBUG
+#pragma comment(lib, "Winmm.lib")
 
 
 bool bNoRecoil = false;
 bool bPlayDead = false;
+bool bAfterlife = false;
 bool bPolterGheist = false;
 
 int previous_health = 0;
@@ -16,32 +16,15 @@ void __DisplayMenu(void);
 
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
-#ifdef DEBUG
+    /* Console */
 	FILE *fp;
 	AllocConsole();
 	freopen_s(&fp, "CONOUT$", "w", stdout);
-#endif
-
 
 	/* Main Loop */
     __DisplayMenu();
 	while (!GetAsyncKeyState(VK_END))
 	{
-        /* Hook Test */
-        if (GetAsyncKeyState(VK_NUMPAD5) & 1)
-        {
-            DxHook::HookEndScene();
-        }
-
-        /* Toggle PlayDead */
-        if (GetAsyncKeyState('G') & 1)
-        {
-            bPlayDead = !bPlayDead;
-
-            Hacks::PlayDead(bPlayDead, &previous_health);
-            __DisplayMenu();
-
-        }
 
         /* Toggle PolterGheist */
         if (GetAsyncKeyState('I') & 1)
@@ -64,6 +47,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 
         }
 
+
         /* Teleport to ADS */
         if (GetAsyncKeyState(VK_LSHIFT) && GetAsyncKeyState('T') & 1)
         {
@@ -73,23 +57,32 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
             
         }
 
-        /* KillAll */
+        /* Unlock All Doors */
+        if (GetAsyncKeyState('U') & 1)
+        {
+            Hacks::UnlockAllDoors();
+            __DisplayMenu();
+            std:: cout << "Doors Unlocked.\n";
+
+        }
+
+        /* Toggle Afterlife */
         if (GetAsyncKeyState(VK_LSHIFT) && GetAsyncKeyState('K') & 1)
         {
-            Hacks::KillAll();
+            bAfterlife = !bAfterlife;
+
+            Hacks::Afterlife(bAfterlife);
             __DisplayMenu();
-            std::cout << "Killing All Enemies.\n";
+            std::cout << (bAfterlife == true ? "Disabling" : "Restoring" ) << "all enemies.\n";
             
         }
     }
+	PlaySound(TEXT("ErrorSound"), 0, SND_SYNC);
 
-#ifdef DEBUG
 	fclose(fp);
 	FreeConsole();
-#endif
-
 	FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
-	PlaySound(TEXT("ErrorSound"), 0, SND_ASYNC);
+
 	return TRUE;
 }
 
@@ -114,10 +107,11 @@ void __DisplayMenu(void)
 {
     system("cls"); // slowest but simplest
     std::cout << "Press 'N' to toggle no recoil.\n"
-                 "Press 'I' to toggle PolterGheist.\n\n";
+                 "Press 'I' to toggle PolterGheist.\n"
+                 "Press 'U' to unlock all doors.\n\n";
 
     /* Toggle Status */
     std::cout << "PlayDead: " << ( bPlayDead ? "Enabled" : "Disabled") << "\n";
     std::cout << "PolterGheist: " << ( bPolterGheist ? "Enabled" : "Disabled") << "\n";
-    std::cout << "NoRecoil: " << ( bNoRecoil ? "Enabled" : "Disabled");
+    std::cout << "NoRecoil: " << ( bNoRecoil ? "Enabled" : "Disabled\n\n");
 }

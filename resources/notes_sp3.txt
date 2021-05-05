@@ -39,3 +39,13 @@ OneShotKill (ALL):
 	original_code = 89 03  == mov [ebx], eax
 	new_code      = 31 1B  == xor [ebx], ebx
 	byte_length   = 2
+	
+	
+Doors:
+	There appears to be a byte value of 0x04 that allows you
+	to open any door that you please.
+	
+	the line I see is...
+		04 00 00 00 06 40 8A C5 5F 78 C0 45 00 00 C0 C1
+
+	The disassembler shows - or dword ptr [ecx + 000004B8], 04 

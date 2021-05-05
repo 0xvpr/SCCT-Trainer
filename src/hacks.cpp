@@ -3,52 +3,39 @@
 #include "hacks.hpp"
 #include "mem.hpp"
 
-#define GUERRILLA   0x110F88D8
-#define PLAYER      0x110E8B50
-#define ever ;;
+#define GUERRILLA       0x110F88D8
+#define PLAYER          0x110E8B50
+#define DOOR            0x110FDDD8
+
+#define DOOR_ALL_ACCESS 0x04
 
 
-void Hacks::KillAll(void)
+void Hacks::Afterlife(bool bAfterlife)
 {
-/*
- *    uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
- *    EntityList* _entity_list = *(EntityList **)Memory::FindDMAddress(module_base_addr + 0xA0DFEC,
- *                                                                     offsets::entity_list_offsets,
- *                                                                     offsets::entity_list_offsets_size);
- *
- *    int current_entity = 0;
- *    for (ever)
- *    {
- *        Entity* entity= _entity_list->entities[current_entity].entity;
- *        if (entity->entity_type == PLAYER)
- *            break;
- *    
- *        if (entity->entity_type == GUERRILLA)
- *            entity->health = 0;
- *
- *        current_entity++;
- *    }
- */
-}
+    uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
+    EntityList* _entity_list = *(EntityList **)Memory::FindDMAddress(module_base_addr + 0xA0DFEC,
+                                                                     offsets::entity_list_offsets,
+                                                                     offsets::entity_list_offsets_size);
 
-void Hacks::PlayDead(bool bPlayDead, int* previous_health)
-{
-/*
- *    uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
- *    Entity* player = *(Entity **)Memory::FindDMAddress(module_base_addr + 0xA0F424,
- *                                                       offsets::player_hp_offsets,
- *                                                       offsets::player_hp_offsets_size);
- *
- *    if (bPlayDead)
- *    {
- *        *previous_health = player->health;
- *        player->health = 0;
- *    }
- *    else
- *    {
- *        player->health = *previous_health;
- *    }
- */
+    size_t size = *((int *)(Memory::FindDMAddress(module_base_addr + 0xA0DFEC,
+												  offsets::entity_list_offsets,
+												  offsets::entity_list_offsets_size)) + 1);
+
+    size_t current_entity = 0;
+    while (current_entity < size)
+    {
+        Entity* entity = _entity_list->entities[current_entity].entity;
+        if (entity->entity_type == GUERRILLA)
+        {
+            if (bAfterlife == true)
+                entity->health = 0;
+            else
+                entity->health = 150;
+        }
+
+        current_entity++;
+    }
+
 }
 
 void Hacks::TeleportToADS(void)
@@ -155,7 +142,7 @@ void Hacks::NoRecoil(bool bNoRecoil)
             Memory::Patch((BYTE *)op, (BYTE *)patch, size);
         }
 
-        if (weapon != NULL)
+        if (weapon != nullptr)
         {
             weapon->minimum_reticle = 0;
             weapon->bloom_1         = 0;
@@ -174,8 +161,36 @@ void Hacks::NoRecoil(bool bNoRecoil)
 
 }
 
+void Hacks::UnlockAllDoors(void)
+{
+    uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
+    EntityList* _entity_list = *(EntityList **)Memory::FindDMAddress(module_base_addr + 0xA0DFEC,
+                                                                     offsets::entity_list_offsets,
+                                                                     offsets::entity_list_offsets_size);
+
+    size_t size = *((int *)(Memory::FindDMAddress(module_base_addr + 0xA0DFEC,
+												  offsets::entity_list_offsets,
+												  offsets::entity_list_offsets_size)) + 1);
+
+    size_t current_entity = 0;
+    while (current_entity < size)
+    {
+        Entity* entity= _entity_list->entities[current_entity].entity;
+        if (entity->entity_type == DOOR)
+        {
+            Door* door = (Door *)entity;
+            if (door->access == 0)
+                door->access = DOOR_ALL_ACCESS;
+        }
+
+        current_entity++;
+    }
+
+}
+
 bool Hacks::KillEnt(void* pThis, int source)
 {
     /* Prototype */
+
     return true;
 }

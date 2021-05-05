@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <tlhelp32.h>
 
+
 uintptr_t Memory::GetModuleBaseAddress(DWORD process_id, const char* modName)
 {
     uintptr_t modBaseAddr = 0;

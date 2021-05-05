@@ -1,0 +1,13 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "dll",
+      "exe": "D:\\Video Games\\Steam\\steamapps\\common\\Splintercell Chaos Theory\\System\\splintercell3.exe",
+      "project": "CMakeLists.txt",
+      "projectTarget": "sp3.dll",
+      "name": "sp3.dll"
+    }
+  ]
+}

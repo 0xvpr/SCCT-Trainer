@@ -35,6 +35,23 @@ struct EntityList
 	struct EntityObject entities[71];
 };
 
+struct Door
+{
+    int door_type;
+    char _0x4B8[0x4B4];
+    int access;
+};
+
+struct DoorObject
+{
+    struct Door* door;
+};
+
+struct DoorList
+{
+    struct DoorObject doors[256];
+};
+
 struct Weapon
 {
 	int chamber_ammo, chamber_max_ammo, total_ammo;
