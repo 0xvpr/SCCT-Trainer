@@ -21,16 +21,6 @@ class Hacks
         static void Afterlife(bool bAfterlife);
 
         /**
-         * Reduces your health to zero to simulate death state. 
-         * Enemies will not shoot (hit you) nor will they sound 
-         * alarms.
-         *
-         * @param bool bPlayDead, int* previous_health 
-         * @rtype void
-         */
-        static void PlayDead(bool bPlayDead, int* previous_health);
-
-        /**
          * Prevents the visibility meter from rising above 0.001. 
          *
          * Cameras WILL still see you. Enemies with night vision 
