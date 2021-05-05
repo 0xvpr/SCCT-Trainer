@@ -18,8 +18,8 @@ void Hacks::Afterlife(bool bAfterlife)
                                                                      offsets::entity_list_offsets_size);
 
     size_t size = *((int *)(Memory::FindDMAddress(module_base_addr + 0xA0DFEC,
-												  offsets::entity_list_offsets,
-												  offsets::entity_list_offsets_size)) + 1);
+                                                  offsets::entity_list_offsets,
+                                                  offsets::entity_list_offsets_size)) + 1);
 
     size_t current_entity = 0;
     while (current_entity < size)
@@ -169,8 +169,8 @@ void Hacks::UnlockAllDoors(void)
                                                                      offsets::entity_list_offsets_size);
 
     size_t size = *((int *)(Memory::FindDMAddress(module_base_addr + 0xA0DFEC,
-												  offsets::entity_list_offsets,
-												  offsets::entity_list_offsets_size)) + 1);
+                                                  offsets::entity_list_offsets,
+                                                  offsets::entity_list_offsets_size)) + 1);
 
     size_t current_entity = 0;
     while (current_entity < size)
