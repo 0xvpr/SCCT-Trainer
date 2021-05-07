@@ -29,23 +29,38 @@ PlayerVisibility:
 	byte_length		= 6
 	
 PlayerSound:
-	"splintercell3.exe" + 0x417E4F
+	"splintercell3.exe" + 0x417E59
 	original_code = D9 9E 3C 04 00 00 == fstp dword ptr [esi+0000043C]
 	new_doe       = 90 90 90 90 90 90 == nop nop nop nop nop nop
 	byte_length   = 6
 	
 OneShotKill (ALL):
 	"splintercell3.exe" + 0x3F07C2
-	original_code = 89 03  == mov [ebx], eax
-	new_code      = 31 1B  == xor [ebx], ebx
+	original_code = 89 03  // mov [ebx], eax
+	new_code      = 31 1B  // xor [ebx], ebx
 	byte_length   = 2
 	
 	
 Doors:
 	There appears to be a byte value of 0x04 that allows you
 	to open any door that you please.
+
+	The disassembler shows - or dword ptr [ecx + 000004B8], 04 
 	
 	the line I see is...
 		04 00 00 00 06 40 8A C5 5F 78 C0 45 00 00 C0 C1
 
-	The disassembler shows - or dword ptr [ecx + 000004B8], 04 
+Ammo:  
+	SNIPER AMMO:
+		splintercell3.exe + 0x2FBC58 48                    - dec eax
+									 89 86 54040000        - mov [esi+00000454],eax
+									 8B 86 5C040000        - mov eax,[esi+0000045C]
+									 48                    - dec eax
+		length = 14
+
+	MAIN WEAPON AMMO:
+	    splintercell3.exe + 0x2F9E4A 4B - dec ebx
+		                             4F - dec edi
+	    length = 2
+
+

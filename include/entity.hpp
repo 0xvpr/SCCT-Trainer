@@ -1,21 +1,6 @@
 #ifndef _ENTITY_H
 #define _ENTITY_H
 
-struct Vec2
-{
-	float x, y;
-};
-
-struct Vec3
-{
-	float x, y, z;
-};
-
-struct Vec4
-{
-	float x, y, z, w;
-};
-
 struct Entity
 {
 	int entity_type;
@@ -32,7 +17,7 @@ struct EntityObject
 
 struct EntityList
 {
-	struct EntityObject entities[71];
+	struct EntityObject entities[99];
 };
 
 struct Door
@@ -46,7 +31,7 @@ struct Weapon
 {
 	int chamber_ammo, chamber_max_ammo, total_ammo;
 	int _0x51C[60];
-	float minimum_reticle, bloom_1, bloom_2;
+	float minimum_reticle, bloom_x, bloom_y;
 };
 
 #endif

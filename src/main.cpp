@@ -5,10 +5,13 @@
 
 #pragma comment(lib, "Winmm.lib")
 
+uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
 bool bNoRecoil = false;
 bool bAfterlife = false;
 bool bPolterGheist = false;
+bool bUnlimitedAmmo = false;
+bool bUnlimitedHealth = false;
 
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
@@ -18,59 +21,68 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
     freopen_s(&fp, "CONOUT$", "w", stdout);
 
     /* Main Loop */
-    __displayMenu();
+    __displayMenu("Happy hacking!");
     while (!GetAsyncKeyState(VK_END))
     {
 
+        /* Toggle Unlimited Health*/
+        if (GetAsyncKeyState(VK_NUMPAD1) & 1)
+        {
+            bUnlimitedHealth = !bUnlimitedHealth;
+
+            Hacks::UnlimitedHealth(bUnlimitedHealth);
+
+            __displayMenu("Unlimited Health Activated.");
+        }
+
+        /* Toggle Unlimited Ammo */
+        if (GetAsyncKeyState(VK_NUMPAD2) & 1)
+        {
+            bUnlimitedAmmo = !bUnlimitedAmmo;
+
+            Hacks::UnlimitedAmmo(bUnlimitedAmmo);
+
+            __displayMenu("Unlimited Ammo Activated.");
+        }
+
+        /* Toggle No Recoil */
+        if (GetAsyncKeyState(VK_NUMPAD3) & 1)
+        {
+            bNoRecoil = !bNoRecoil;
+
+            Hacks::NoRecoil(bNoRecoil);
+
+            __displayMenu("");
+        }
+
         /* Toggle PolterGheist */
-        if (GetAsyncKeyState('I') & 1)
+        if (GetAsyncKeyState(VK_NUMPAD4) & 1)
         {
             bPolterGheist = !bPolterGheist;
 
             Hacks::Invisibilty(bPolterGheist);
             Hacks::Silent(bPolterGheist);
-            __displayMenu();
 
-        }
+            __displayMenu("");
 
-        /* Toggle No Recoil */
-        if (GetAsyncKeyState('N') & 1)
-        {
-            bNoRecoil = !bNoRecoil;
-
-            Hacks::NoRecoil(bNoRecoil);
-            __displayMenu();
-
-        }
-
-
-        /* Teleport to ADS */
-        if (GetAsyncKeyState(VK_LSHIFT) && GetAsyncKeyState('T') & 1)
-        {
-            Hacks::TeleportToADS();
-            __displayMenu();
-
-            std::cout << "Teleporting...\n";
-        }
-
-        /* Unlock All Doors */
-        if (GetAsyncKeyState('U') & 1)
-        {
-            Hacks::UnlockAllDoors();
-            __displayMenu();
-
-            std::cout << "Doors Unlocked.\n";
         }
 
         /* Toggle Afterlife */
-        if (GetAsyncKeyState(VK_LSHIFT) && GetAsyncKeyState('K') & 1)
+        if (GetAsyncKeyState(VK_NUMPAD5) & 1)
         {
             bAfterlife = !bAfterlife;
 
             Hacks::Afterlife(bAfterlife);
-            __displayMenu();
 
-            std::cout << (bAfterlife == true ? "Disabling" : "Restoring") << " all enemies.\n";
+            __displayMenu((bAfterlife == true ? "Disabling all enemies." : "Restoring all enemies."));
+        }
+
+        /* Unlock All Doors */
+        if (GetAsyncKeyState(VK_NUMPAD6) & 1)
+        {
+            Hacks::UnlockAllDoors();
+
+            __displayMenu("Doors Unlocked.");
         }
     }
     PlaySound(TEXT("ErrorSound"), 0, SND_SYNC);
