@@ -29,7 +29,6 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
         if (GetAsyncKeyState(VK_NUMPAD1) & 1)
         {
             bUnlimitedHealth = !bUnlimitedHealth;
-
             Hacks::UnlimitedHealth(bUnlimitedHealth);
 
             __displayMenu("Unlimited Health Activated.");
@@ -39,7 +38,6 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
         if (GetAsyncKeyState(VK_NUMPAD2) & 1)
         {
             bUnlimitedAmmo = !bUnlimitedAmmo;
-
             Hacks::UnlimitedAmmo(bUnlimitedAmmo);
 
             __displayMenu("Unlimited Ammo Activated.");
@@ -49,7 +47,6 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
         if (GetAsyncKeyState(VK_NUMPAD3) & 1)
         {
             bNoRecoil = !bNoRecoil;
-
             Hacks::NoRecoil(bNoRecoil);
 
             __displayMenu("");
@@ -59,21 +56,18 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
         if (GetAsyncKeyState(VK_NUMPAD4) & 1)
         {
             bPolterGheist = !bPolterGheist;
-
             Hacks::Invisibilty(bPolterGheist);
             Hacks::Silent(bPolterGheist);
 
             __displayMenu("");
-
         }
 
         /* Toggle Afterlife */
         if (GetAsyncKeyState(VK_NUMPAD5) & 1)
         {
             bAfterlife = !bAfterlife;
-
             Hacks::Afterlife(bAfterlife);
-
+            
             __displayMenu((bAfterlife == true ? "Disabling all enemies." : "Restoring all enemies."));
         }
 

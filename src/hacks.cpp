@@ -157,13 +157,6 @@ void Hacks::NoRecoil(bool bNoRecoil)
             const char* op = (char *)(module_base_addr + op_offsets[i]);
             Memory::Patch((BYTE *)op, (BYTE *)patch, size);
         }
-
-        //if ((int)weapon != 0x434)  // Find a way to make it say that this only executes if the weapon is drawn
-        //{
-        //    weapon->minimum_reticle = 0;
-        //    weapon->bloom_x         = 0;
-        //    weapon->bloom_y         = 0;
-        //}
     }
     else
     {
