@@ -88,6 +88,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 
     }
 
+    __deactivate();
     PlaySound(TEXT("Exit Success"), 0, SND_SYNC);
 
     fclose(fp);

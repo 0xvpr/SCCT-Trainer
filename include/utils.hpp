@@ -25,7 +25,7 @@ void __displayMenu(const char* text);
  * @param  void
  * @return void
  */
-void __destroyMenu(void);
+void __deactivate(void);
 
 
 #endif

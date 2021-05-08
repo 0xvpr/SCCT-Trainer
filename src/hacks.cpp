@@ -4,11 +4,11 @@
 #include "hook.hpp"
 #include "mem.hpp"
 
+#define DOOR_ALL_ACCESS 0x00000004
+
 #define PLAYER          0x110E8B50
 #define DOOR            0x110FDDD8
 #define NPC             0x110F88D8
-
-#define DOOR_ALL_ACCESS 0x00000004
 
 
 unsigned int Hacks::Afterlife(bool bAfterlife)
