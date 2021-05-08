@@ -111,7 +111,7 @@ void Hacks::GodGun(bool bGodGun)
     const char* rapid_fire_op = (char *)(module_base_addr + offsets::rapid_fire_base);
     const char* rapid_fire_original = "\x75\x47";  // jne short 0x47
     const char* rapid_fire_patch    = "\x90\x90";  // nop
-    size_t rapid_fire_size = strlen(rapid_fire_patch);
+    size_t rapid_fire_size = 2;
 
     if (bGodGun)
     {
@@ -149,12 +149,12 @@ void Hacks::PolterGheist(bool bPolterGheist)
     const char* visibility_op = (char *)(module_base_addr + offsets::invisibility_base);
     const char* visibility_original = "\x8B\x86\x18\x15\x00\x00";  // mov eax, dword ptr [esi + 0x1518]
     const char* visibility_patch    = "\x90\x90\x90\x90\x90\x90";  // nop
-    size_t visibility_size = strlen(visibility_patch);
+    size_t visibility_size = 6;
 
     const char* noise_op = (char *)(module_base_addr + offsets::noise_base);
     const char* noise_original = "\x8B\x43\x30";  // mov eax, dword ptr [ebx + 30]
     const char* noise_patch    = "\x31\xC0\x90";  // xor eax, eax; nop
-    size_t noise_size = strlen(noise_patch);
+    size_t noise_size = 3;
 
     // Add third op for slider
 
