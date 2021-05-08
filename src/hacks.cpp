@@ -1,8 +1,8 @@
 #include "offsets.hpp"
 #include "entity.hpp"
 #include "hacks.hpp"
+#include "hook.hpp"
 #include "mem.hpp"
-#include "hook.h"
 
 #define PLAYER          0x110E8B50
 #define DOOR            0x110FDDD8

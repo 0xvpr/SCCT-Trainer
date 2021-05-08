@@ -1,6 +1,5 @@
-#ifndef _HOOK_H
-#define _HOOK_H
-
+#ifndef _HOOK_HPP
+#define _HOOK_HPP
 
 bool Detour(void* hookedFunc, void* myFunc, int length);
 
