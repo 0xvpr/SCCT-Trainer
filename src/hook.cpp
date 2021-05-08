@@ -24,15 +24,15 @@ void __declspec( naked ) healthDetour(void)
 {
     __asm
     {
-		cmp    DWORD PTR [edi],0x110e8b50
-		je     $+0x08
-		xor    eax,eax
-		mov    eax,eax
-		mov    DWORD PTR [ebx],eax
-		mov    ebx,eax
-		mov    eax,DWORD PTR [esp+0x14]
+		cmp    dword ptr [edi], 0X110E8B50
+		je     $ + 0x08
+		xor    eax, eax
+		mov    eax, eax
+		mov    dword ptr [ebx], eax
+		mov    ebx, eax
+		mov    eax, dword ptr [esp + 0x14]
 		pop    esi
-		mov    DWORD PTR [eax],ebx
+		mov    dword ptr [eax], ebx
 		pop    ebx
 		pop    ecx
 		ret    0x8

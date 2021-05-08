@@ -1,12 +1,12 @@
 Health:
-	8 byte value
+	4 byte int              // x86 unsigned long int
 	Starts at 450 on normal
 	Starts at 300 on hard
 	starts at 150 on expert
-	"splintercell3.exe" + 0xA0F424 -> 84 -> 420 (Consistent Enough** player health ptr)
 
 Offsets:
 	Entity* Entity:
+		entity_type = 0x0
 		x_pos		= 0xE8
 		y_pos		= 0xEC
 		z_pos 		= 0xF0
@@ -17,33 +17,33 @@ Offsets:
 PlayerCam* PlayerCam (Broken):
 	"splintercell3.exe" + 0x8FA4E8 -> 0xC8 -> 0x7CC
 	
-EntityList* EntityListAddr (Broken):
+EntityList* EntityListAddr (Non-consisten):
 	"splintercell3.exe" + 0xA0DFEC -> 0x78 -> 0x5E4
 	
 - - - - - - -
 
 PlayerVisibility:
-	"splintercell.exe" + 0x27F12C 
+	"splintercell.exe" + 0x27F12C      // You can probably go up a little higher and fudge the esi + 1518 value instead.
 	original_code	= 8B 86 18 15 00 00 -> mov eax, [esi + 00001518]
-	new_code		= B8 00 00 00 00 90 -> mov eax, 00000000 nop
+	new_code		= B8 00 00 00 00 90 -> mov eax, 00000000; nop
 	byte_length		= 6
 	
 PlayerSound:
-	"splintercell3.exe" + 0x417E59
+	"splintercell3.exe" + 0x417E59     // Maybe even move zero
 	original_code = D9 9E 3C 04 00 00 == fstp dword ptr [esi+0000043C]
-	new_doe       = 90 90 90 90 90 90 == nop nop nop nop nop nop
+	new_doe       = 90 90 90 90 90 90 == nop
 	byte_length   = 6
 	
 OneShotKill (ALL):
-	"splintercell3.exe" + 0x3F07C2
-	original_code = 89 03  // mov eax, [ebx]
+	"splintercell3.exe" + 0x3F07C2    // One shots you as well. Detour is probably the best solution here.
+	original_code = 89 03  // mov [ebx], eax
 	new_code      = 31 1B  // xor eax, eax
 	byte_length   = 2
 	
 	
 Doors:
-	There appears to be a byte value of 0x04 that allows you
-	to open any door that you please.
+	There appears to be a byte value of 0x04 that corresponds
+	to the access level of the door.
 
 	The disassembler shows - or dword ptr [ecx + 000004B8], 04 
 	
