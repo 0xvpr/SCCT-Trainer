@@ -29,39 +29,7 @@ class Hacks
          * @param  bool bUnlimitedHealth
          * @return void
          */
-        static void UnlimitedHealth(bool bUnlimitedHealth);
-
-        /**
-         * Prevents the game from subtracting from both: the player's 
-         * current magazine, and the player's total ammunition for all 
-         * weapons.
-         *
-         * @param  bool bUnlimitedAmmo
-         * @return void
-         */
-        static void UnlimitedAmmo(bool bUnlimitedAmmo);
-
-        /**
-         * Prevents the visibility meter from rising above 0.001. 
-         *
-         * Cameras WILL still see you. Enemies with night vision 
-         * WILL still drop your ass. 
-         *
-         * @param  bool bInvisible 
-         * @return void
-         */
-        static void Invisibilty(bool bInvisible);
-
-        /**
-         * Prevents the sound meter from rising above 0.001. 
-         *
-         * Enemies WILL still hear you at 0 threshhold. 
-         * WILL still drop your ass. 
-         *
-         * @param  bool bSilent 
-         * @return void
-         */
-        static void Silent(bool bSilent);
+        static void GodMode(bool bGodMode);
 
         /**
          * Toggles No Recoil 
@@ -69,7 +37,28 @@ class Hacks
          * @param  bool bNoRecoil 
          * @return void 
          */
-        static void NoRecoil(bool bNoRecoil);
+        static void GodGun(bool bNoRecoil);
+
+        /**
+         * Prevents the visibility meter from rising above 0.001. 
+         *
+         * Cameras WILL still see you. Enemies with night vision 
+         * Enemies WILL still hear you at 0 threshhold. 
+
+         * Enemies WILL still drop your ass. 
+         *
+         * @param  bool bPolterGheist
+         * @return void
+         */
+        static void PolterGheist(bool bInvisible);
+
+        /**
+         * Disable alarms
+         *
+         * @param  bDisableAlarms
+         * @return void
+         */
+        static void DisableAlarms(bool bDisableAlarms);
 
         /**
          * Unlock all of the doors in a level. 
@@ -79,5 +68,6 @@ class Hacks
          */
         static void UnlockAllDoors(void);
 };
+
 
 #endif

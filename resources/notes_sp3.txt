@@ -36,8 +36,8 @@ PlayerSound:
 	
 OneShotKill (ALL):
 	"splintercell3.exe" + 0x3F07C2
-	original_code = 89 03  // mov [ebx], eax
-	new_code      = 31 1B  // xor [ebx], ebx
+	original_code = 89 03  // mov eax, [ebx]
+	new_code      = 31 1B  // xor eax, eax
 	byte_length   = 2
 	
 	

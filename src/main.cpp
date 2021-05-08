@@ -7,11 +7,11 @@
 
 uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
-bool bNoRecoil = false;
+bool bGodGun = false;
+bool bGodMode = false;
 bool bAfterlife = false;
 bool bPolterGheist = false;
-bool bUnlimitedAmmo = false;
-bool bUnlimitedHealth = false;
+bool bDisableAlarms = false;
 
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
@@ -25,41 +25,40 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
     while (!GetAsyncKeyState(VK_END))
     {
 
-        /* Toggle Unlimited Health*/
+        /* Toggle GodMode */
         if (GetAsyncKeyState(VK_NUMPAD1) & 1)
         {
-            bUnlimitedHealth = !bUnlimitedHealth;
-            Hacks::UnlimitedHealth(bUnlimitedHealth);
+            bGodMode = !bGodMode;
+            Hacks::GodMode(bGodMode);
 
-            __displayMenu("Unlimited Health Activated.");
+            __displayMenu((bGodMode ? "GodMode Activated." : "GodMode Deactivated"));
         }
 
         /* Toggle Unlimited Ammo */
         if (GetAsyncKeyState(VK_NUMPAD2) & 1)
         {
-            bUnlimitedAmmo = !bUnlimitedAmmo;
-            Hacks::UnlimitedAmmo(bUnlimitedAmmo);
+            bGodGun = !bGodGun;
+            Hacks::GodGun(bGodGun);
 
-            __displayMenu("Unlimited Ammo Activated.");
+            __displayMenu((bGodGun ? "GodGun Activated." : "GodGun Deactivated"));
         }
 
-        /* Toggle No Recoil */
+        /*  Disable All Alarms */
         if (GetAsyncKeyState(VK_NUMPAD3) & 1)
         {
-            bNoRecoil = !bNoRecoil;
-            Hacks::NoRecoil(bNoRecoil);
+            bDisableAlarms = !bDisableAlarms;
+            Hacks::DisableAlarms(bDisableAlarms);
 
-            __displayMenu("");
+            __displayMenu((bDisableAlarms == true ? "Disabling alarms." : "Reenabling alarms."));
         }
 
         /* Toggle PolterGheist */
         if (GetAsyncKeyState(VK_NUMPAD4) & 1)
         {
             bPolterGheist = !bPolterGheist;
-            Hacks::Invisibilty(bPolterGheist);
-            Hacks::Silent(bPolterGheist);
+            Hacks::PolterGheist(bPolterGheist);
 
-            __displayMenu("");
+            __displayMenu((bPolterGheist ? "PolterGheist Activated." : "PolterGheist Deactivated"));
         }
 
         /* Toggle Afterlife */
@@ -78,8 +77,18 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 
             __displayMenu("Doors Unlocked.");
         }
+
     }
-    PlaySound(TEXT("ErrorSound"), 0, SND_SYNC);
+    /* Deactivate all cheats */
+    std::cout << "Deactivating all cheats\n" << std::endl;
+
+    Hacks::GodGun(false);
+    Hacks::GodMode(false);
+    Hacks::Afterlife(false);
+    Hacks::PolterGheist(false);
+    Hacks::DisableAlarms(false);
+
+    PlaySound(TEXT("Exit Success"), 0, SND_SYNC);
 
     fclose(fp);
     FreeConsole();

@@ -34,4 +34,5 @@ struct Weapon
 	float minimum_reticle, bloom_x, bloom_y;
 };
 
+
 #endif

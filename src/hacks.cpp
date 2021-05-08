@@ -2,6 +2,7 @@
 #include "entity.hpp"
 #include "hacks.hpp"
 #include "mem.hpp"
+#include "hook.h"
 
 #define GUERRILLA       0x110F88D8
 #define PLAYER          0x110E8B50
@@ -34,14 +35,26 @@ void Hacks::Afterlife(bool bAfterlife)
 
 }
 
-void Hacks::UnlimitedHealth(bool bUnlimitedHealth)
+void Hacks::GodMode(bool bGodMode)
 {
-    /* Unlimited Health Prototype */
+    const char* health_op = (char *)(module_base_addr + offsets::health_base);
+    const char* health_original = "\x2B\xC2"   // sub eax, edx
+                                  "\x89\x03"   // mov dword ptr [ebx], eax
+                                  "\x8B\xD8";  // mov ebx, eax
+    size_t health_op_size = 6;
 
-    // Detour sub health if entity type is PLAYER
+    if (bGodMode)
+    {
+        Detour((void *)health_op, (void *)healthDetour, health_op_size);
+    }
+    else
+    {
+        Memory::Patch((BYTE *)health_op, (BYTE *)health_original, health_op_size);
+    }
+
 }
 
-void Hacks::UnlimitedAmmo(bool bUnlimitedAmmo)
+void Hacks::GodGun(bool bGodGun)
 {
     /* Main Weapon Ammo Operation */
     const char* main_ammo_op = (char*)(module_base_addr + offsets::main_ammo_base);
@@ -65,108 +78,114 @@ void Hacks::UnlimitedAmmo(bool bUnlimitedAmmo)
 
     /* Sniper Ammo Operations */
     const char* sniper_ammo_op = (char *)(module_base_addr + offsets::sniper_ammo_base);
-    const char* sniper_ammo_original = "\x48"                      // dec eax
-                                       "\x89\x86\x54\x04\x00\x00"  // mov [esi + 0x454], eax
-                                       "\x8B\x86\x5C\x04\x00\x00"  // mov eax, [esi + 0x45C]
-                                       "\x48";                     // dec eax
+    const char* sniper_ammo_original  = "\x48"                      // dec eax
+                                        "\x89\x86\x54\x04\x00\x00"  // mov [esi + 0x454], eax
+                                        "\x8B\x86\x5C\x04\x00\x00"  // mov eax, [esi + 0x45C]
+                                        "\x48";                     // dec eax
 
-    const char* sniper_ammo_patch    = "\x90"                      // nop
-                                       "\x89\x86\x54\x04\x00\x00"  // mov [esi + 0x454], eax
-                                       "\x8B\x86\x5C\x04\x00\x00"  // mov eax, [esi + 0x45C]
-                                       "\x90";                     // nop
+    const char* sniper_ammo_patch     = "\x90"                      // nop
+                                        "\x89\x86\x54\x04\x00\x00"  // mov [esi + 0x454], eax
+                                        "\x8B\x86\x5C\x04\x00\x00"  // mov eax, [esi + 0x45C]
+                                        "\x90";                     // nop
     size_t sniper_ammo_size = 14;
 
-    if (bUnlimitedAmmo)
+    /* Recoil & Spread Operations */
+    unsigned recoil_op_offsets[6]  = { 0x2F83BE,
+                                       0x2F8409,
+                                       0x2F845B,
+                                       0x2F855E,
+                                       0x2F84D5,
+                                       0x2F8578 };
+
+    const char* recoil_original[6] = { "\xD9\x9E\x2C\x05\x00\x00",    // fstp dword ptr [esi + 0x52C]
+                                       "\xD9\x9E\x2C\x05\x00\x00",    // fstp dword ptr [esi + 0x52C]
+                                       "\xD9\x9E\x2C\x05\x00\x00",    // fstp dword ptr [esi + 0x52C]
+                                       "\xD9\x9E\x30\x05\x00\x00",    // fstp dword ptr [esi + 0x530]
+                                       "\x89\x96\x30\x05\x00\x00",    // mov  dword ptr [esi + 0x530], edx
+                                       "\x89\x8E\x34\x05\x00\x00" };  // mov  dword ptr [esi + 0x534], ecx
+
+    const char* recoil_patch       =   "\x90\x90\x90\x90\x90\x90";    // nop
+    size_t recoil_op_size = 6;
+
+    /* Rapid Fire Operation */
+    const char* rapid_fire_op = (char *)(module_base_addr + offsets::rapid_fire_base);
+    const char* rapid_fire_original = "\x75\x47";  // jne short 0x47
+    const char* rapid_fire_patch    = "\x90\x90";  // nop
+    size_t rapid_fire_size = strlen(rapid_fire_patch);
+
+    if (bGodGun)
     {
         Memory::Patch((BYTE *)main_ammo_op, (BYTE *)main_ammo_patch, main_ammo_size);
         Memory::Patch((BYTE *)sniper_ammo_op, (BYTE *)sniper_ammo_patch, sniper_ammo_size);
         Memory::Patch((BYTE *)shotgun_ammo_op, (BYTE *)shotgun_ammo_patch, shotgun_ammo_size);
+
+        for (size_t i = 0; i < recoil_op_size; i++)
+        {
+            const char* recoil_op = (char *)(module_base_addr + recoil_op_offsets[i]);
+            Memory::Patch((BYTE *)recoil_op, (BYTE *)recoil_patch, recoil_op_size);
+        }
+
+        Memory::Patch((BYTE *)rapid_fire_op, (BYTE *)rapid_fire_patch, rapid_fire_size);
     }
     else
     {
         Memory::Patch((BYTE *)main_ammo_op, (BYTE *)main_ammo_original, main_ammo_size);
         Memory::Patch((BYTE *)sniper_ammo_op, (BYTE *)sniper_ammo_original, sniper_ammo_size);
         Memory::Patch((BYTE *)shotgun_ammo_op, (BYTE *)shotgun_ammo_original, shotgun_ammo_size);
+
+        for (size_t i = 0; i < recoil_op_size; i++)
+        {
+            const char* recoil_op = (char *)(module_base_addr + recoil_op_offsets[i]);
+            Memory::Patch((BYTE *)recoil_op, (BYTE *)recoil_original[i], recoil_op_size);
+        }
+
+        Memory::Patch((BYTE *)rapid_fire_op, (BYTE *)rapid_fire_original, rapid_fire_size);
     }
 
 }
 
-void Hacks::Invisibilty(bool bPolterGheist)
+void Hacks::PolterGheist(bool bPolterGheist)
 {
     const char* visibility_op = (char *)(module_base_addr + offsets::invisibility_base);
-    const char* original = "\x8B\x86\x18\x15\x00\x00";  // mov eax, dword ptr [esi + 0x1518]
-    const char* patch    = "\x90\x90\x90\x90\x90\x90";  // nop
-    size_t size = 6;
+    const char* visibility_original = "\x8B\x86\x18\x15\x00\x00";  // mov eax, dword ptr [esi + 0x1518]
+    const char* visibility_patch    = "\x90\x90\x90\x90\x90\x90";  // nop
+    size_t visibility_size = strlen(visibility_patch);
 
-    if (bPolterGheist)
-    {
-        Memory::Patch((BYTE *)visibility_op, (BYTE *)patch, size);
-    }
-    else
-    {
-        Memory::Patch((BYTE *)visibility_op, (BYTE *)original, size);
-    }
-
-}
-
-void Hacks::Silent(bool bPolterGheist)
-{
     const char* noise_op = (char *)(module_base_addr + offsets::noise_base);
-    const char* original = "\x8B\x43\x30";  // mov eax, dword ptr [ebx + 30]
-    const char* patch    = "\x31\xC0\x90";  // xor eax, eax; nop
-    size_t size = 3;
+    const char* noise_original = "\x8B\x43\x30";  // mov eax, dword ptr [ebx + 30]
+    const char* noise_patch    = "\x31\xC0\x90";  // xor eax, eax; nop
+    size_t noise_size = strlen(noise_patch);
+
+    // Add third op for slider
 
     if (bPolterGheist)
     {
-        Memory::Patch((BYTE *)noise_op, (BYTE *)patch, size);
+        Memory::Patch((BYTE *)visibility_op, (BYTE *)visibility_patch, visibility_size);
+        Memory::Patch((BYTE *)noise_op, (BYTE *)noise_patch, noise_size);
     }
     else
     {
-        Memory::Patch((BYTE *)noise_op, (BYTE *)original, size);
+        Memory::Patch((BYTE *)visibility_op, (BYTE *)visibility_original, visibility_size);
+        Memory::Patch((BYTE *)noise_op, (BYTE *)noise_original, noise_size);
     }
 
 }
 
-void Hacks::NoRecoil(bool bNoRecoil)
+void Hacks::DisableAlarms(bool bDisableAlarms)
 {
-    Weapon* weapon = (Weapon *)Memory::FindDMAddress(module_base_addr + offsets::weapon_base,
-                                                     offsets::weapon_offsets,
-                                                     offsets::weapon_offsets_size);
+    const char* alarm_op = (char *)(module_base_addr + offsets::alarm_base);
+    const char* alarm_original = "\x0F\x85\x35\x03\x00\x00"; // jne splintercell3.exe + 0x9BF9C
+    const char* alarm_patch    = "\xE9\x36\x03\x00\x00\x90"; // jmp splintercell3.exe + 0x9BF9C
+    size_t alarm_size = 6;
 
-    uintptr_t op_offsets[6] = { 0x2F83BE,
-                                0x2F8409,
-                                0x2F845B,
-                                0x2F855E,
-                                0x2F84D5,
-                                0x2F8578 };
-
-    const char* original[6] = { "\xD9\x9E\x2C\x05\x00\x00",    // fstp dword ptr [esi + 0x52C]
-                                "\xD9\x9E\x2C\x05\x00\x00",    // fstp dword ptr [esi + 0x52C]
-                                "\xD9\x9E\x2C\x05\x00\x00",    // fstp dword ptr [esi + 0x52C]
-                                "\xD9\x9E\x30\x05\x00\x00",    // fstp dword ptr [esi + 0x530]
-                                "\x89\x96\x30\x05\x00\x00",    // mov  dword ptr [esi + 0x530], edx
-                                "\x89\x8E\x34\x05\x00\x00" };  // mov  dword ptr [esi + 0x534], ecx
-
-    const char* patch =         "\x90\x90\x90\x90\x90\x90";    // nop
-    size_t size = 6;
-
-    if (bNoRecoil)
+    if (bDisableAlarms)
     {
-        for (size_t i = 0; i < size; i++)
-        {
-            const char* op = (char *)(module_base_addr + op_offsets[i]);
-            Memory::Patch((BYTE *)op, (BYTE *)patch, size);
-        }
+        Memory::Patch((BYTE *)alarm_op, (BYTE *)alarm_patch, alarm_size);
     }
     else
     {
-        for (size_t i = 0; i < size; i++)
-        {
-            const char* op = (char *)(module_base_addr + op_offsets[i]);
-            Memory::Patch((BYTE *)op, (BYTE *)original[i], size);
-        }
+        Memory::Patch((BYTE *)alarm_op, (BYTE *)alarm_original, alarm_size);
     }
-
 }
 
 void Hacks::UnlockAllDoors(void)
