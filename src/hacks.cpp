@@ -4,35 +4,43 @@
 #include "mem.hpp"
 #include "hook.h"
 
-#define GUERRILLA       0x110F88D8
 #define PLAYER          0x110E8B50
 #define DOOR            0x110FDDD8
+#define NPC             0x110F88D8
 
 #define DOOR_ALL_ACCESS 0x00000004
 
 
-void Hacks::Afterlife(bool bAfterlife)
+unsigned int Hacks::Afterlife(bool bAfterlife)
 {
     EntityList* entity_list = *(EntityList **)Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
-                                                                    offsets::entity_list_offsets,
-                                                                    offsets::entity_list_offsets_size);
+                                                                                       offsets::entity_list_offsets,
+                                                                                       offsets::entity_list_offsets_size);
 
-    size_t size = *((int *)(Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
-                                                  offsets::entity_list_offsets,
-                                                  offsets::entity_list_offsets_size)) + 1);
+    size_t entity_list_size = *((int *)(Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
+                                                                                 offsets::entity_list_offsets,
+                                                                                 offsets::entity_list_offsets_size)) + 1);
 
-    for (size_t i = 0; i < size; i++)
+    unsigned int n_entities_changed = 0;
+    for (size_t i = 0; i < entity_list_size; i++)
     {
         Entity* entity = entity_list->entities[i].entity;
-        if (entity->entity_type == GUERRILLA)
+        if (entity->entity_type == NPC)
         {
             if (bAfterlife == true)
+            {
                 entity->health = 0;
+                ++n_entities_changed;
+            }
             else
+            {
                 entity->health = 150;
+                ++n_entities_changed;
+            }
         }
     }
 
+    return n_entities_changed;
 }
 
 void Hacks::GodMode(bool bGodMode)
@@ -188,16 +196,18 @@ void Hacks::DisableAlarms(bool bDisableAlarms)
     }
 }
 
-void Hacks::UnlockAllDoors(void)
+unsigned int Hacks::UnlockAllDoors(void)
 {
     EntityList* _entity_list = *(EntityList **)Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
-                                                                     offsets::entity_list_offsets,
-                                                                     offsets::entity_list_offsets_size);
+                                                                                        offsets::entity_list_offsets,
+                                                                                        offsets::entity_list_offsets_size);
 
     size_t size = *((int *)(Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
-                                                  offsets::entity_list_offsets,
-                                                  offsets::entity_list_offsets_size)) + 1);
+                                                                     offsets::entity_list_offsets,
+                                                                     offsets::entity_list_offsets_size)) + 1);
 
+    unsigned int local_total = 0;
+    unsigned int n_doors_unlocked = 0;
     for (size_t i = 0; i < size; i++)
     {
         Entity* entity= _entity_list->entities[i].entity;
@@ -205,8 +215,19 @@ void Hacks::UnlockAllDoors(void)
         {
             Door* door = (Door *)entity;
             if (door->access == 0)
+            {
                 door->access = DOOR_ALL_ACCESS;
+                ++n_doors_unlocked;
+            }
+
+            if (door->access == DOOR_ALL_ACCESS)
+            {
+                ++local_total;
+            }
+
         }
     }
+    total_doors_unlocked = local_total;
 
+    return n_doors_unlocked;
 }

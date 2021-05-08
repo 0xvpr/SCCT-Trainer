@@ -13,6 +13,8 @@ bool bAfterlife = false;
 bool bPolterGheist = false;
 bool bDisableAlarms = false;
 
+unsigned int total_doors_unlocked = 0;
+
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
     /* Console */
@@ -31,7 +33,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
             bGodMode = !bGodMode;
             Hacks::GodMode(bGodMode);
 
-            __displayMenu((bGodMode ? "GodMode Activated." : "GodMode Deactivated"));
+            __displayMenu((bGodMode ? "God Mode activated." : "God Mode deactivated."));
         }
 
         /* Toggle Unlimited Ammo */
@@ -40,7 +42,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
             bGodGun = !bGodGun;
             Hacks::GodGun(bGodGun);
 
-            __displayMenu((bGodGun ? "GodGun Activated." : "GodGun Deactivated"));
+            __displayMenu((bGodGun ? "God Gun activated." : "God Gun deactivated."));
         }
 
         /*  Disable All Alarms */
@@ -49,7 +51,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
             bDisableAlarms = !bDisableAlarms;
             Hacks::DisableAlarms(bDisableAlarms);
 
-            __displayMenu((bDisableAlarms == true ? "Disabling alarms." : "Reenabling alarms."));
+            __displayMenu((bDisableAlarms ? "Disabling alarms." : "Re-enabling alarms."));
         }
 
         /* Toggle PolterGheist */
@@ -58,35 +60,33 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
             bPolterGheist = !bPolterGheist;
             Hacks::PolterGheist(bPolterGheist);
 
-            __displayMenu((bPolterGheist ? "PolterGheist Activated." : "PolterGheist Deactivated"));
+            __displayMenu((bPolterGheist ? "PolterGheist activated." : "PolterGheist deactivated"));
         }
 
         /* Toggle Afterlife */
         if (GetAsyncKeyState(VK_NUMPAD5) & 1)
         {
             bAfterlife = !bAfterlife;
-            Hacks::Afterlife(bAfterlife);
+            unsigned int n_entities_changed = Hacks::Afterlife(bAfterlife);
+
+            char entities_changed_text[64] = {};
+            sprintf_s(entities_changed_text, sizeof(entities_changed_text), "%d Enemies %s.", n_entities_changed, bAfterlife ? "Disabled" : "Re-enabled");
             
-            __displayMenu((bAfterlife == true ? "Disabling all enemies." : "Restoring all enemies."));
+            __displayMenu(entities_changed_text);
         }
 
         /* Unlock All Doors */
         if (GetAsyncKeyState(VK_NUMPAD6) & 1)
         {
-            Hacks::UnlockAllDoors();
+            unsigned int n_doors_unlocked = Hacks::UnlockAllDoors();
 
-            __displayMenu("Doors Unlocked.");
+            char unlock_doors_text[64] = {};
+            sprintf_s(unlock_doors_text, sizeof(unlock_doors_text), "%d new doors unlocked.", n_doors_unlocked);
+
+            __displayMenu(unlock_doors_text);
         }
 
     }
-    /* Deactivate all cheats */
-    std::cout << "Deactivating all cheats\n" << std::endl;
-
-    Hacks::GodGun(false);
-    Hacks::GodMode(false);
-    Hacks::Afterlife(false);
-    Hacks::PolterGheist(false);
-    Hacks::DisableAlarms(false);
 
     PlaySound(TEXT("Exit Success"), 0, SND_SYNC);
 
