@@ -70,7 +70,7 @@ These locations include:
 ### Goals
  - [x] Find reliable weapon pointer. <i>(patched March 12, 2021)</i>
  - [ ] Find reliable entity_list pointer.
- - [ ] ~~Find reliable player_health pointer.~~ <i>unnecessary</i>
- - [x] Find 'Death' __thiscall <i>(patched April 30, 2021)</i>
- - [x] Find a way to prevent PolterGheist from breaking the game.<i>(patched March 12, 2021)</i>
- - [ ] Find reliable 'in game' boolean (or other explicit distinction).
+ - [ ] ~~Find reliable player_health pointer.~~ <i>(removed - unnecessary</i>
+ - [x] ~~Find 'Death' __thiscall~~ <i>(removed - unnecessary)</i>
+ - [x] Find a way to prevent PolterGheist from breaking the game.<i>(patched May 5, 2021)</i>
+ - ~~[ ] Find reliable 'in game' boolean (or other explicit distinction).~~ <i>(removed - unnecessary)</i>
