@@ -11,38 +11,6 @@
 #define NPC             0x110F88D8
 
 
-unsigned int Hacks::Afterlife(bool bAfterlife)
-{
-    EntityList* entity_list = *(EntityList **)Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
-                                                                                       offsets::entity_list_offsets,
-                                                                                       offsets::entity_list_offsets_size);
-
-    size_t entity_list_size = *((int *)(Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
-                                                                                 offsets::entity_list_offsets,
-                                                                                 offsets::entity_list_offsets_size)) + 1);
-
-    unsigned int n_entities_changed = 0;
-    for (size_t i = 0; i < entity_list_size; i++)
-    {
-        Entity* entity = entity_list->entities[i].entity;
-        if (entity->entity_type == NPC)
-        {
-            if (bAfterlife == true)
-            {
-                entity->health = 0;
-                ++n_entities_changed;
-            }
-            else
-            {
-                entity->health = 150;
-                ++n_entities_changed;
-            }
-        }
-    }
-
-    return n_entities_changed;
-}
-
 void Hacks::GodMode(bool bGodMode)
 {
     const char* health_op = (char *)(module_base_addr + offsets::health_base);
@@ -62,7 +30,34 @@ void Hacks::GodMode(bool bGodMode)
 
 }
 
-void Hacks::GodGun(bool bGodGun)
+void Hacks::GhostMode(bool bGhostMode)
+{
+    const char* visibility_op = (char *)(module_base_addr + offsets::invisibility_base);
+    const char* visibility_original = "\x8B\x86\x18\x15\x00\x00";  // mov eax, dword ptr [esi + 0x1518]
+    const char* visibility_patch    = "\x90\x90\x90\x90\x90\x90";  // nop
+    size_t visibility_size = 6;
+
+    const char* noise_op = (char *)(module_base_addr + offsets::noise_base);
+    const char* noise_original = "\x8B\x43\x30";  // mov eax, dword ptr [ebx + 30]
+    const char* noise_patch    = "\x31\xC0\x90";  // xor eax, eax; nop
+    size_t noise_size = 3;
+
+    // Add third op for slider
+
+    if (bGhostMode)
+    {
+        Memory::Patch((BYTE *)visibility_op, (BYTE *)visibility_patch, visibility_size);
+        Memory::Patch((BYTE *)noise_op, (BYTE *)noise_patch, noise_size);
+    }
+    else
+    {
+        Memory::Patch((BYTE *)visibility_op, (BYTE *)visibility_original, visibility_size);
+        Memory::Patch((BYTE *)noise_op, (BYTE *)noise_original, noise_size);
+    }
+
+}
+
+void Hacks::SuperWeapons(bool bSuperWeapons)
 {
     /* Main Weapon Ammo Operation */
     const char* main_ammo_op = (char*)(module_base_addr + offsets::main_ammo_base);
@@ -121,7 +116,7 @@ void Hacks::GodGun(bool bGodGun)
     const char* rapid_fire_patch    = "\x90\x90";  // nop
     size_t rapid_fire_size = 2;
 
-    if (bGodGun)
+    if (bSuperWeapons)
     {
         Memory::Patch((BYTE *)main_ammo_op, (BYTE *)main_ammo_patch, main_ammo_size);
         Memory::Patch((BYTE *)sniper_ammo_op, (BYTE *)sniper_ammo_patch, sniper_ammo_size);
@@ -152,33 +147,6 @@ void Hacks::GodGun(bool bGodGun)
 
 }
 
-void Hacks::PolterGheist(bool bPolterGheist)
-{
-    const char* visibility_op = (char *)(module_base_addr + offsets::invisibility_base);
-    const char* visibility_original = "\x8B\x86\x18\x15\x00\x00";  // mov eax, dword ptr [esi + 0x1518]
-    const char* visibility_patch    = "\x90\x90\x90\x90\x90\x90";  // nop
-    size_t visibility_size = 6;
-
-    const char* noise_op = (char *)(module_base_addr + offsets::noise_base);
-    const char* noise_original = "\x8B\x43\x30";  // mov eax, dword ptr [ebx + 30]
-    const char* noise_patch    = "\x31\xC0\x90";  // xor eax, eax; nop
-    size_t noise_size = 3;
-
-    // Add third op for slider
-
-    if (bPolterGheist)
-    {
-        Memory::Patch((BYTE *)visibility_op, (BYTE *)visibility_patch, visibility_size);
-        Memory::Patch((BYTE *)noise_op, (BYTE *)noise_patch, noise_size);
-    }
-    else
-    {
-        Memory::Patch((BYTE *)visibility_op, (BYTE *)visibility_original, visibility_size);
-        Memory::Patch((BYTE *)noise_op, (BYTE *)noise_original, noise_size);
-    }
-
-}
-
 void Hacks::DisableAlarms(bool bDisableAlarms)
 {
     const char* alarm_op = (char *)(module_base_addr + offsets::alarm_base);
@@ -196,6 +164,38 @@ void Hacks::DisableAlarms(bool bDisableAlarms)
     }
 }
 
+unsigned int Hacks::DisableEnemies(bool bDisableEnemies)
+{
+    EntityList* entity_list = *(EntityList **)Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
+                                                                                       offsets::entity_list_offsets,
+                                                                                       offsets::entity_list_offsets_size);
+
+    size_t entity_list_size = *((int *)(Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
+                                                                                 offsets::entity_list_offsets,
+                                                                                 offsets::entity_list_offsets_size)) + 1);
+
+    unsigned int n_entities_changed = 0;
+    for (size_t i = 0; i < entity_list_size; i++)
+    {
+        Entity* entity = entity_list->entities[i].entity;
+        if (entity->entity_type == NPC)
+        {
+            if (bDisableEnemies == true)
+            {
+                entity->health = 0;
+                ++n_entities_changed;
+            }
+            else
+            {
+                entity->health = 150;
+                ++n_entities_changed;
+            }
+        }
+    }
+
+    return n_entities_changed;
+}
+
 unsigned int Hacks::UnlockAllDoors(void)
 {
     EntityList* _entity_list = *(EntityList **)Memory::FindDMAddress(module_base_addr + offsets::entity_list_base,
@@ -210,7 +210,7 @@ unsigned int Hacks::UnlockAllDoors(void)
     unsigned int n_doors_unlocked = 0;
     for (size_t i = 0; i < size; i++)
     {
-        Entity* entity= _entity_list->entities[i].entity;
+        Entity* entity = _entity_list->entities[i].entity;
         if (entity->entity_type == DOOR)
         {
             Door* door = (Door *)entity;

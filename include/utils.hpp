@@ -1,11 +1,11 @@
 #ifndef _UTILS_HPP
 #define _UTILS_HPP
 
-extern bool bGodGun;
 extern bool bGodMode;
-extern bool bAfterlife;
-extern bool bPolterGheist;
+extern bool bGhostMode;
+extern bool bSuperWeapons;
 extern bool bDisableAlarms;
+extern bool bDisableEnemies;
 
 extern unsigned int total_doors_unlocked;
 

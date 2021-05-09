@@ -53,10 +53,10 @@ a resize-able console will pop up letting you know what hacks are available as w
 
 The hacks written are:
 - Press <code>Numpad 1</code> to toggle God Mode
-- Press <code>Numpad 2</code> to toggle God Gun
-- Press <code>Numpad 3</code> to toggle Alarms
-- Press <code>Numpad 4</code> to toggle PolterGheist
-- Press <code>Numpad 5</code> to toggle the Afterlife
+- Press <code>Numpad 2</code> to toggle Ghost Mode
+- Press <code>Numpad 3</code> to toggle Super Gun
+- Press <code>Numpad 4</code> to toggle alarms
+- Press <code>Numpad 5</code> to toggle enemies
 - Press <code>Numpad 6</code> to unlock all doors
 
 ### Known issues

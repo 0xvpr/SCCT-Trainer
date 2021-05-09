@@ -86,14 +86,14 @@ BOOL Memory::Hook(BYTE* dst,BYTE* src, size_t size)
     if (size < 5)
             return false;
 
-    DWORD original;
-    VirtualProtect(src, size, PAGE_EXECUTE_READWRITE, &original);
+    DWORD oldprotect;
+    VirtualProtect(src, size, PAGE_EXECUTE_READWRITE, &oldprotect);
     memset(src, 0x90, size);
 
     uintptr_t relativeAddr = (uintptr_t)(dst - src - 5);
     *src = (BYTE)0xE9;
     *(uintptr_t *)(src + 1) = (uintptr_t)relativeAddr;
-    VirtualProtect(src, size, original, nullptr);
+    VirtualProtect(src, size, oldprotect, &oldprotect);
 
     return true;
 }
@@ -118,9 +118,9 @@ BYTE* Memory::TrampolineHook(BYTE* dst, BYTE* src, size_t size)
 
 void Memory::Patch(BYTE* dst, BYTE* src, size_t size)
 {
-    DWORD old_protect;
+    DWORD oldprotect;
 
-    VirtualProtect(dst, size, PAGE_EXECUTE_WRITECOPY, &old_protect);
+    VirtualProtect(dst, size, PAGE_EXECUTE_WRITECOPY, &oldprotect);
     memcpy(dst, src, size); 
-    VirtualProtect(dst, size, old_protect, NULL);
+    VirtualProtect(dst, size, oldprotect, &oldprotect);
 }

@@ -7,11 +7,11 @@
 
 uintptr_t module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
-bool bGodGun = false;
 bool bGodMode = false;
-bool bAfterlife = false;
-bool bPolterGheist = false;
+bool bGhostMode = false;
+bool bSuperWeapons = false;
 bool bDisableAlarms = false;
+bool bDisableEnemies = false;
 
 unsigned int total_doors_unlocked = 0;
 
@@ -36,17 +36,26 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
             __displayMenu((bGodMode ? "God Mode activated." : "God Mode deactivated."));
         }
 
-        /* Toggle Unlimited Ammo */
+        /* Toggle GhostMode */
         if (GetAsyncKeyState(VK_NUMPAD2) & 1)
         {
-            bGodGun = !bGodGun;
-            Hacks::GodGun(bGodGun);
+            bGhostMode = !bGhostMode;
+            Hacks::GhostMode(bGhostMode);
 
-            __displayMenu((bGodGun ? "God Gun activated." : "God Gun deactivated."));
+            __displayMenu((bGhostMode ? "GhostMode activated." : "GhostMode deactivated"));
+        }
+
+        /* Toggle Super Weapons */
+        if (GetAsyncKeyState(VK_NUMPAD3) & 1)
+        {
+            bSuperWeapons = !bSuperWeapons;
+            Hacks::SuperWeapons(bSuperWeapons);
+
+            __displayMenu((bSuperWeapons ? "Super Weapons activated." : "Super Weapons deactivated."));
         }
 
         /*  Disable All Alarms */
-        if (GetAsyncKeyState(VK_NUMPAD3) & 1)
+        if (GetAsyncKeyState(VK_NUMPAD4) & 1)
         {
             bDisableAlarms = !bDisableAlarms;
             Hacks::DisableAlarms(bDisableAlarms);
@@ -54,23 +63,14 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
             __displayMenu((bDisableAlarms ? "Disabling alarms." : "Re-enabling alarms."));
         }
 
-        /* Toggle PolterGheist */
-        if (GetAsyncKeyState(VK_NUMPAD4) & 1)
-        {
-            bPolterGheist = !bPolterGheist;
-            Hacks::PolterGheist(bPolterGheist);
-
-            __displayMenu((bPolterGheist ? "PolterGheist activated." : "PolterGheist deactivated"));
-        }
-
-        /* Toggle Afterlife */
+        /* Toggle DisableEnemies */
         if (GetAsyncKeyState(VK_NUMPAD5) & 1)
         {
-            bAfterlife = !bAfterlife;
-            unsigned int n_entities_changed = Hacks::Afterlife(bAfterlife);
+            bDisableEnemies = !bDisableEnemies;
+            unsigned int n_entities_changed = Hacks::DisableEnemies(bDisableEnemies);
 
             char entities_changed_text[64] = {};
-            sprintf_s(entities_changed_text, sizeof(entities_changed_text), "%d Enemies %s.", n_entities_changed, bAfterlife ? "Disabled" : "Re-enabled");
+            sprintf_s(entities_changed_text, sizeof(entities_changed_text), "%d Enemies %s.", n_entities_changed, bDisableEnemies ? "Disabled" : "Re-enabled");
             
             __displayMenu(entities_changed_text);
         }
