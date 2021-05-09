@@ -17,7 +17,7 @@ to put in the time.
 embed YouTube or place gif.
 
 ## Overview
-This is a repository for a Splinter Cell Chaos Theory DLL that I built entirely in C.  
+This is a repository for a Splinter Cell Chaos Theory DLL that I originally built entirely in C.  
 The only compiler I used throughout the project was mingw's <code>i686-w64-mingw32-gcc</code>  
 compiler.  
 
@@ -31,8 +31,8 @@ to Windows (10 Pro Insider Preview Build 21318.rs_prerelease.210216-1530).
 
 ### What I Learned
 While cross compiling from Linux to Windows using <code>i686-win64-mingw32-gcc</code> isn't very well  
-documented, it is certainly doable. It took a bit of research just to get the compiler to compile  
-all of the various non-standard 'MS-isms' that are included in <code>Windows.h</code> and <code>tlhelp32.h</code>.
+documented, it is certainly doable (with serious effort). It took a bit of research just to get the compiler to compile  
+all of the various non-standard 'MSVC-isms' that are included in <code>Windows.h</code> and <code>tlhelp32.h</code>.
 
 Another issue was that, since I exclusively edited the project in <code>nvim</code>, I had a ton of problems  
 getting [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) to properly recognize that I was using Windows headers and give me  
