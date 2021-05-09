@@ -1,9 +1,8 @@
 # Splinter Cell Chaos Theory Trainer
 
 ## Things Are Changing
-The Repository has been translated from C to C++ for extensions of the project's 
-current capabilities. This means future support for Directx9 if anyone is willing  
-to put in the time.
+The Repository has been translated from C to C++ for extensions of the project's current  
+capabilities. This means future support for Directx9 for anyone who is willing to put in the time.
 
 ## Table of Contents
   - [Demonstration](#demonstration)
@@ -13,23 +12,22 @@ to put in the time.
   - [Known issues](#known-issues)
   - [Goals](#Goals)
 
-### Demonstration
+### Demonstration ( NEEDS UPDATE )
 embed YouTube or place gif.
 
-## Overview
-This is a repository for a Splinter Cell Chaos Theory DLL that I built entirely in C.  
+## Overview ( NEEDS UPDATE )
+This is a repository for a Splinter Cell Chaos Theory DLL that I originally built entirely in C.  
 The only compiler I used throughout the project was mingw's <code>i686-w64-mingw32-gcc</code>  
 compiler.  
 
-I challenged myself to exclusively use <code>nvim</code> as my only 'IDE' if you will. I did not like  
-the fact that most programmers on Windows seem to be confined to only being familiar  
-with the <code>Visual Studio</code> ecosystem.
+I challenged myself to exclusively use <code>nvim</code> as my only 'IDE' if you will. I did not like the fact  
+that most programmers on Windows seem to be confined to only being familiar with the <code>Visual Studio</code> ecosystem.
 
 The main purpose of this project was to get familiar with the C language while also  
 familiarizing myself with cross platform compilation from Linux (Ubuntu 20.04 LTS)  
 to Windows (10 Pro Insider Preview Build 21318.rs_prerelease.210216-1530).
 
-### What I Learned
+### What I Learned ( NEEDS UPDATE )
 While cross compiling from Linux to Windows using <code>i686-win64-mingw32-gcc</code> isn't very well  
 documented, it is certainly doable. It took a bit of research just to get the compiler to compile  
 all of the various non-standard 'MS-isms' that are included in <code>Windows.h</code> and <code>tlhelp32.h</code>.
@@ -46,7 +44,7 @@ I originally planned to hook directx9 for an in-game GUI but getting mingw's ld 
 <code>detours.h</code> was more work that it was really worth so it was abandoned. It seems that C++  
 is much better suited for these types of tasks.
 
-### How it works
+### How it works ( NEEDS UPDATE )
 Compiling the source & header files with the <code>-shared</code> option will yield an injectable DLL file.  
 Use any DLL injector that you are comfortable with to inject the file into the <code>splintercell3.exe</code> process.  
 a resize-able console will pop up letting you know what hacks are available as well as their respective status.
@@ -68,9 +66,9 @@ These locations include:
 - ~~Special cases such as trying to toggle no recoil without first equipping weapon~~ <i>(patched May 05, 2021)</i>
 
 ### Goals
- - [x] Find reliable weapon pointer. <i>(patched March 12, 2021)</i>
- - [ ] Find reliable entity_list pointer.
- - [ ] ~~Find reliable player_health pointer.~~ <i>(removed - unnecessary</i>
+ - [x] Find reliable weapon pointer <i>(patched March 12, 2021)</i>
+ - [ ] Find reliable entity_list pointer
+ - [ ] ~~Find reliable player_health pointer~~ <i>(removed - unnecessary)</i>
  - [x] ~~Find 'Death' __thiscall~~ <i>(removed - unnecessary)</i>
- - [x] Find a way to prevent PolterGheist from breaking the game.<i>(patched May 5, 2021)</i>
- - ~~[ ] Find reliable 'in game' boolean (or other explicit distinction).~~ <i>(removed - unnecessary)</i>
+ - [x] Find a way to prevent PolterGheist from breaking the game <i>(patched May 5, 2021)</i>
+ - [ ] ~~Find reliable 'in game' boolean (or other explicit distinction)~~ <i>(removed - unnecessary)</i>
