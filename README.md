@@ -6,6 +6,7 @@
 - [What I Learned](#what-i-learned)
 - [How it works](#how-it-works)
 - [Known issues](#known-issues)
+- [Goals](#Goals)
 - [Build Instructions](#build-instructions)
     - [Windows](#building-for-windows)
         - [CMake](#building-with-cmake)
@@ -13,8 +14,7 @@
         - [WSL](#building-with-wsl)
         - [Python](#building-with-script)
     - [Linux (Debian)](#building-in-linux)
-    - [MinGW](#building-with-mingw)
-- [Goals](#Goals)
+        - [MinGW](#building-with-mingw)
 
 ### Demonstration ( NEEDS UPDATE )
 embed YouTube or place gif.
@@ -78,14 +78,20 @@ as multiple levels are completed.
  - [x] Find a way to prevent PolterGheist from breaking the game <i>(patched May 5, 2021)</i>
  - [ ] ~~Find reliable 'in game' boolean (or other explicit distinction)~~ <i>(removed - unnecessary)</i>
 
-### Build Instructions
- - [Windows](#building-for-windows)
-  - [CMake](#building-with-cmake)
-  - [Make](#building-with-make)
-  - [WSL](#building-with-wsl)
-  - [Python](#building-with-script)
- - [Linux (Debian)](#building-in-linux)
-  - [MinGW]
+## Build Instructions
+### Building in Windows
+EZPZ.
+
+#### With CMake
+
+#### With Make
+
+#### With WSL
+
+#### With Python
+
+### Building in Linux
+Use mingw. Thank you.
 
 
 #### References
