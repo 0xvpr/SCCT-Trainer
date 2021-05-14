@@ -6,6 +6,14 @@
   - [What I Learned](#what-i-learned)
   - [How it works](#how-it-works)
   - [Known issues](#known-issues)
+  - [Build Instructions](#build-instructions)
+   - [Windows](#building-for-windows)
+    - [CMake](#building-with-cmake)
+    - [Make](#building-with-make)
+    - [WSL](#building-with-wsl)
+    - [Python](#building-with-script)
+   - [Linux (Debian)](#building-in-linux)
+    - [MinGW](#building-with-mingw)
   - [Goals](#Goals)
 
 ### Demonstration ( NEEDS UPDATE )
@@ -70,6 +78,15 @@ as multiple levels are completed.
  - [x] Find a way to prevent PolterGheist from breaking the game <i>(patched May 5, 2021)</i>
  - [ ] ~~Find reliable 'in game' boolean (or other explicit distinction)~~ <i>(removed - unnecessary)</i>
 
+### Build Instructions
+ - [Windows](#building-for-windows)
+  - [CMake](#building-with-cmake)
+  - [Make](#building-with-make)
+  - [WSL](#building-with-wsl)
+  - [Python](#building-with-script)
+ - [Linux (Debian)](#building-in-linux)
+  - [MinGW]
 
- ### References
+
+#### References
 Windows* -> (10 Pro Insider Preview Build 21318.rs_prerelease.210216-1530).
