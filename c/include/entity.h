@@ -38,7 +38,7 @@ typedef struct Weapon
     float minimum_reticle;   // 0x51C
     float bloom_x;           // 0x520
     float bloom_y;           // 0x524
-} Weapon;
+} Weapona;
 
 
 #endif
