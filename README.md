@@ -1,20 +1,20 @@
 # Splinter Cell Chaos Theory Trainer
 
 ## Table of Contents
-  - [Demonstration](#demonstration)
-  - [Overview](#overview)
-  - [What I Learned](#what-i-learned)
-  - [How it works](#how-it-works)
-  - [Known issues](#known-issues)
-  - [Build Instructions](#build-instructions)
+- [Demonstration](#demonstration)
+- [Overview](#overview)
+- [What I Learned](#what-i-learned)
+- [How it works](#how-it-works)
+- [Known issues](#known-issues)
+- [Build Instructions](#build-instructions)
     - [Windows](#building-for-windows)
-      - [CMake](#building-with-cmake)
-      - [Make](#building-with-make)
-      - [WSL](#building-with-wsl)
-      - [Python](#building-with-script)
+        - [CMake](#building-with-cmake)
+        - [Make](#building-with-make)
+        - [WSL](#building-with-wsl)
+        - [Python](#building-with-script)
     - [Linux (Debian)](#building-in-linux)
     - [MinGW](#building-with-mingw)
-  - [Goals](#Goals)
+- [Goals](#Goals)
 
 ### Demonstration ( NEEDS UPDATE )
 embed YouTube or place gif.
