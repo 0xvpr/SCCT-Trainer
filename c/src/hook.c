@@ -21,7 +21,7 @@ bool Detour(void* hookedFunc, void* myFunc, int length)
 }
 
 #ifndef __MINGW32__
-void __declspec( naked ) healthDetour(void)
+    void __declspec( naked ) healthDetour(void)
     {
         __asm
         {
