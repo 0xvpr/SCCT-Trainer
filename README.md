@@ -12,22 +12,30 @@
 embed YouTube or place gif.
 
 ## Overview
-This is a repository for a Splinter Cell Chaos Theory DLL that I originally built entirely in C (ISO C99).  
-The only compiler that I used throughout the beginning of the project was mingw's  
-<code>i686-w64-mingw32-gcc</code> compiler.  I later added support for the Windows version of MinGW-gcc as well.
+This is a repository for a Splinter Cell Chaos Theory DLL that I originally built entirely  
+in <b>C (ISO C99)</b>. The only compiler that I used throughout the beginning of the project  
+was mingw's <code>i686-w64-mingw32-gcc</code> compiler. I later added support for the Windows version  
+of MinGW-gcc as well.
 
 The main purpose of this project was to get familiar with the C language while also  
 familiarizing myself with cross platform compilation from Linux (wsl Ubuntu 20.04 LTS)  
 to Windows*.
 
 ### What I Learned
-While cross compiling from Linux to Windows using <code>i686-win64-mingw32-gcc</code> isn't as documented as VSC++ is,  
-it is certainly doable (with serious effort). It took a bit of research just to get the compiler to compile  
-all of the various non-standard 'MS-isms' that are included in <code>Windows.h</code> and <code>tlhelp32.h</code>.
+<b>Visual C++ lets you get away with a lot of programming fuckery.</b>
 
-I originally planned to hook DirectX for an internally hooked GUI, but getting mingw's ld to recognize <code>detours.h</code> was  
-more work that it was really worth so it was abandoned. It seems that C++ is much better suited for these types of tasks.  
-This was also circumvented by using <code>CMake</code> instead of <code>i686-w64-mingw32-gcc</code>
+Switching to converting the old MVSC++ code back to C99 was a pain because of the amount of  
+errors that Visual Studio handled silently on its own. It was an enlightening experience.
+
+While cross compiling from Linux to Windows using <code>i686-win64-mingw32-gcc</code> isn't as well  
+documented as VisualC++ is, it is certainly doable (with serious effort). It took a bit of  
+research just to get the compiler to compile all of the various non-standard 'MS-isms' that  
+are included in <code>Windows.h</code> and <code>tlhelp32.h</code>.
+
+I originally planned to hook DirectX for an internally hooked GUI, but getting mingw's ld  
+to recognize <code>detours.h</code> was more work that it was really worth so it was abandoned.  
+It seems that C++ is much better suited for these types of tasks anyway, so the C++ version  
+supports it.
 
 ### How it works ( NEEDS UPDATE )
 Compiling the source & header files with the <code>-shared</code> option will yield an injectable DLL file.  
