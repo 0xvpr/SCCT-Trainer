@@ -19,9 +19,9 @@ void __displayMenu(const char* text)
 
     /* Current Toggle Statuses */
     std::cout << "1 -- God Mode:\t\t"      << (bGodMode        ? "Enabled" : "Disabled") << "\n";
-    std::cout << "2 -- Ghost Mode:\t"      << (bSuperWeapons   ? "Enabled" : "Disabled") << "\n";
-    std::cout << "3 -- Super Weapons:\t"   << (bDisableAlarms  ? "Enabled" : "Disabled") << "\n";
-    std::cout << "4 -- Disable Alarms:\t"  << (bGhostMode      ? "Enabled" : "Disabled") << "\n";
+    std::cout << "2 -- Ghost Mode:\t"      << (bGhostMode      ? "Enabled" : "Disabled") << "\n";
+    std::cout << "3 -- Super Weapons:\t"   << (bSuperWeapons   ? "Enabled" : "Disabled") << "\n";
+    std::cout << "4 -- Disable Alarms:\t"  << (bDisableAlarms  ? "Enabled" : "Disabled") << "\n";
     std::cout << "5 -- Disable Enemies:\t" << (bDisableEnemies ? "Enabled" : "Disabled") << "\n";
     std::cout << "6 -- Doors Unlocked:\t"  << total_doors_unlocked << "\n";
     std::cout << std::endl;
