@@ -23,7 +23,7 @@ unsigned int offsets_weapon_pointers[3]      = { 0x84, 0x6E0, 0x434 };
 
 // Length of Multi-level Pointers
 size_t offsets_entity_list_pointers_size = sizeof(offsets_entity_list_pointers) / sizeof(int);
-size_t offsets_weapon_pointers_size	     = sizeof(offsets_weapon_pointers) / sizeof(int);
+size_t offsets_weapon_pointers_size         = sizeof(offsets_weapon_pointers) / sizeof(int);
 
 
 #endif
