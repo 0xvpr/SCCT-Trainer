@@ -8,7 +8,7 @@ typedef struct Entity
     float x;                  // 0xE8
     float y;                  // 0xEC
     float z;                  // 0xF0
-    char _0x420[0x326];
+    char _0x420[0x32C];
     int health;               // 0x420
 } Entity;
 
@@ -34,7 +34,7 @@ typedef struct Weapon
     int current_ammo;        // 0x434
     int max_clip_size;       // 0x438
     int total_ammo;          // 0x43C
-    char _0x51C[0xE8];
+    char _0x51C[0xF0];
     float minimum_reticle;   // 0x51C
     float bloom_x;           // 0x520
     float bloom_y;           // 0x524
