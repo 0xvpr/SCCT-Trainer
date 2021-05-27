@@ -84,44 +84,44 @@ less reliably as multiple levels are completed.
 
 ## Build Instructions
 ### Building in Windows
-- install MinGW
-- add MinGW/bin to path
-- open Powershell in project directory
-    ```
-    $ make.exe
-    ```
+1. install MinGW
+2. add MinGW/bin to path
+3. open Powershell in project directory
+```
+$ make.exe
+```
 
 #### With CMake
 - Visual Studio 2019
-    - open the project folder in Visual Studio 2019
-    - ctrl + shift + b
+    1. open the project folder in Visual Studio 2019
+    2. ctrl + shift + b
 - Powershell
-    - open Powershell in project directory
+    1. open Powershell in project directory
     ```
     $ cmake -G "Visual Studio 2019" -A Win32 -B "build"
     $ cmake --build "build" --config "Release"
     ```
 
 #### With Make
-    ```
-    $ make
-    ```
+```
+$ make
+```
 
 #### With WSL
 - sudo apt install mingw-w64
-    ```
-    $ make
-    ```
+```
+$ make
+```
 
 #### With Python
-    ```
-    python3 build.py
-    ```
+```
+python3 build.py
+```
 
 ### Building in Linux
-    ```
-    $ make
-    ```
+```
+$ make
+```
 
 #### References
 *Windows - <i>10 Pro Insider Preview Build 21318.rs_prerelease.210216-1530)</i>
