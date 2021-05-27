@@ -46,9 +46,8 @@ It seems that C++ is much better suited for these types of tasks anyway, so the 
 supports it.
 
 ### How it works ( NEEDS UPDATE )
-Compiling the source & header files with the <code>-shared</code> option will yield an injectable DLL file.  
 Use any DLL injector that you are comfortable with to inject the file into the <code>splintercell3.exe</code> process.  
-a resize-able console will pop up letting you know what hacks are available as well as their respective status.
+A resize-able console will pop up letting you know what hacks are available as well as their respective status.
 
 The hacks written are:
 - Press <code>Numpad 1</code> to toggle God Mode
@@ -66,9 +65,9 @@ These locations include:
 - ~~Special cases such as trying to teleport without first equipping weapon~~ <i>(patched May 05, 2021)</i>
 - ~~Special cases such as trying to toggle no recoil without first equipping weapon~~ <i>(patched May 05, 2021)</i>
 
-The entity list is also extremely illusive. Sometimes functions that include the EntityList Object end up returning  
-<code>NULL</code> due to its random nature. The hacks that rely on the EntityList Object tend to work less reliably  
-as multiple levels are completed.
+The entity list is also extremely illusive. Sometimes functions that include the EntityList Object end 
+up returning NULL due to its random nature. The hacks that rely on the EntityList Object tend to work  
+less reliably as multiple levels are completed.
 
 ### Goals
  - [x] Find reliable weapon pointer <i>(patched March 12, 2021)</i>
