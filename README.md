@@ -18,7 +18,7 @@
         - WSL
         - Python
     - [Linux (Debian)](#building-in-linux)
-        - [MinGW](#building-with-mingw)
+        - [MinGW]
 
 ### Demonstration ( NEEDS UPDATE )
 embed YouTube or place gif.
@@ -115,10 +115,11 @@ less reliably as multiple levels are completed.
     ```
 
 ### Linux
-```
-$ sudo apt install mingw-w64
-$ make
-```
+- MinGW
+    ```
+    $ sudo apt install mingw-w64
+    $ make
+    ```
 
 #### References
 *Windows - <i>10 Pro Insider Preview Build 21318.rs_prerelease.210216-1530)</i>
