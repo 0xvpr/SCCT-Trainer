@@ -12,7 +12,7 @@
 - [Known issues](#known-issues)
 - [Goals](#Goals)
 - [Build Instructions](#build-instructions)
-    - [Windows](#building-for-windows)
+    - [Windows](#windows)
         - [CMake](#building-with-cmake)
         - [Make](#building-with-make)
         - [WSL](#building-with-wsl)
@@ -83,43 +83,45 @@ less reliably as multiple levels are completed.
  - [ ] ~~Find reliable 'in game' boolean (or other explicit distinction)~~ <i>(removed - unnecessary)</i>
 
 ## Build Instructions
-### Building in Windows
-1. install MinGW
-2. add MinGW/bin to path
-3. open Powershell in project directory
-```
-$ make.exe
-```
-
-#### With CMake
-- Visual Studio 2019
-    1. open the project folder in Visual Studio 2019
-    2. ctrl + shift + b
+### Windows
 - Powershell
-    1. open Powershell in project directory
+    1. install MinGW
+    2. add MinGW/bin to path
+    3. open Powershell in project directory
     ```
-    $ cmake -G "Visual Studio 2019" -A Win32 -B "build"
-    $ cmake --build "build" --config "Release"
+    $ make.exe
     ```
 
-#### With Make
-```
-$ make
-```
+- CMake
+    - Visual Studio 2019
+        1. open the project folder in Visual Studio 2019
+        2. ctrl + shift + b
+    - Powershell
+        1. open Powershell in project directory
+        ```
+        $ cmake -G "Visual Studio 2019" -A Win32 -B "build"
+        $ cmake --build "build" --config "Release"
+        ```
 
-#### With WSL
+- Make
+    ```
+    $ make
+    ```
+
+- WSL
+    ```
+    $ sudo apt install mingw-w64
+    $ make
+    ```
+
+- Python
+    ```
+    python3 build.py
+    ```
+
+### Linux
 ```
 $ sudo apt install mingw-w64
-$ make
-```
-
-#### With Python
-```
-python3 build.py
-```
-
-### Building in Linux
-```
 $ make
 ```
 
