@@ -18,7 +18,7 @@
         - WSL
         - Python
     - [Linux (Debian)](#building-in-linux)
-        - [MinGW]
+        - MinGW
 
 ### Demonstration ( NEEDS UPDATE )
 embed YouTube or place gif.
