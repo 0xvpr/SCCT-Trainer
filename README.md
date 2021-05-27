@@ -111,7 +111,7 @@ less reliably as multiple levels are completed.
 
 - Python
     ```
-    python3 generate.py
+    python3 build.py
     ```
 
 ### Linux
