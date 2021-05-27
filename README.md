@@ -1,4 +1,8 @@
 # Splinter Cell Chaos Theory Trainer
+### Timeline
+- Project started: 03/12/2021
+- First release: 03/14/2021 
+- Final Revision: 05/14/2021
 
 ## Table of Contents
 - [Demonstration](#demonstration)
@@ -45,8 +49,9 @@ to recognize <code>detours.h</code> was more work that it was really worth so it
 It seems that C++ is much better suited for these types of tasks anyway, so the C++ version  
 supports it.
 
-### How it works ( NEEDS UPDATE )
+### How it works
 Use any DLL injector that you are comfortable with to inject the file into the <code>splintercell3.exe</code> process.  
+If you don't have a DLL injector, you can use mine <a href="https://github.com/malikrbooker/Vipers-DLL-Injector-2/releases/latest">here</a>.  
 A resize-able console will pop up letting you know what hacks are available as well as their respective status.
 
 The hacks written are:
@@ -71,27 +76,41 @@ less reliably as multiple levels are completed.
 
 ### Goals
  - [x] Find reliable weapon pointer <i>(patched March 12, 2021)</i>
- - [ ] Find reliable entity_list pointer
- - [ ] ~~Find reliable player_health pointer~~ <i>(removed - unnecessary)</i>
  - [x] ~~Find 'Death' __thiscall~~ <i>(removed - unnecessary)</i>
  - [x] Find a way to prevent PolterGheist from breaking the game <i>(patched May 5, 2021)</i>
+ - [ ] Find reliable entity_list pointer
+ - [ ] ~~Find reliable player_health pointer~~ <i>(removed - unnecessary)</i>
  - [ ] ~~Find reliable 'in game' boolean (or other explicit distinction)~~ <i>(removed - unnecessary)</i>
 
 ## Build Instructions
 ### Building in Windows
-EZPZ.
+```
+$ make
+```
 
-#### With CMake
+#### With CMake (Visual Studio 2019)
+- open the project folder in Visual Studio 2019
+- ctrl + shift + b
 
 #### With Make
+```
+$ make
+```
 
 #### With WSL
+```
+$ make
+```
 
 #### With Python
+```
+python3 build.py
+```
 
 ### Building in Linux
-Use mingw. Thank you.
-
+```
+$ make
+```
 
 #### References
-Windows* -> (10 Pro Insider Preview Build 21318.rs_prerelease.210216-1530).
+*Windows - <i>10 Pro Insider Preview Build 21318.rs_prerelease.210216-1530)</i>
