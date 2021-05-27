@@ -13,10 +13,10 @@
 - [Goals](#Goals)
 - [Build Instructions](#build-instructions)
     - [Windows](#windows)
-        - [CMake](#building-with-cmake)
-        - [Make](#building-with-make)
-        - [WSL](#building-with-wsl)
-        - [Python](#building-with-script)
+        - Powershell
+        - CMake
+        - WSL
+        - Python
     - [Linux (Debian)](#building-in-linux)
         - [MinGW](#building-with-mingw)
 
@@ -87,12 +87,12 @@ less reliably as multiple levels are completed.
 - Powershell
     1. install MinGW
     2. add MinGW/bin to path
-    3. open Powershell in project directory
     ```
     $ make.exe
     ```
 
 - CMake
+    1. install cmake for windows
     - Visual Studio 2019
         1. open the project folder in Visual Studio 2019
         2. ctrl + shift + b
@@ -103,11 +103,6 @@ less reliably as multiple levels are completed.
         $ cmake --build "build" --config "Release"
         ```
 
-- Make
-    ```
-    $ make
-    ```
-
 - WSL
     ```
     $ sudo apt install mingw-w64
@@ -116,7 +111,7 @@ less reliably as multiple levels are completed.
 
 - Python
     ```
-    python3 build.py
+    python3 generate.py
     ```
 
 ### Linux
