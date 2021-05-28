@@ -20,8 +20,15 @@
     - [Linux (Debian)](#building-in-linux)
         - MinGW
 
-### Demonstration ( NEEDS UPDATE )
-embed YouTube or place gif.
+### Demonstration
+<img src="./resources/sp3_godmode.gif"/>
+Godmode Enabled
+
+<img src="./resources/sp3_ghostmode.gif"/>
+Ghostmode Enabled
+
+<img src="./resources/sp3_superweapons.gif"/>
+Super Weapons Enabled
 
 ## Overview
 This is a repository for a Splinter Cell Chaos Theory DLL that I originally built entirely  
@@ -57,7 +64,7 @@ A resize-able console will pop up letting you know what hacks are available as w
 The hacks written are:
 - Press <code>Numpad 1</code> to toggle God Mode
 - Press <code>Numpad 2</code> to toggle Ghost Mode
-- Press <code>Numpad 3</code> to toggle Super Gun
+- Press <code>Numpad 3</code> to toggle Super Weapons
 - Press <code>Numpad 4</code> to toggle alarms
 - Press <code>Numpad 5</code> to toggle enemies
 - Press <code>Numpad 6</code> to unlock all doors
