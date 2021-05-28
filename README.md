@@ -16,12 +16,7 @@ Godmode Enabled
 - [Goals](#Goals)
 - [Build Instructions](#build-instructions)
     - [Windows](#windows)
-        - Powershell
-        - CMake
-        - WSL
-        - Python
     - [Linux (Debian)](#building-in-linux)
-        - MinGW
 
 ## Overview
 This is a repository for a Splinter Cell Chaos Theory DLL that I originally built entirely  
