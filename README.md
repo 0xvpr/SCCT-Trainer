@@ -5,8 +5,9 @@
 - Final Revision: 05/14/2021
 
 ### Demonstration
-<img src="./resources/sp3_godmode.gif"/>
-Godmode Enabled
+<img src="./resources/sp3_godmode.gif"/>  
+Godmode Enabled - The player can not receive damage of any kind (invincible) while  
+enemies convert any and all damage taken to maximum damage. (insta-kill)
 
 ## Table of Contents
 - [Overview](#overview)
