@@ -25,7 +25,7 @@ enemies convert any and all damage taken to maximum damage. (insta-kill)
 ### What I Learned
 <b>Visual C++ lets you get away with a lot of programming fuckery.</b>
 
-Switching to converting the old MVSC++ code back to C99 was a pain because of the amount of  
+Switching to converting the old Visual C/C++ code to C99 was a pain because of the amount of  
 errors that Visual Studio handled silently on its own. It was an enlightening experience.
 
 While cross compiling from Linux to Windows using <code>i686-win64-mingw32-gcc</code> isn't as well  
@@ -35,8 +35,7 @@ are included in <code>Windows.h</code> and <code>tlhelp32.h</code>.
 
 I originally planned to hook DirectX for an internally hooked GUI, but getting mingw's ld  
 to recognize <code>detours.h</code> was more work that it was really worth so it was abandoned.  
-It seems that C++ is much better suited for these types of tasks anyway, so the C++ version  
-supports it.
+It seems that C++ is much better suited for these types of tasks anyway.
 
 ### How it works
 Use any DLL injector that you are comfortable with to inject the file into the <code>splintercell3.exe</code> process.  
