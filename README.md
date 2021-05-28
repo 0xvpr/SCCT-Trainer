@@ -22,7 +22,7 @@ enemies convert any and all damage taken to maximum damage. (insta-kill)
 - [Known issues](#known-issues)
 - [Goals](#Goals)
 
-### What I Learned
+## What I Learned
 <b>Visual C++ lets you get away with a lot of programming fuckery.</b>
 
 Switching to converting the old Visual C/C++ code to C99 was a pain because of the amount of  
@@ -37,7 +37,7 @@ I originally planned to hook DirectX for an internally hooked GUI, but getting m
 to recognize <code>detours.h</code> was more work that it was really worth so it was abandoned.  
 It seems that C++ is much better suited for these types of tasks anyway.
 
-### How it works
+## How it works
 Use any DLL injector that you are comfortable with to inject the file into the <code>splintercell3.exe</code> process.  
 If you don't have a DLL injector, you can use mine <a href="https://github.com/malikrbooker/Vipers-DLL-Injector-2/releases/latest">here</a>.  
 
@@ -83,7 +83,7 @@ A resize-able console will pop up letting you know what hacks are available as w
     $ make
     ```
 
-### Known issues
+## Known issues
 ~~I could not find a reliable 'in game' boolean value or other explicit distinction that would  
 prevent the user from attempting to execute the code in places that would crash the game.~~ <i>circumvented</i>
 
@@ -95,7 +95,7 @@ The entity list is also extremely illusive. Sometimes functions that include the
 up returning NULL due to its random nature. The hacks that rely on the EntityList Object tend to work  
 less reliably as multiple levels are completed.
 
-### Goals
+## Goals
  - [x] Find reliable weapon pointer <i>(patched March 12, 2021)</i>
  - [x] ~~Find 'Death' __thiscall~~ <i>(removed - unnecessary)</i>
  - [x] Find a way to prevent PolterGheist from breaking the game <i>(patched May 5, 2021)</i>
