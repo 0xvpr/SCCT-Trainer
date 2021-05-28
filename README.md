@@ -4,8 +4,11 @@
 - First release: 03/14/2021 
 - Final Revision: 05/14/2021
 
+### Demonstration
+<img src="./resources/sp3_godmode.gif"/>
+Godmode Enabled
+
 ## Table of Contents
-- [Demonstration](#demonstration)
 - [Overview](#overview)
 - [What I Learned](#what-i-learned)
 - [How it works](#how-it-works)
@@ -19,16 +22,6 @@
         - Python
     - [Linux (Debian)](#building-in-linux)
         - MinGW
-
-### Demonstration
-<img src="./resources/sp3_godmode.gif"/>
-Godmode Enabled
-
-<img src="./resources/sp3_ghostmode.gif"/>
-Ghostmode Enabled
-
-<img src="./resources/sp3_superweapons.gif"/>
-Super Weapons Enabled
 
 ## Overview
 This is a repository for a Splinter Cell Chaos Theory DLL that I originally built entirely  
