@@ -41,15 +41,9 @@ supports it.
 ### How it works
 Use any DLL injector that you are comfortable with to inject the file into the <code>splintercell3.exe</code> process.  
 If you don't have a DLL injector, you can use mine <a href="https://github.com/malikrbooker/Vipers-DLL-Injector-2/releases/latest">here</a>.  
-A resize-able console will pop up letting you know what hacks are available as well as their respective status.
 
-The hacks written are:
-- Press <code>Numpad 1</code> to toggle God Mode
-- Press <code>Numpad 2</code> to toggle Ghost Mode
-- Press <code>Numpad 3</code> to toggle Super Weapons
-- Press <code>Numpad 4</code> to toggle alarms
-- Press <code>Numpad 5</code> to toggle enemies
-- Press <code>Numpad 6</code> to unlock all doors
+A resize-able console will pop up letting you know what hacks are available as well as their respective status.
+<img src="resources/dll_console_example.png"/>
 
 ## Build Instructions
 ### Windows
