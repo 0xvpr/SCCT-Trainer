@@ -18,7 +18,7 @@ enemies convert any and all damage taken to maximum damage. (insta-kill)
 - [How it works](#how-it-works)
 - [Build Instructions](#build-instructions)
     - [Windows](#windows)
-    - [Linux (Debian)](#building-in-linux)
+    - [Linux (Debian)](#linux-debian)
 - [Known issues](#known-issues)
 - [Goals](#Goals)
 
@@ -76,7 +76,7 @@ A resize-able console will pop up letting you know what hacks are available as w
     python3 build.py
     ```
 
-### Linux
+### Linux (Debian)
 - MinGW
     ```
     $ sudo apt install mingw-w64
