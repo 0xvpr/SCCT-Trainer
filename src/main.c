@@ -1,18 +1,29 @@
+/**
+ * @Author    Malik Booker
+ * @Created:  August 18, 2021
+ * @Modified: August 20, 2021
+ * 
+ * @Brief: SCCT GUI
+ * 
+ * @Copyright: I claim no liability/responsibility
+ * for damage associated with however this code is used.
+ */
+
+#include "d3d9hook.h"
+#include "drawing.h"
 #include "utils.h"
 #include "hacks.h"
+#include "mem.h"
 
+// Make sure you need each of these
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define PSEUDO_MODULE_HANDLE -1
-
-#pragma comment(lib, "Winmm.dll")
-
-uintptr_t module_base_addr = 0;
-
+bool bInit = false;
 bool bGodMode = false;
+bool bShutdown = false;
 bool bGhostMode = false;
 bool bSuperWeapons = false;
 bool bDisableAlarms = false;
@@ -21,87 +32,34 @@ bool bDisableEnemies = false;
 unsigned int total_doors_unlocked = 0;
 unsigned int n_entities_changed = 0;
 
+uintptr_t module_base_addr = 0;
+
+void* d3d9Device[119];
+tEndScene oEndScene = NULL;
+LPDIRECT3DDEVICE9 pD3DDevice = NULL;
+
+HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 pDevice)
+{
+    if (bInit == false)
+    {
+        hack_InitializeMenuItems();
+        bInit = true;
+    }
+
+    hack_Menu(pDevice);
+    hack_HandleKeyboard();
+
+    return oEndScene(pDevice);
+}
+
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
     module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
-    /* Console */
-    FILE* fp;
-    AllocConsole();
-    freopen_s(&fp, "CONOUT$", "w", stdout);
-
-    /* Main Loop */
-    utils_DisplayMenu("Happy hacking!");
-    while (!GetAsyncKeyState(VK_END))
+    if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
     {
-
-        /* Toggle GodMode */
-        if (GetAsyncKeyState(VK_NUMPAD1) & 1)
-        {
-            bGodMode = !bGodMode;
-            hacks_GodMode(bGodMode);
-
-            utils_DisplayMenu((bGodMode ? "God Mode activated." : "God Mode Deactivated."));
-        }
-
-        /* Toggle GhostMode */
-        if (GetAsyncKeyState(VK_NUMPAD2) & 1)
-        {
-            bGhostMode = !bGhostMode;
-            hacks_GhostMode(bGhostMode);
-
-            utils_DisplayMenu((bGhostMode ? "GhostMode activated." : "GhostMode Deactivated"));
-        }
-
-        /* Toggle Super Weapons */
-        if (GetAsyncKeyState(VK_NUMPAD3) & 1)
-        {
-            bSuperWeapons = !bSuperWeapons;
-            hacks_SuperWeapons(bSuperWeapons);
-
-            utils_DisplayMenu((bSuperWeapons ? "Super Weapons activated." : "Super Weapons Deactivated."));
-        }
-
-        /*  Disable All Alarms */
-        if (GetAsyncKeyState(VK_NUMPAD4) & 1)
-        {
-            bDisableAlarms = !bDisableAlarms;
-            hacks_DisableAlarms(bDisableAlarms);
-
-            utils_DisplayMenu((bDisableAlarms ? "Disabling alarms." : "Re-enabling alarms."));
-        }
-
-        /* Toggle DisableEnemies */
-        if (GetAsyncKeyState(VK_NUMPAD5) & 1)
-        {
-            bDisableEnemies = !bDisableEnemies;
-            n_entities_changed = hacks_DisableEnemies(bDisableEnemies);
-
-            char entities_changed_text[64] = { 0 };
-            sprintf_s(entities_changed_text, sizeof(entities_changed_text), "%d Enemies %s.", n_entities_changed, bDisableEnemies ? "Disabled" : "Re-enabled");
-            
-            utils_DisplayMenu(entities_changed_text);
-        }
-
-        /* Unlock All Doors */
-        if (GetAsyncKeyState(VK_NUMPAD6) & 1)
-        {
-            unsigned int n_doors_unlocked = hacks_UnlockAllDoors();
-
-            char unlock_doors_text[64] = { 0 };
-            sprintf_s(unlock_doors_text, sizeof(unlock_doors_text), "%d new doors unlocked.", n_doors_unlocked);
-
-            utils_DisplayMenu(unlock_doors_text);
-        }
-
+        oEndScene = (tEndScene)TrampHook((char*)d3d9Device[42], (char*)hkEndScene, 7);
     }
-
-    utils_Deactivate();
-    PlaySound(TEXT("Exit Success"), 0, SND_SYNC);
-
-    fclose(fp);
-    FreeConsole();
-    FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
 
     return TRUE;
 }

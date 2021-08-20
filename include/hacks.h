@@ -1,13 +1,39 @@
 #ifndef _HACKS_H
 #define _HACKS_H
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <windows.h>
+#include "drawing.h"
+
 #include <tlhelp32.h>
+#include <stdbool.h>
+
+#define GOD_MODE         0x00000000
+#define GHOST_MODE       0x00000001
+#define SUPER_WEAPONS    0x00000002
+#define DISABLE_ALARMS   0x00000003
+#define DISABLE_ENEMIES  0x00000004
+#define UNLOCK_ALL_DOORS 0x00000005
+#define MAX_MENU_ITEMS   0x00000006
+
+#define DOOR_ALL_ACCESS  0x00000004
+
+#define PLAYER           0x110E8B50
+#define DOOR             0x110FDDD8
+#define NPC              0x110F88D8
 
 extern uintptr_t module_base_addr;
+
+extern unsigned int n_entities_changed;
 extern unsigned int total_doors_unlocked;
+
+extern bool bGodMode;
+extern bool bShutdown;
+extern bool bGhostMode;
+extern bool bSuperWeapons;
+extern bool bDisableAlarms;
+extern bool bDisableEnemies;
+
+LPD3DXFONT m_font;
+LPD3DXFONT m_font_small;
 
 /**
  * Prevents the game from subtracting the player's HP 
@@ -16,7 +42,7 @@ extern unsigned int total_doors_unlocked;
  * @param  bool bGodMode
  * @return void
  */
- void hacks_GodMode(bool bGodMode);
+void hack_GodMode(bool bGodMode);
 
 /**
  * Prevents the visibility meter from rising above 0.001. 
@@ -29,7 +55,7 @@ extern unsigned int total_doors_unlocked;
  * @param  bool bGhostMode
  * @return void
  */
- void hacks_GhostMode(bool bInvisible);
+void hack_GhostMode(bool bInvisible);
 
 /**
  * Toggles: rapid fire, infinite ammo (if previously non-zero), 
@@ -38,7 +64,7 @@ extern unsigned int total_doors_unlocked;
  * @param  bool bSuperWeapons
  * @return void 
  */
- void hacks_SuperWeapons(bool bSuperWeapons);
+void hack_SuperWeapons(bool bSuperWeapons);
 
 /**
  * Disable alarms
@@ -46,7 +72,7 @@ extern unsigned int total_doors_unlocked;
  * @param  bDisableAlarms
  * @return void
  */
- void hacks_DisableAlarms(bool bDisableAlarms);
+void hack_DisableAlarms(bool bDisableAlarms);
 
 /**
  * Reduces all enemies in the current level's hp 
@@ -59,7 +85,7 @@ extern unsigned int total_doors_unlocked;
  * @param  bool bDisableEnemies
  * @return (unsigned int)n_entities_changed
  */
- unsigned int hacks_DisableEnemies(bool bDisableEnemies);
+unsigned int hack_DisableEnemies(bool bDisableEnemies);
 
 /**
  * Unlock all of the doors in a level. 
@@ -67,7 +93,48 @@ extern unsigned int total_doors_unlocked;
  * @param  void 
  * @return (unsigned int)n_doors_unlocked
  */
- unsigned int hacks_UnlockAllDoors(void);
+unsigned int hack_UnlockAllDoors(void);
 
+/**
+ * Handles keyboard input
+ *
+ * @param void
+ * @return bool
+ */
+bool hack_HandleKeyboard(void);
 
-#endif
+/**
+ * Initializes each menu item
+ *
+ * @param void
+ * @return void
+ */
+void hack_InitializeMenuItems(void);
+
+/**
+ * Draw main UI.
+ *
+ * @param pDevice
+ * @return void
+ */
+void hack_Menu(IDirect3DDevice9* pDevice);
+
+typedef struct HackMenu
+{
+	bool bEnabled;
+	char name[64];
+} HackMenu;
+
+typedef struct Resolution
+{
+	int x;
+	int y;
+} Resolution;
+
+typedef struct Coordinates
+{
+	int x;
+	int y;
+} Coordinates;
+
+#endif /* _HACKS_H */

@@ -1,26 +1,21 @@
 cmake_minimum_required(VERSION 3.6)
 
-project("Splinter Cell 3 Hacks")
+project("SCCT GUI")
 
-set(EXEC "sp3")
-set(CMAKE_C_STANDARD 99)
+set(EXEC "scctgui")
+set(CMAKE_C_STANDARD 17)
 
 ## Sources
 file(GLOB SOURCES src/*.c)
 
 ## Includes
 include_directories(include)
+include_directories("C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Include")
+
+## Library
+link_directories("C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Lib/x86")
 
 ## Output DLL
 add_library(${EXEC} SHARED ${SOURCES})
 
-## Output DIR
-#set_target_properties(${EXEC}
-#					  PROPERTIES
-#					  CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
-#					  CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
-#					  CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
-#)
-
-## Library Files
-target_link_libraries(${EXEC} Winmm)
+target_link_libraries(${EXEC} d3d9 d3dx9)

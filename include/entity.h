@@ -40,5 +40,4 @@ typedef struct Weapon
     float bloom_y;           // + 0x0524
 } Weapon;
 
-
 #endif
