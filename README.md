@@ -42,24 +42,26 @@ Once the DLL is injected, you will have access to the following Hacks:
 
 ## Build Instructions
 - WSL
-    1. install cmake for windows
-    ```
-    $ ./install_script.sh
-    ```
+    1. Install CMake for Windows
+        ```
+        mkdir bin
+        ./install_script.sh
+        ```
 - CMake
-    1. install cmake for windows
-    - Visual Studio 2019
-        1. open the project folder in Visual Studio 2019
-        2. ctrl + shift + b
-    - Powershell
-        1. open Powershell in project directory
-        ```
-        $ cmake -G "Visual Studio 2019" -A Win32 -B "build"
-        $ cmake --build "build" --config "Release"
-        ```
+    1. Install CMake for Windows
+        - Visual Studio 2019
+            1. Open the project root in Visual Studio 2019
+            2. Ctrl + Shift + B
+        - Powershell
+            1. Open PowerShell in project root
+            ```
+            cmake -G "Visual Studio 2019" -A Win32 -B "build"
+            cmake --build "build" --config "Release"
+            ```
 
 ## Known Issues
-If the user presses F3 while the menu is minimized, it will reset position.
+- Does NOT work with the Widescreen-Fix patch.
+- If the user presses F3 while the menu is minimized, it will reset position.
 
 ## Goals
 - [ ] ~~Find out how to draw text~~
