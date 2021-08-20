@@ -1,9 +1,10 @@
 # Splinter Cell Chaos Theory Trainer
 ### Timeline
-- Project started:      08/18/2021
-- Switch from C to CPP: 08/18/2021
-- Project completed:    08/19/2021
-- Switch from CPP to C: 08/20/2021
+- Project started:           03/14/2021
+- Project completed:         03/17/2021
+- Switch from C to CPP:      08/18/2021
+- Replaced Console with GUI: 08/18/2021
+- Switch from CPP to C:      08/20/2021
 
 ## Overview & Demonstration
 The main purpose of this project was to get familiar with the C language while also  
