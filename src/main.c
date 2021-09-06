@@ -1,39 +1,35 @@
 /**
  * @Author    Malik Booker
  * @Created:  August 18, 2021
- * @Modified: August 20, 2021
+ * @Modified: September 6, 2021
  * 
- * @Brief: SCCT GUI
+ * @Brief:
+ * SCCT GUI
  * 
- * @Copyright: I claim no liability/responsibility
+ * @Disclaimer:
+ * I claim no liability/responsibility
  * for damage associated with however this code is used.
- */
+**/
 
 #include "d3d9hook.h"
 #include "drawing.h"
 #include "hacks.h"
 #include "mem.h"
 
-// Make sure you need each of these
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-bool bInit = false;
-bool bGodMode = false;
-bool bShutdown = false;
-bool bGhostMode = false;
-bool bSuperWeapons = false;
-bool bDisableAlarms = false;
 bool bDisableEnemies = false;
+bool bDisableAlarms = false;
+bool bSuperWeapons = false;
+bool bGhostMode = false;
+bool bShutdown = false;
+bool bGodMode = false;
+bool bInit = false;
 
 unsigned int total_doors_unlocked = 0;
 unsigned int n_entities_changed = 0;
 
 uintptr_t module_base_addr = 0;
 
-void* d3d9Device[119];
+void* d3d9Device[119] = { 0 };
 tEndScene oEndScene = NULL;
 LPDIRECT3DDEVICE9 pD3DDevice = NULL;
 
@@ -56,9 +52,9 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
     module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
-    {
+	{
         oEndScene = (tEndScene)TrampHook((char*)d3d9Device[42], (char*)hkEndScene, 7);
-    }
+	}
 
     return TRUE;
 }
