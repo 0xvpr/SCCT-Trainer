@@ -17,7 +17,7 @@ BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam)
 HWND GetProcessWindow()
 {
     g_window = NULL;
-    EnumWindows(EnumWindowsCallback, NULL);
+    EnumWindows(EnumWindowsCallback, (LPARAM)NULL);
     return g_window;
 }
 

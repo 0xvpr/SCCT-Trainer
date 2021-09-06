@@ -11,7 +11,6 @@
 
 #include "d3d9hook.h"
 #include "drawing.h"
-#include "utils.h"
 #include "hacks.h"
 #include "mem.h"
 
