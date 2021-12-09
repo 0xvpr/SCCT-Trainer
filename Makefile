@@ -62,7 +62,7 @@ $(BIN):
 
 clean:
 	rm -f bin/*
-	rm -f build/*
+	rm -f build/{debug,release}/*
 
 extra-clean:
 	rm -fr bin
