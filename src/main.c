@@ -56,7 +56,10 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
     {
-        oEndScene = (tEndScene)TrampHook((char*)d3d9Device[42], (char*)hkEndScene, 7);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+        oEndScene = (tEndScene)TrampHook((char *)d3d9Device[42], (char *)hkEndScene, 7);
+#pragma GCC diagnostic pop
     }
 
     return TRUE;

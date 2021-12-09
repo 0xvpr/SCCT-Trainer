@@ -1,9 +1,6 @@
 # CMake generated files
 out
 
-# nvim Coc clangd lsp
-compile_flags.txt
-
 # Visual Studio nuances
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,c++

@@ -4,7 +4,7 @@ static HWND g_window;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lpParam)
+BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam)
 {
     DWORD wndProcId;
     GetWindowThreadProcessId(handle, &wndProcId);

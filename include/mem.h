@@ -11,7 +11,7 @@
  * @param: uintptr_t ptr, unsigned offsets[], size_t size
  * @rype: uintptr_t
  */
-uintptr_t FindDMAddress(uintptr_t ptr, unsigned offsets[], size_t size);
+uintptr_t FindDynamicAddress(uintptr_t ptr, unsigned offsets[], size_t size);
 
 /**
  * Byte replacement from source to destination.

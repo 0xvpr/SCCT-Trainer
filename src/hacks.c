@@ -19,6 +19,8 @@ extern bool bGhostMode;
 extern bool bShutdown;
 extern bool bGodMode;
 
+/*void healthDetour(void); // maybe this works?*/
+
 void hack_GodMode(bool bGodMode)
 {
     const char* health_op = (char *)(module_base_addr + offsets_health_base);
@@ -29,11 +31,18 @@ void hack_GodMode(bool bGodMode)
 
     if (bGodMode)
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
         Detour((void *)health_op, (void *)healthDetour, health_op_size);
+#pragma GCC diagnostic pop
+
     }
     else
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
         Patch((BYTE *)health_op, (BYTE *)health_original, health_op_size);
+#pragma GCC diagnostic pop
     }
 
 }
@@ -54,13 +63,19 @@ void hack_GhostMode(bool bGhostMode)
 
     if (bGhostMode)
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
         Patch((BYTE *)visibility_op, (BYTE *)visibility_patch, visibility_size);
         Patch((BYTE *)noise_op, (BYTE *)noise_patch, noise_size);
+#pragma GCC diagnostic pop
     }
     else
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
         Patch((BYTE *)visibility_op, (BYTE *)visibility_original, visibility_size);
         Patch((BYTE *)noise_op, (BYTE *)noise_original, noise_size);
+#pragma GCC diagnostic pop
     }
 
 }
@@ -174,11 +189,11 @@ void hack_DisableAlarms(bool bDisableAlarms)
 
 unsigned int hack_DisableEnemies(bool bDisableEnemies)
 {
-    EntityList* entity_list = *(EntityList **)FindDMAddress(module_base_addr + offsets_entity_list_base,
+    EntityList* entity_list = *(EntityList **)FindDynamicAddress(module_base_addr + offsets_entity_list_base,
                                                                                offsets_entity_list_pointers,
                                                                                offsets_entity_list_pointers_size);
 
-    size_t entity_list_size = *((int *)(FindDMAddress(module_base_addr + offsets_entity_list_base,
+    size_t entity_list_size = *((int *)(FindDynamicAddress(module_base_addr + offsets_entity_list_base,
                                                                          offsets_entity_list_pointers,
                                                                          offsets_entity_list_pointers_size)) + 1);
 
@@ -206,11 +221,11 @@ unsigned int hack_DisableEnemies(bool bDisableEnemies)
 
 unsigned int hack_UnlockAllDoors(void)
 {
-    EntityList* _entity_list = *(EntityList **)FindDMAddress(module_base_addr + offsets_entity_list_base,
+    EntityList* _entity_list = *(EntityList **)FindDynamicAddress(module_base_addr + offsets_entity_list_base,
                                                                                 offsets_entity_list_pointers,
                                                                                 offsets_entity_list_pointers_size);
 
-    size_t size = *((int *)(FindDMAddress(module_base_addr + offsets_entity_list_base,
+    size_t size = *((int *)(FindDynamicAddress(module_base_addr + offsets_entity_list_base,
                                                              offsets_entity_list_pointers,
                                                              offsets_entity_list_pointers_size)) + 1);
 
@@ -239,83 +254,3 @@ unsigned int hack_UnlockAllDoors(void)
 
     return n_doors_unlocked;
 }
-
-/*void hack_InitializeMenuItems()*/
-/*{*/
-    /*strcpy(hackMenu[GOD_MODE].name, "1: God Mode");*/
-    /*strcpy(hackMenu[GHOST_MODE].name, "2: Ghost Mode");*/
-    /*strcpy(hackMenu[SUPER_WEAPONS].name, "3: Super Weapons");*/
-    /*strcpy(hackMenu[DISABLE_ALARMS].name, "4: Disable Alarms");*/
-    /*strcpy(hackMenu[DISABLE_ENEMIES].name, "5: Disable Enemies");*/
-    /*strcpy(hackMenu[UNLOCK_ALL_DOORS].name, "6: Unlock All Doors");*/
-/*}*/
-
-/*void hack_Menu(IDirect3DDevice9* d3dDevice)*/
-/*{*/
-    /*resolution = *((Resolution *)(0x0009D2A8));*/
-
-    /*float factor = 1.0;*/
-    /*if (bMaximizeMenu)*/
-    /*{*/
-        /*// Title Template*/
-        /*draw_DrawFilledRect(coordinates.x, coordinates.y, 140, 100, color_DarkGrey, d3dDevice);*/
-        /*draw_DrawBorderBox(coordinates.x, coordinates.y, 140, 100, 4, color_Black, d3dDevice);*/
-
-        /*// Row one*/
-        /*int x1 = 20;*/
-        /*int y1 = 15;*/
-        /*for (int i = 3; i < MAX_MENU_ITEMS; i++)*/
-        /*{*/
-            /*// If hack is on we display the text colour in green*/
-            /*draw_DrawFilledRect(coordinates.x + x1, coordinates.y + y1, 25, 20, hackMenu[i].bEnabled ? color_Green : color_LightGrey, d3dDevice);*/
-            /*draw_DrawBorderBox(coordinates.x + x1, coordinates.y + y1, 25, 20, 2, color_Black, d3dDevice);*/
-
-            /*//used to position the next item below*/
-            /*x1 += 40;*/
-        /*}*/
-        /*// Row two*/
-        /*int x2 = 20;*/
-        /*int y2 = 55;*/
-        /*for (int i = 0; i < MAX_MENU_ITEMS - 3; i++)*/
-        /*{*/
-            /*// If hack is on we display the text colour in green*/
-            /*draw_DrawFilledRect(coordinates.x + x2, coordinates.y + y2, 25, 20, hackMenu[i].bEnabled ? color_Green : color_LightGrey, d3dDevice);*/
-            /*draw_DrawBorderBox(coordinates.x + x2, coordinates.y + y2, 25, 20, 2, color_Black, d3dDevice);*/
-
-            /*//used to position the next item*/
-            /*x2 += 40;*/
-        /*}*/
-    /*}*/
-    /*else*/
-    /*{*/
-        /*factor = 0.25;*/
-        /*// Title Template*/
-        /*draw_DrawFilledRect(30, 20, (int)(factor*140), (int)(factor*100), color_DarkGrey, d3dDevice);*/
-        /*draw_DrawBorderBox(30, 20, (int)(factor*140), (int)(factor*100), 2, color_Black, d3dDevice);*/
-
-        /*// Row one*/
-        /*int x1 = 35;*/
-        /*int y1 = 25;*/
-        /*for (int i = 3; i < MAX_MENU_ITEMS; i++)*/
-        /*{*/
-            /*// If hack is on we display the text colour in green*/
-            /*draw_DrawFilledRect(x1, y1, (int)(factor*20), (int)(factor*20), hackMenu[i].bEnabled ? color_Green : color_LightGrey, d3dDevice);*/
-            /*draw_DrawBorderBox(x1, y1, (int)(factor*20), (int)(factor*20), 1, color_Black, d3dDevice);*/
-
-            /*//used to position the next item below*/
-            /*x1 += (int)(factor*40);*/
-        /*}*/
-        /*// Row two*/
-        /*int x2 = 35;*/
-        /*int y2 = 35;*/
-        /*for (int i = 0; i < MAX_MENU_ITEMS - 3; i++)*/
-        /*{*/
-            /*// If hack is on we display the text colour in green*/
-            /*draw_DrawFilledRect(x2, y2, (int)(factor*20), (int)(factor*20), hackMenu[i].bEnabled ? color_Green : color_LightGrey, d3dDevice);*/
-            /*draw_DrawBorderBox(x2, y2, (int)(factor*20), (int)(factor*20), 1, color_Black, d3dDevice);*/
-
-            /*//used to position the next item*/
-            /*x2 += (int)(factor*40);*/
-        /*}*/
-    /*}*/
-/*}*/

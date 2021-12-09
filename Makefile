@@ -1,10 +1,13 @@
 PROJECT = sp3
 
 CC      = i686-w64-mingw32-gcc
-CFLAGS  = -std=c99 -masm=intel -Wall -Wextra -Werror -shared
+CFLAGS  = -std=c99 -masm=intel -pedantic -Wall -Wextra -Werror -shared
 
 LD      = i686-w64-mingw32-gcc
-LDFLAGS = 
+LDFLAGS = -shared
+
+ASM     = nasm
+ASFLAGS = -f win32
 
 BIN     = bin
 BUILD   = build
@@ -14,33 +17,45 @@ RELEASE = $(OBJ)/release
 SRC     = src
 OBJ     = build
 SOURCES = $(wildcard $(SRC)/*.c)
-OBJECTS = $(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SOURCES))
-
+DBG_OBJECTS = $(patsubst $(SRC)/%.c,$(DEBUG)/%.o,$(SOURCES))
+REL_OBJECTS = $(patsubst $(SRC)/%.c,$(RELEASE)/%.o,$(SOURCES))
 
 INCLUDE  = include 
-INCLUDES = -I$(INCLUDE)
+INCLUDES = $(addprefix -I,$(INCLUDE))
 
-LIB_FILES = -ld3d9 -ld3dx9
-LIBS      = $(LIB_FILES)
+LIB_FILES = d3d9 d3dx9
+LIBS      = $(addprefix -l,$(LIB_FILES))
+
+ASM_TARGET = healthDetour
+ASM_SRC    = $(SRC)/healthDetour.asm
+ASM_OBJ    = $(OBJ)/healthDetour.o
 
 all: debug release
 
 debug: $(DEBUG)
 release: $(PROJECT)
 
-$(DEBUG): CFLAGS+=-g -DDEBUG
-$(DEBUG): $(OBJ) $(BIN) $(OBJECTS) 
-	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
+$(DEBUG): CFLAGS += -g
+$(DEBUG): $(OBJ) $(BIN) $(ASM_OBJ) $(DBG_OBJECTS) 
+	$(LD) $(LDFLAGS) $(ASM_OBJ) $(DBG_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
 
-$(PROJECT): CFLAGS+=-s -O2
-$(PROJECT): $(OBJ) $(BIN) $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
+$(PROJECT): CFLAGS  += -O3 -fno-ident -fvisibility=hidden
+$(PROJECT): LDFLAGS += -s
+$(PROJECT): $(OBJ) $(BIN) $(REL_OBJECTS)
+	$(LD) $(LDFLAGS) $(ASM_OBJ) $(REL_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
 
-$(OBJECTS): $(OBJ)/%.o: $(SRC)/%.c
+$(ASM_OBJ): $(OBJ)/%.o: $(SRC)/%.asm
+	$(ASM) $(ASFLAGS) $^ -o $@
+
+$(DBG_OBJECTS): $(DEBUG)/%.o: $(SRC)/%.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
+
+$(REL_OBJECTS): $(RELEASE)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
 $(OBJ):
-	mkdir -p $@
+	mkdir -p $@/debug
+	mkdir -p $@/release
 
 $(BIN):
 	mkdir -p $@

@@ -4,6 +4,7 @@
 - Switch from C to CPP: 08/18/2021
 - Project completed:    08/19/2021
 - Switch from CPP to C: 08/20/2021
+- Project revisited:    12/09/2021
 
 ## Overview & Demonstration
 The main purpose of this project was to get familiar with the C language while also  
@@ -40,26 +41,17 @@ Once the DLL is injected, you will have access to the following Hacks:
 - Numpad 5: Disable Enemies
 - Numpad 6: Unlock All Doors
 
-## Build Instructions
-- WSL
-    1. install cmake for windows
-    ```
-    $ ./install_script.sh
-    ```
-- CMake
-    1. install cmake for windows
-    - Visual Studio 2019
-        1. open the project folder in Visual Studio 2019
-        2. ctrl + shift + b
-    - Powershell
-        1. open Powershell in project directory
-        ```
-        $ cmake -G "Visual Studio 2019" -A Win32 -B "build"
-        $ cmake --build "build" --config "Release"
-        ```
+## Build Instructions (Debian)
+#### Toolchain
+```bash
+# Install toolchain for the required compiler
+chmod +x ./install-toolchain.sh
+sudo ./install-toolchain.sh # Modify it as you please before executing
+```
+#### Build
+```bash
+make # defaults to both release and debug builds
+```
 
 ## Known Issues
 If the user presses F3 while the menu is minimized, it will reset position.
-
-## Goals
-- [ ] ~~Find out how to draw text~~
