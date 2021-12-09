@@ -12,20 +12,21 @@
 **/
 
 #include "d3d9hook.h"
-#include "drawing.h"
-#include "hacks.h"
+#include "render.h"
+#include "events.h"
 #include "mem.h"
 
-bool bDisableEnemies = false;
-bool bDisableAlarms = false;
-bool bSuperWeapons = false;
-bool bGhostMode = false;
-bool bShutdown = false;
-bool bGodMode = false;
-bool bInit = false;
+bool bDisableEnemies = false; // Possible unecessary?
+bool bDisableAlarms  = false; // Possible unecessary?
+bool bSuperWeapons   = false; // Possible unecessary?
+bool bMaximizeMenu   = true;  // Possible unecessary?
+bool bGhostMode      = false; // Possible unecessary?
+bool bShutdown       = false; // Possible unecessary?
+bool bGodMode        = false; // Possible unecessary?
+bool bInit           = false; // Possible unecessary? 
 
 unsigned int total_doors_unlocked = 0;
-unsigned int n_entities_changed = 0;
+unsigned int n_entities_changed   = 0;
 
 uintptr_t module_base_addr = 0;
 
@@ -37,28 +38,33 @@ HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 {
     if (bInit == false)
     {
-        hack_InitializeMenuItems();
+        render_InitializeMenuItems();
         bInit = true;
     }
 
-    hack_Menu(pDevice);
-    hack_HandleKeyboard();
+    render_Menu(pDevice);
+    events_HandleKeyboard();
 
     return oEndScene(pDevice);
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
     module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
-	{
+    {
         oEndScene = (tEndScene)TrampHook((char*)d3d9Device[42], (char*)hkEndScene, 7);
-	}
+    }
 
     return TRUE;
 }
+#pragma GCC diagnostic pop
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
     switch (dwReason)
@@ -75,3 +81,4 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
     return TRUE;
 }
+#pragma GCC diagnostic pop

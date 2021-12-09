@@ -2,7 +2,9 @@
 
 static HWND g_window;
 
-BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lpParam)
 {
     DWORD wndProcId;
     GetWindowThreadProcessId(handle, &wndProcId);
@@ -13,6 +15,7 @@ BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam)
     g_window = handle;
     return FALSE; // g_window found abort search
 }
+#pragma GCC diagnostic pop
 
 HWND GetProcessWindow()
 {
@@ -56,7 +59,7 @@ bool GetD3D9Device(void** pTable, size_t Size)
 
     memcpy(pTable, *(void ***)pDummyDevice, Size);
 
-	IDirect3DDevice9_Release(pDummyDevice);
-	IDirect3DDevice9_Release(pD3D);
+    IDirect3DDevice9_Release(pDummyDevice);
+    IDirect3DDevice9_Release(pD3D);
     return true;
 }

@@ -1,8 +1,6 @@
 #ifndef _HACKS_H
 #define _HACKS_H
 
-#include "drawing.h"
-
 #include <tlhelp32.h>
 #include <stdbool.h>
 
@@ -19,21 +17,6 @@
 #define PLAYER           0x110E8B50
 #define DOOR             0x110FDDD8
 #define NPC              0x110F88D8
-
-extern uintptr_t module_base_addr;
-
-extern unsigned int n_entities_changed;
-extern unsigned int total_doors_unlocked;
-
-extern bool bGodMode;
-extern bool bShutdown;
-extern bool bGhostMode;
-extern bool bSuperWeapons;
-extern bool bDisableAlarms;
-extern bool bDisableEnemies;
-
-LPD3DXFONT m_font;
-LPD3DXFONT m_font_small;
 
 /**
  * Prevents the game from subtracting the player's HP 
@@ -94,47 +77,5 @@ unsigned int hack_DisableEnemies(bool bDisableEnemies);
  * @return (unsigned int)n_doors_unlocked
  */
 unsigned int hack_UnlockAllDoors(void);
-
-/**
- * Handles keyboard input
- *
- * @param void
- * @return bool
- */
-bool hack_HandleKeyboard(void);
-
-/**
- * Initializes each menu item
- *
- * @param void
- * @return void
- */
-void hack_InitializeMenuItems(void);
-
-/**
- * Draw main UI.
- *
- * @param pDevice
- * @return void
- */
-void hack_Menu(IDirect3DDevice9* pDevice);
-
-typedef struct HackMenu
-{
-	bool bEnabled;
-	char name[64];
-} HackMenu;
-
-typedef struct Resolution
-{
-	int x;
-	int y;
-} Resolution;
-
-typedef struct Coordinates
-{
-	int x;
-	int y;
-} Coordinates;
 
 #endif /* _HACKS_H */

@@ -1,29 +1,27 @@
-# MAKEFLAGS += silent
+PROJECT = sp3
 
-PROJECT=sp3
+CC      = i686-w64-mingw32-gcc
+CFLAGS  = -std=c99 -masm=intel -Wall -Wextra -Werror -shared
 
-CC=i686-w64-mingw32-gcc
-CFLAGS=-std=c99 -masm=intel -Wall -Wextra -shared
-EXTRA_FLAGS=-fms-extensions
+LD      = i686-w64-mingw32-gcc
+LDFLAGS = 
 
-SRC=src
-OBJ=build
-SOURCES=$(wildcard $(SRC)/*.c)
-OBJS=$(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
+BIN     = bin
+BUILD   = build
+DEBUG   = $(OBJ)/debug
+RELEASE = $(OBJ)/release
 
-BIN=bin
-DEBUG=$(OBJ)/debug
-RELEASE=$(OBJ)/release
+SRC     = src
+OBJ     = build
+SOURCES = $(wildcard $(SRC)/*.c)
+OBJECTS = $(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SOURCES))
 
-INCLUDE=include 
-DIRECTX_INCLUDE=/usr/i686-w64-mingw32/include
-INCLUDES=-I$(INCLUDE) -I$(DIRECTX_INCLUDE)
 
-LIB_FILES=-ld3d9 -ld3dx9
-LIBS=$(LIB_FILES)
+INCLUDE  = include 
+INCLUDES = -I$(INCLUDE)
 
-#TEST=tests
-#TESTS=$(wildcard $(TEST)/*.c)
+LIB_FILES = -ld3d9 -ld3dx9
+LIBS      = $(LIB_FILES)
 
 all: debug release
 
@@ -31,23 +29,26 @@ debug: $(DEBUG)
 release: $(PROJECT)
 
 $(DEBUG): CFLAGS+=-g -DDEBUG
-$(DEBUG): $(OBJS) $(OBJ) $(BIN)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
+$(DEBUG): $(OBJ) $(BIN) $(OBJECTS) 
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
 
-$(PROJECT): CFLAGS+=-s -O3
-$(PROJECT): $(OBJS) $(OBJ) $(BIN)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(BIN)/$(PROJECT).dll
+$(PROJECT): CFLAGS+=-s -O2
+$(PROJECT): $(OBJ) $(BIN) $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
 
-$(OBJS): $(OBJ)/%.o: $(SRC)/%.c
+$(OBJECTS): $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
 $(OBJ):
-	mkdir -p $@
 	mkdir -p $@
 
 $(BIN):
 	mkdir -p $@
 
 clean:
-	rm $(OBJ)/*
-	rm $(BIN)/*
+	rm -f bin/*
+	rm -f build/*
+
+extra-clean:
+	rm -fr bin
+	rm -fr build

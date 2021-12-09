@@ -19,5 +19,5 @@ void draw_DrawText(LPCSTR TextToDraw, int x, int y, D3DCOLOR color, LPD3DXFONT m
     RECT rct = { x - 120, y, x + 120, y + 15 };
 
     // Possible in theory to draw text but this game won't allow it
-	m_font->lpVtbl->DrawTextA(m_font, NULL, TextToDraw, -1, &rct, DT_NOCLIP, color);
+    m_font->lpVtbl->DrawTextA(m_font, NULL, TextToDraw, -1, &rct, DT_NOCLIP, color);
 }

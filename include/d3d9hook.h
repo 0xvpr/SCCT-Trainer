@@ -8,7 +8,7 @@
 
 typedef HRESULT(APIENTRY* tEndScene)(LPDIRECT3DDEVICE9 pDevice);
 
-bool GetD3D9Device(void** pTable, size_t Size);
+bool GetD3D9Device(void** pTable, size_t size);
 
 BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam);
 
