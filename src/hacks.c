@@ -19,7 +19,7 @@ extern bool bGhostMode;
 extern bool bShutdown;
 extern bool bGodMode;
 
-/*void healthDetour(void); // maybe this works?*/
+/*void health_detour(void); // maybe this works?*/
 
 void hack_GodMode(bool bGodMode)
 {
@@ -33,7 +33,7 @@ void hack_GodMode(bool bGodMode)
     {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-        Detour((void *)health_op, (void *)healthDetour, health_op_size);
+        Detour((void *)health_op, (void *)health_detour, health_op_size);
 #pragma GCC diagnostic pop
 
     }

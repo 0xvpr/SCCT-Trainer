@@ -29,7 +29,7 @@ bool Detour(void* hookedFunc, void* myFunc, int length);
 /**
  * TODO: finish comments
  */
-void healthDetour(void);
+void health_detour(void);
 
 /**
  * TODO: finish comments

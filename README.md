@@ -50,7 +50,7 @@ sudo ./install-toolchain.sh # Modify it as you please before executing
 ```
 #### Build
 ```bash
-make # defaults to both release and debug builds
+make -j$(nproc) # defaults to both release and debug builds
 ```
 
 ## Known Issues

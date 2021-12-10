@@ -1,8 +1,8 @@
 segment .text
 
-global _healthDetour
+global _health_detour
 
-_healthDetour:
+_health_detour:
     cmp    dword [edi], 0x110E8B50
     je     $ + 0x08
     xor    eax, eax

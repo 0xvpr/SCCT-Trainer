@@ -26,9 +26,11 @@ INCLUDES = $(addprefix -I,$(INCLUDE))
 LIB_FILES = d3d9 d3dx9
 LIBS      = $(addprefix -l,$(LIB_FILES))
 
-ASM_TARGET = healthDetour
-ASM_SRC    = $(SRC)/healthDetour.asm
-ASM_OBJ    = $(OBJ)/healthDetour.o
+ASM_TARGET  = health_detour
+ASM_SRC     = asm
+ASM_OBJ     = $(BUILD)/asm
+ASM_SOURCES = $(wildcard $(ASM_SRC)/*.asm)
+ASM_OBJECTS = $(patsubst $(ASM_SRC)/%.asm,$(ASM_OBJ)/%.obj,$(ASM_SOURCES))
 
 all: debug release
 
@@ -36,15 +38,15 @@ debug: $(DEBUG)
 release: $(PROJECT)
 
 $(DEBUG): CFLAGS += -g
-$(DEBUG): $(OBJ) $(BIN) $(ASM_OBJ) $(DBG_OBJECTS) 
-	$(LD) $(LDFLAGS) $(ASM_OBJ) $(DBG_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
+$(DEBUG): $(OBJ) $(BIN) $(ASM_OBJECTS) $(DBG_OBJECTS) 
+	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(DBG_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
 
 $(PROJECT): CFLAGS  += -O3 -fno-ident -fvisibility=hidden
 $(PROJECT): LDFLAGS += -s
 $(PROJECT): $(OBJ) $(BIN) $(REL_OBJECTS)
-	$(LD) $(LDFLAGS) $(ASM_OBJ) $(REL_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
+	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(REL_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
 
-$(ASM_OBJ): $(OBJ)/%.o: $(SRC)/%.asm
+$(ASM_OBJECTS): $(ASM_OBJ)/%.obj: $(ASM_SRC)/%.asm
 	$(ASM) $(ASFLAGS) $^ -o $@
 
 $(DBG_OBJECTS): $(DEBUG)/%.o: $(SRC)/%.c
@@ -54,15 +56,16 @@ $(REL_OBJECTS): $(RELEASE)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
 $(OBJ):
-	mkdir -p $@/debug
-	mkdir -p $@/release
+	mkdir -p build/asm
+	mkdir -p build/debug
+	mkdir -p build/release
 
 $(BIN):
-	mkdir -p $@
+	mkdir -p bin
 
 clean:
 	rm -f bin/*
-	rm -f build/{debug,release}/*
+	rm -f build/{asm,debug,release}/*
 
 extra-clean:
 	rm -fr bin
