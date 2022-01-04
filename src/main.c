@@ -31,51 +31,59 @@ unsigned int n_entities_changed   = 0;
 uintptr_t module_base_addr = 0;
 
 void* d3d9Device[119] = { 0 };
+unsigned char oEndScene_bytes[7] = { 0 };
 tEndScene oEndScene = NULL;
 LPDIRECT3DDEVICE9 pD3DDevice = NULL;
 
 HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 {
-    if (bInit == false)
+    if (!bInit)
     {
-        render_InitializeMenuItems();
+        /*render_InitializeMenuItems();*/
+        /*render_CreateFont(pDevice, 16);*/
+
         bInit = true;
     }
-
     render_Menu(pDevice);
-    events_HandleKeyboard();
 
     return oEndScene(pDevice);
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
+    (void)lpReserved;
     module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
     {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-        oEndScene = (tEndScene)TrampHook((char *)d3d9Device[42], (char *)hkEndScene, 7);
+        memcpy(oEndScene_bytes, d3d9Device[42], sizeof(oEndScene_bytes));
+        oEndScene = (tEndScene)memory_tramp_hook((char *)d3d9Device[42], (char *)hkEndScene, 7);
 #pragma GCC diagnostic pop
     }
 
+    while (!(bShutdown = events_HandleKeyboard()))
+    {
+        // Main Loop
+    }
+
+    memory_patch(d3d9Device[42], oEndScene_bytes, sizeof(oEndScene_bytes));
+    FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
     return TRUE;
 }
-#pragma GCC diagnostic pop
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
+    (void)lpReserved;
     switch (dwReason)
     {
         case DLL_PROCESS_ATTACH:
+        {
             DisableThreadLibraryCalls(hInstance);
             CreateThread(0, 0, MainThread, hInstance, 0, 0);
             break;
+        }
         case DLL_PROCESS_DETACH:
             break;
         default:
@@ -84,4 +92,3 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
     return TRUE;
 }
-#pragma GCC diagnostic pop

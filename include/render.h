@@ -30,6 +30,11 @@ void render_InitializeMenuItems(void);
  */
 void render_Menu(IDirect3DDevice9* pDevice);
 
+/**
+ * TODO
+**/
+void render_CreateFont(LPDIRECT3DDEVICE9 pDevice, int size);
+
 typedef struct _HackMenu
 {
     bool bEnabled;

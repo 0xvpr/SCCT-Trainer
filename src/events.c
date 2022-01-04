@@ -106,15 +106,20 @@ bool events_HandleKeyboard(void)
 
     }
 
-    if(bMaximizeMenu && (GetAsyncKeyState(VK_F3) & 1) > 0)
+    if (bMaximizeMenu && (GetAsyncKeyState(VK_F3) & 1) > 0)
     {
         coordinates.x = 30;
         coordinates.y = 25;
     }
 
-    if(GetAsyncKeyState(VK_F2) & 1)
+    if (GetAsyncKeyState(VK_F2) & 1)
     {
         bMaximizeMenu = !bMaximizeMenu;
+    }
+
+    if (GetAsyncKeyState(VK_END))
+    {
+        return true;
     }
 
     return false;

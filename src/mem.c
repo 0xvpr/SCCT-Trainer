@@ -1,7 +1,7 @@
 #include "mem.h"
 
-uintptr_t FindDynamicAddress(uintptr_t ptr, unsigned offsets[], size_t size)
-{
+uintptr_t memory_find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t size)
+{ 
     uintptr_t addr = ptr;
 
     for (size_t i = 0; i < size; i++)
@@ -9,75 +9,115 @@ uintptr_t FindDynamicAddress(uintptr_t ptr, unsigned offsets[], size_t size)
         addr = *(uintptr_t *)addr;
         addr += offsets[i];
 
-        if (!addr) { return 0; }
+        if (*(uintptr_t *)addr == 0)
+        {
+            return 0;
+        }
     }
 
     return addr;
 }
 
-void Patch(BYTE* dst, BYTE* src, size_t size)
+bool memory_patch(void* dst, void* src, size_t size)
 {
     DWORD oldprotect;
 
     VirtualProtect(dst, size, PAGE_EXECUTE_WRITECOPY, &oldprotect);
     memcpy(dst, src, size); 
     VirtualProtect(dst, size, oldprotect, &oldprotect);
+
+    unsigned char* destination = (unsigned char *)dst;
+    unsigned char* source = (unsigned char *)src;
+
+    for (size_t i = 0; i < size; i++, destination++, source++)
+    {
+        if (*destination != *source )
+        {
+            return FALSE;
+        }
+    }
+
+    return TRUE;
 }
 
-bool Detour(void* hookedFunc, void* myFunc, int length)
+bool memory_detour(void* targetFunc, void* myFunc, size_t size)
 {
-    if (length < 5)
-        return false;
+    if (size < 5)
+    {
+        return FALSE;
+    }
 
-    DWORD oldProtect;
-    VirtualProtect(hookedFunc, length, PAGE_EXECUTE_READWRITE, &oldProtect);
+    DWORD dwProtect;
+    VirtualProtect(targetFunc, size, PAGE_EXECUTE_READWRITE, &dwProtect);
 
-    memset(hookedFunc, 0x90, length);
-    DWORD relAddr = ((DWORD)myFunc - (DWORD)hookedFunc) - 5;
+    memset(targetFunc, 0x90, size); // memset nop
+    uintptr_t relative_addr = ((uintptr_t)myFunc - (uintptr_t)targetFunc) - 5;
 
-    *(BYTE *)hookedFunc = 0xE9;
-    *(DWORD *)((DWORD)hookedFunc + 1) = relAddr;
-    VirtualProtect(hookedFunc, length, oldProtect, &oldProtect);
+    *(unsigned char *)targetFunc = 0xE9; // replace with jmp
+    *(uintptr_t *)((uintptr_t)targetFunc + 1) = relative_addr;
+    VirtualProtect(targetFunc, size, dwProtect, &dwProtect);
 
-    return true;
+    return TRUE;
 }
 
-bool Hook(char* src, char* dst, int len)
+char* memory_tramp_hook(char* src, char* dst, size_t size)
 {
-    if (len < 5)
-        return false;
-
-    DWORD curProtection;
-
-    VirtualProtect(src, len, PAGE_EXECUTE_READWRITE, &curProtection);
-    memset(src, 0x90, len);
-
-    uintptr_t relativeAddress = (uintptr_t)(dst - src - 5);
-    *src = (char)0xE9;
-    *(uintptr_t *)(src + 1) = (uintptr_t)relativeAddress;
-
-    DWORD temp;
-    VirtualProtect(src, len, curProtection, &temp);
-
-    return true;
-}
-
-char* TrampHook(char* src, char* dst, unsigned int len)
-{
-    if (len < 5)
+    if (size < 5)
+    {
         return 0;
+    }
 
-    char* gateway = (char *)VirtualAlloc(0, len + 5, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-    memcpy(gateway, src, len);
+    char* gateway = (char *)VirtualAlloc(0, size + 5, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    memcpy(gateway, src, size);
 
-    uintptr_t gateJmpAddy = (uintptr_t)(src - gateway - 5);
-    *(gateway + len) = (char)0xE9;
-    *(uintptr_t *)(gateway + len + 1) = gateJmpAddy;
+    uintptr_t gateJmpAddress = (uintptr_t)(src - gateway - 5);
+    *(gateway + size) = (char)0xE9;
+    *(uintptr_t *)(gateway + size + 1) = gateJmpAddress;
 
-    if (Hook(src, dst, len))
+    if (memory_detour(src, dst, size))
     {
         return gateway;
     }
+    else
+    {
+        return NULL;
+    }
+}
 
-    else return NULL;
+static inline
+int compare_byte_array(unsigned char* data, unsigned char* pattern, size_t pattern_size)
+{
+    for (size_t i = 0; i < pattern_size; i++, pattern++, data++)
+    {
+        if (*pattern == '\0')
+        {
+            continue;
+        }
+        else if (*data != *pattern)
+        {
+            return FALSE;
+        }
+    }
+
+    return TRUE;
+}
+
+unsigned char* memory_find_pattern(unsigned char* base_addr, size_t img_size, unsigned char* pattern, size_t pattern_size)
+{
+    BYTE first = pattern[0];
+    PBYTE last = base_addr + img_size - pattern_size;
+
+    for (; base_addr < last; ++base_addr)
+    {
+        if (*base_addr != first)
+        {
+            continue;
+        }
+        else if (compare_byte_array(base_addr, pattern, pattern_size))
+        {
+            return base_addr;
+        }
+    }
+
+    return NULL;
 }

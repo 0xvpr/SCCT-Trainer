@@ -27,7 +27,7 @@ LIB_FILES = d3d9 d3dx9
 LIBS      = $(addprefix -l,$(LIB_FILES))
 
 ASM_TARGET  = health_detour
-ASM_SRC     = asm
+ASM_SRC     = $(SRC)/asm
 ASM_OBJ     = $(BUILD)/asm
 ASM_SOURCES = $(wildcard $(ASM_SRC)/*.asm)
 ASM_OBJECTS = $(patsubst $(ASM_SRC)/%.asm,$(ASM_OBJ)/%.obj,$(ASM_SOURCES))
