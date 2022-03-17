@@ -1,37 +1,44 @@
-PROJECT = sp3
+PROJECT       = sp3
 
-CC      = i686-w64-mingw32-gcc-posix
-CFLAGS  = -std=c++2a -masm=intel -Wall -Wextra -Werror -Wshadow -Wconversion -Wpedantic\
-		  -Wno-write-strings
+CC            = i686-w64-mingw32-g++-posix
+CFLAGS        = -std=c++2a -O2\
+                -Wall -Wextra -Werror -Wshadow -Wconversion -Wpedantic\
+                -Wno-write-strings
 
-LD      = i686-w64-mingw32-ld
-LDFLAGS = -shared 
+LD            = i686-w64-mingw32-ld
+LDFLAGS       = -shared -nostdinc++
 
-ASM     = nasm
-ASFLAGS = -f win32
+ASM           = nasm
+ASFLAGS       = -f win32
 
-BIN     = Lib
-BUILD   = Build
-DEBUG   = $(OBJ)/debug
-RELEASE = $(OBJ)/release
+BIN           = Lib
+BUILD         = Build
+DEBUG         = $(BUILD)/Debug
+RELEASE       = $(BUILD)/Release
 
-SRC     = Sources
-OBJ     = $(BUILD)
-SOURCES = $(wildcard $(SRC)/*.cpp)
-DBG_OBJECTS = $(patsubst $(SRC)/%.cpp,$(DEBUG)/%.o,$(SOURCES))
-REL_OBJECTS = $(patsubst $(SRC)/%.cpp,$(RELEASE)/%.o,$(SOURCES))
+SOURCE        = Sources
+OBJECT        = $(BUILD)
+SOURCES       = $(wildcard $(SOURCE)/*.cpp)
+DBG_OBJECTS   = $(patsubst $(SOURCE)/%.cpp,$(DEBUG)/%.o,$(SOURCES))
+REL_OBJECTS   = $(patsubst $(SOURCE)/%.cpp,$(RELEASE)/%.o,$(SOURCES))
+MINGW_OBJECTS = /usr/i686-w64-mingw32/lib/dllcrt2.o
 
-INCLUDE  = Includes
-INCLUDES = $(addprefix -I,$(INCLUDE))
+INCLUDE       = Includes
+INCLUDES      = $(addprefix -I,$(INCLUDE))
 
-LIB_FILES = d3d9 d3dx9 msvcrt kernel32 user32
-LIBS      = $(addprefix -l,$(LIB_FILES))
+LINK_DIRS     = /usr/lib/gcc/i686-w64-mingw32/9.3-posix
+LINKS         = $(addprefix -L,$(LINK_DIRS))
 
-ASM_TARGET  = health_detour
-ASM_SRC     = $(SRC)/asm
-ASM_OBJ     = $(BUILD)/asm
-ASM_SOURCES = $(wildcard $(ASM_SRC)/*.asm)
-ASM_OBJECTS = $(patsubst $(ASM_SRC)/%.asm,$(ASM_OBJ)/%.obj,$(ASM_SOURCES))
+LIB_FILES     = d3d9 d3dx9 mingw32 moldname mingwex msvcrt user32 kernel32 msvcrt gcc
+LIBS          = $(addprefix -l,$(LIB_FILES))
+
+ASM_TARGET    = health_detour
+ASM_SOURCE    = $(SOURCE)/asm
+ASM_OBJECT    = $(BUILD)/asm
+ASM_SOURCES   = $(wildcard $(ASM_SOURCE)/*.asm)
+ASM_OBJECTS   = $(patsubst $(ASM_SOURCE)/%.asm,$(ASM_OBJECT)/%.obj,$(ASM_SOURCES))
+
+MAKEFLAGS    += -j$(shell nproc)
 
 all: debug release
 
@@ -39,35 +46,35 @@ debug: $(DEBUG)
 release: $(PROJECT)
 
 $(DEBUG): CFLAGS += -g
-$(DEBUG): $(OBJ) $(BIN) $(ASM_OBJECTS) $(DBG_OBJECTS) 
-	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(DBG_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
+$(DEBUG): $(BUILD) $(BIN) $(ASM_OBJECTS) $(DBG_OBJECTS) 
+	$(LD) $(LDFLAGS) $(LINKS) $(ASM_OBJECTS) $(DBG_OBJECTS) $(MINGW_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
 
-$(PROJECT): CFLAGS  += -O3 -fno-ident -fvisibility=hidden -fno-rtti
+$(PROJECT): CFLAGS  += -O3 -ffast-math -fvisibility=hidden -fno-ident -fno-rtti
 $(PROJECT): LDFLAGS += -s
-$(PROJECT): $(OBJ) $(BIN) $(REL_OBJECTS)
-	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(REL_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
+$(PROJECT): $(BUILD) $(BIN) $(REL_OBJECTS)
+	$(LD) $(LDFLAGS) $(LINKS) $(ASM_OBJECTS) $(REL_OBJECTS) $(MINGW_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
 
-$(ASM_OBJECTS): $(ASM_OBJ)/%.obj: $(ASM_SRC)/%.asm
+$(ASM_OBJECTS): $(ASM_OBJECT)/%.obj: $(ASM_SOURCE)/%.asm
 	$(ASM) $(ASFLAGS) $^ -o $@
 
-$(DBG_OBJECTS): $(DEBUG)/%.o: $(SRC)/%.cpp
+$(DBG_OBJECTS): $(DEBUG)/%.o: $(SOURCE)/%.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
-$(REL_OBJECTS): $(RELEASE)/%.o: $(SRC)/%.cpp
+$(REL_OBJECTS): $(RELEASE)/%.o: $(SOURCE)/%.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
-$(OBJ):
-	mkdir -p build/asm
-	mkdir -p build/debug
-	mkdir -p build/release
+$(BUILD):
+	mkdir -p Build/Asm
+	mkdir -p Build/Debug
+	mkdir -p Build/Release
 
 $(BIN):
-	mkdir -p bin
+	mkdir -p Bin
 
 clean:
-	rm -f bin/*
-	rm -f build/{asm,debug,release}/*
+	rm -f Bin/*
+	rm -f Build/{Asm,Debug,Release}/*
 
 extra-clean:
-	rm -fr bin
-	rm -fr build
+	rm -fr Bin
+	rm -fr Build
