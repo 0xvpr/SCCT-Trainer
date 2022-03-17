@@ -2,6 +2,9 @@
 #define _RENDER_H
 
 #include "drawing.h"
+#ifndef __cplusplus
+#include <stdbool.h>
+#endif // __cplusplus
 
 LPD3DXFONT m_font;
 LPD3DXFONT m_font_small;
