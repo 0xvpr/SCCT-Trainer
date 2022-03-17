@@ -1,7 +1,13 @@
-- [ ] Refactor Makefile
-- [x] Create toolchain script for contribution purposes
-- [x] Update README
+## TODO
+### Readme
+- [ ] Update README
+
+### Hacks
+- [ ] Add fly command
+- [ ] Add no enemies command
+- [ ] Add noclip command
+
+## Completed
+- [x] Refactor Makefile
 - [x] Remove inline assembly and change it into .asm
 - [x] Replace tabs with spaces
-- [x] Create event.h/c and move handle keyboard to event "namespace"
-- [x] Create render.h/c and move handle keyboard to render "namespace"

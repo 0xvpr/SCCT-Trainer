@@ -5,10 +5,15 @@
 - Project completed:    08/19/2021
 - Switch from CPP to C: 08/20/2021
 - Project revisited:    12/09/2021
+- Project revisited:    03/17/2022
+- Switch from C to CPP: 03/17/2022
 
 ## Overview & Demonstration
 The main purpose of this project was to get familiar with the C language while also  
 familiarizing myself with the Directx9c API.  
+
+This time around, I've learned more about using compilers and linkers as well as  
+more things about C++ in general. (most of the C++ features will not be used anyway)
 
 <img src="./resources/demo.gif"/>
 Demonstration of God Mode, Disable Alarms, and Disable Enemies.  
@@ -22,12 +27,7 @@ Activated cheats are highlighted in the top left in green.
 - [Goals](#Goals)
 
 ## What I Learned
-Splinter Cell Chaos Theory has a unique Directx API structure. Text can  
-not be drawn, and most sprites, tools, and images can only be half drawn  
-and are very poorly rendered when they are drawn.
-
-There are more things that can be done but I've concluded that it's not  
-worth the effort.
+MinGW-w64's LD is terribly documented.
 
 ## How It Works
 Use any DLL injector that you are comfortable with to inject the file into  
@@ -44,13 +44,11 @@ Once the DLL is injected, you will have access to the following Hacks:
 ## Build Instructions (Debian)
 #### Toolchain
 ```bash
-# Install toolchain for the required compiler
-chmod +x ./install-toolchain.sh
 sudo ./install-toolchain.sh # Modify it as you please before executing
 ```
 #### Build
 ```bash
-make -j$(nproc) # defaults to both release and debug builds
+make # defaults to both release and debug builds
 ```
 
 ## Known Issues
