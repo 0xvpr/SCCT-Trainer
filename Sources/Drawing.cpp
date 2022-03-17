@@ -1,15 +1,7 @@
 #include "drawing.h"
 
-LPD3DXFONT m_font = NULL;
-LPD3DXFONT m_font_small = NULL;
-
-const D3DCOLOR colorLightGrey = D3DCOLOR_ARGB(255, 80, 80, 80);
-const D3DCOLOR colorDarkGrey  = D3DCOLOR_ARGB(255, 25, 25, 25);
-const D3DCOLOR colorWhite     = D3DCOLOR_ARGB(255, 255, 255, 255);
-const D3DCOLOR colorBlack     = D3DCOLOR_ARGB(255, 0, 0, 0);
-const D3DCOLOR colorGreen     = D3DCOLOR_ARGB(255, 10, 200, 10);
-const D3DCOLOR colorBlue      = D3DCOLOR_ARGB(255, 0, 42, 255);
-const D3DCOLOR colorRed       = D3DCOLOR_ARGB(255, 255, 0, 0);
+extern LPD3DXFONT m_font;
+extern LPD3DXFONT m_font_small;
 
 void drawing_draw_border_box(int x, int y, int w, int h, int thickness, D3DCOLOR color, LPDIRECT3DDEVICE9 d3dDevice)
 { 
@@ -28,5 +20,5 @@ void drawing_draw_filled_rect(int x, int y, int w, int h, D3DCOLOR color, LPDIRE
 void drawing_draw_text(LPCSTR text, int x, int y, int width, int height, D3DCOLOR color, LPD3DXFONT font)
 {
     RECT rct = { x, y, x + width, y + height };
-    font->lpVtbl->DrawTextA(font, NULL, text, -1, &rct, DT_NOCLIP, color);
+    font->DrawTextA(NULL, text, -1, &rct, DT_NOCLIP, color);
 }

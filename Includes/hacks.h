@@ -1,26 +1,27 @@
-#ifndef _HACKS_H
-#define _HACKS_H
+#ifndef HACKS_HEADER
+#define HACKS_HEADER
 
 #ifndef WIN32_LEAN_AND_MEAN
 #   define WIN32_LEAN_AND_MEAN
 #endif // WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <tlhelp32.h>
+#include <stdint.h>
+#ifndef __cplusplus
 #include <stdbool.h>
+#endif // __cplusplus
 
-#define GOD_MODE         0x00000000
-#define GHOST_MODE       0x00000001
-#define SUPER_WEAPONS    0x00000002
-#define DISABLE_ALARMS   0x00000003
-#define DISABLE_ENEMIES  0x00000004
-#define UNLOCK_ALL_DOORS 0x00000005
-#define MAX_MENU_ITEMS   0x00000006
-
-#define DOOR_ALL_ACCESS  0x00000004
-
-#define PLAYER           0x110E8B50
-#define DOOR             0x110FDDD8
-#define NPC              0x110F88D8
+constexpr uint32_t GOD_MODE         = 0x00000000;
+constexpr uint32_t GHOST_MODE       = 0x00000001;
+constexpr uint32_t SUPER_WEAPONS    = 0x00000002;
+constexpr uint32_t DISABLE_ALARMS   = 0x00000003;
+constexpr uint32_t DISABLE_ENEMIES  = 0x00000004;
+constexpr uint32_t UNLOCK_ALL_DOORS = 0x00000005;
+constexpr uint32_t MAX_MENU_ITEMS   = 0x00000006;
+constexpr uint32_t DOOR_ALL_ACCESS  = 0x00000004;
+constexpr uint32_t PLAYER           = 0x110E8B50;
+constexpr uint32_t DOOR             = 0x110FDDD8;
+constexpr uint32_t NPC              = 0x110F88D8;
 
 /**
  * Prevents the game from subtracting the player's HP 
@@ -82,4 +83,4 @@ unsigned int hack_DisableEnemies(bool bDisableEnemies);
  */
 unsigned int hack_UnlockAllDoors(void);
 
-#endif /* _HACKS_H */
+#endif // HACKS_HEADER

@@ -16,19 +16,13 @@
 #include "events.h"
 #include "mem.h"
 
-bool bDisableEnemies = false; // Possible unecessary?
-bool bDisableAlarms  = false; // Possible unecessary?
-bool bSuperWeapons   = false; // Possible unecessary?
-bool bMaximizeMenu   = true;  // Possible unecessary?
-bool bGhostMode      = false; // Possible unecessary?
-bool bShutdown       = false; // Possible unecessary?
-bool bGodMode        = false; // Possible unecessary?
-bool bInit           = false; // Possible unecessary? 
-
 unsigned int total_doors_unlocked = 0;
 unsigned int n_entities_changed   = 0;
 
 uintptr_t module_base_addr = 0;
+
+bool bShutdown = false;
+bool bInit = false;
 
 void* d3d9Device[119] = { 0 };
 unsigned char oEndScene_bytes[7] = { 0 };

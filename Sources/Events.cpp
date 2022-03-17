@@ -2,7 +2,6 @@
 #include "events.h"
 #include "render.h"
 
-
 extern uintptr_t module_base_addr;
 
 extern unsigned int n_entities_changed;
@@ -20,10 +19,13 @@ extern Resolution resolution;
 extern Coordinates coordinates;
 extern HackMenu hackMenu[MAX_MENU_ITEMS];
 
-bool events_HandleKeyboard(void)
+static constexpr uint16_t key_registered = 1 <<  0;
+static constexpr uint16_t key_held       = 1 << 15;
+
+bool events_HandleKeyboard()
 {
     /* Toggle GodMode */
-    if (GetAsyncKeyState(VK_NUMPAD1) & 1)
+    if (GetAsyncKeyState(VK_NUMPAD1) & key_registered)
     {
         bGodMode = !bGodMode;
         hackMenu[GOD_MODE].bEnabled = bGodMode;
@@ -31,7 +33,7 @@ bool events_HandleKeyboard(void)
     }
 
     /* Toggle GhostMode */
-    if (GetAsyncKeyState(VK_NUMPAD2) & 1)
+    if (GetAsyncKeyState(VK_NUMPAD2) & key_registered)
     {
         bGhostMode = !bGhostMode;
         hackMenu[GHOST_MODE].bEnabled = bGhostMode;
@@ -39,7 +41,7 @@ bool events_HandleKeyboard(void)
     }
 
     /* Toggle Super Weapons */
-    if (GetAsyncKeyState(VK_NUMPAD3) & 1)
+    if (GetAsyncKeyState(VK_NUMPAD3) & key_registered)
     {
         bSuperWeapons = !bSuperWeapons;
         hackMenu[SUPER_WEAPONS].bEnabled = bSuperWeapons;
@@ -47,7 +49,7 @@ bool events_HandleKeyboard(void)
     }
 
     /*  Disable All Alarms */
-    if (GetAsyncKeyState(VK_NUMPAD4) & 1)
+    if (GetAsyncKeyState(VK_NUMPAD4) & key_registered)
     {
         bDisableAlarms = !bDisableAlarms;
         hackMenu[DISABLE_ALARMS].bEnabled = bDisableAlarms;
@@ -55,7 +57,7 @@ bool events_HandleKeyboard(void)
     }
 
     /* Toggle DisableEnemies */
-    if (GetAsyncKeyState(VK_NUMPAD5) & 1)
+    if (GetAsyncKeyState(VK_NUMPAD5) & key_registered)
     {
         bDisableEnemies = !bDisableEnemies;
         hackMenu[DISABLE_ENEMIES].bEnabled = bDisableEnemies;
@@ -63,7 +65,7 @@ bool events_HandleKeyboard(void)
     }
 
     /* Unlock All Doors */
-    if (GetAsyncKeyState(VK_NUMPAD6) & 1)
+    if (GetAsyncKeyState(VK_NUMPAD6) & key_registered)
     {
         hackMenu[UNLOCK_ALL_DOORS].bEnabled = !hackMenu[UNLOCK_ALL_DOORS].bEnabled;
         total_doors_unlocked = hack_UnlockAllDoors();
@@ -72,7 +74,7 @@ bool events_HandleKeyboard(void)
     // Control Menu Position
     if (bMaximizeMenu) // When maximized
     {
-        if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+        if (GetAsyncKeyState(VK_LEFT) & key_held)
         {
             if (coordinates.x > 35)
             {
@@ -80,7 +82,7 @@ bool events_HandleKeyboard(void)
             }
         }
 
-        if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+        if (GetAsyncKeyState(VK_RIGHT) & key_held)
         {
             if (coordinates.x < resolution.x - 175)
             {
@@ -88,7 +90,7 @@ bool events_HandleKeyboard(void)
             }
         }
 
-        if (GetAsyncKeyState(VK_UP) & 0x8000)
+        if (GetAsyncKeyState(VK_UP) & key_held)
         {
             if (coordinates.y > 30)
             {
@@ -96,7 +98,7 @@ bool events_HandleKeyboard(void)
             }
         }
 
-        if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+        if (GetAsyncKeyState(VK_DOWN) & key_held)
         {
             if (coordinates.y < resolution.y - 120)
             {
@@ -106,13 +108,13 @@ bool events_HandleKeyboard(void)
 
     }
 
-    if (bMaximizeMenu && (GetAsyncKeyState(VK_F3) & 1) > 0)
+    if (bMaximizeMenu && (GetAsyncKeyState(VK_F3) & key_registered) > 0)
     {
         coordinates.x = 30;
         coordinates.y = 25;
     }
 
-    if (GetAsyncKeyState(VK_F2) & 1)
+    if (GetAsyncKeyState(VK_F2) & key_registered)
     {
         bMaximizeMenu = !bMaximizeMenu;
     }

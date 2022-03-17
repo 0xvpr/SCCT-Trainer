@@ -1,24 +1,24 @@
-#include <windows.h>
-#include <string.h>
+#include "hacks.h"
 
 #include "assembly.h"
 #include "offsets.h"
 #include "entity.h"
-#include "hacks.h"
 #include "mem.h"
+
+#include <string.h>
+#include <windows.h>
 
 extern uintptr_t module_base_addr;
 
 extern unsigned int n_entities_changed;
 extern unsigned int total_doors_unlocked;
 
-extern bool bDisableEnemies;
-extern bool bDisableAlarms;
-extern bool bSuperWeapons;
-extern bool bMaximizeMenu;
-extern bool bGhostMode;
-extern bool bShutdown;
-extern bool bGodMode;
+bool bMaximizeMenu   = true;
+bool bDisableEnemies = false;
+bool bDisableAlarms  = false;
+bool bSuperWeapons   = false;
+bool bGhostMode      = false;
+bool bGodMode        = false;
 
 /*void health_detour(void); // maybe this works?*/
 

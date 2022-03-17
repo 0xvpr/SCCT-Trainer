@@ -5,8 +5,8 @@
 #   define WIN32_LEAN_AND_MEAN
 #endif /* WIN32_LEAN_AND_MEAN */
 #include <windows.h>
-#ifndef __cplusplus
 #include <stdint.h>
+#ifndef __cplusplus
 #include <stdbool.h>
 #endif /* __cplusplus */
 

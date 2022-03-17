@@ -1,28 +1,31 @@
-#include "render.h"
-#include "drawing.h"
-#include "hacks.h"
+#include "Render.h"
+#include "Drawing.h"
+#include "Hacks.h"
+
+LPD3DXFONT m_font;
+LPD3DXFONT m_font_small;
 
 extern bool bMaximizeMenu;
 
-D3DCOLOR color_LightGrey = D3DCOLOR_ARGB(255, 80, 80, 80);
-D3DCOLOR color_DarkGrey  = D3DCOLOR_ARGB(255, 25, 25, 25);
-D3DCOLOR color_White     = D3DCOLOR_ARGB(255, 255, 255, 255);
-D3DCOLOR color_Black     = D3DCOLOR_ARGB(255, 0, 0, 0);
-D3DCOLOR color_Green     = D3DCOLOR_ARGB(255, 10, 200, 10);
-D3DCOLOR color_Blue      = D3DCOLOR_ARGB(255, 0, 42, 255);
-D3DCOLOR color_Red       = D3DCOLOR_ARGB(255, 255, 0, 0);
+static constexpr D3DCOLOR color_LightGrey = D3DCOLOR_ARGB(255, 80, 80, 80);
+static constexpr D3DCOLOR color_DarkGrey  = D3DCOLOR_ARGB(255, 25, 25, 25);
+static constexpr D3DCOLOR color_White     = D3DCOLOR_ARGB(255, 255, 255, 255);
+static constexpr D3DCOLOR color_Black     = D3DCOLOR_ARGB(255, 0, 0, 0);
+static constexpr D3DCOLOR color_Green     = D3DCOLOR_ARGB(255, 10, 200, 10);
+static constexpr D3DCOLOR color_Blue      = D3DCOLOR_ARGB(255, 0, 42, 255);
+static constexpr D3DCOLOR color_Red       = D3DCOLOR_ARGB(255, 255, 0, 0);
 
-Resolution resolution = { 0, 0 };          // TODO: move to 
-Coordinates coordinates = { 30, 25 };      // TODO: move to render.c
-HackMenu hackMenu[MAX_MENU_ITEMS] = { 0 }; // TODO: move to render.c
+Resolution resolution{ 0, 0 };        // TODO: move to 
+Coordinates coordinates{ 30, 25 };    // TODO: move to render.c
+HackMenu hackMenu[MAX_MENU_ITEMS]{ }; // TODO: move to render.c
 
 void render_InitializeMenuItems()
 {
-    strcpy(hackMenu[GOD_MODE].name, "1: God Mode");
-    strcpy(hackMenu[GHOST_MODE].name, "2: Ghost Mode");
-    strcpy(hackMenu[SUPER_WEAPONS].name, "3: Super Weapons");
-    strcpy(hackMenu[DISABLE_ALARMS].name, "4: Disable Alarms");
-    strcpy(hackMenu[DISABLE_ENEMIES].name, "5: Disable Enemies");
+    strcpy(hackMenu[GOD_MODE].name,         "1: God Mode");
+    strcpy(hackMenu[GHOST_MODE].name,       "2: Ghost Mode");
+    strcpy(hackMenu[SUPER_WEAPONS].name,    "3: Super Weapons");
+    strcpy(hackMenu[DISABLE_ALARMS].name,   "4: Disable Alarms");
+    strcpy(hackMenu[DISABLE_ENEMIES].name,  "5: Disable Enemies");
     strcpy(hackMenu[UNLOCK_ALL_DOORS].name, "6: Unlock All Doors");
 }
 
@@ -46,7 +49,7 @@ void render_Menu(IDirect3DDevice9* d3dDevice)
         // Row one
         int x1 = 20;
         int y1 = 15;
-        for (int i = 3; i < MAX_MENU_ITEMS; i++)
+        for (unsigned i = 3; i < MAX_MENU_ITEMS; i++)
         {
             // If hack is on we display the text colour in green
             drawing_draw_filled_rect(coordinates.x + x1, coordinates.y + y1, 25, 20, hackMenu[i].bEnabled ? color_Green : color_LightGrey, d3dDevice);
@@ -58,7 +61,7 @@ void render_Menu(IDirect3DDevice9* d3dDevice)
         // Row two
         int x2 = 20;
         int y2 = 55;
-        for (int i = 0; i < MAX_MENU_ITEMS - 3; i++)
+        for (unsigned i = 0; i < MAX_MENU_ITEMS - 3; i++)
         {
             // If hack is on we display the text colour in green
             drawing_draw_filled_rect(coordinates.x + x2, coordinates.y + y2, 25, 20, hackMenu[i].bEnabled ? color_Green : color_LightGrey, d3dDevice);
@@ -78,7 +81,7 @@ void render_Menu(IDirect3DDevice9* d3dDevice)
         // Row one
         int x1 = 35;
         int y1 = 25;
-        for (int i = 3; i < MAX_MENU_ITEMS; i++)
+        for (unsigned i = 3; i < MAX_MENU_ITEMS; i++)
         {
             // If hack is on we display the text colour in green
             drawing_draw_filled_rect(x1, y1, (int)(factor*20), (int)(factor*20), hackMenu[i].bEnabled ? color_Green : color_LightGrey, d3dDevice);
@@ -90,7 +93,7 @@ void render_Menu(IDirect3DDevice9* d3dDevice)
         // Row two
         int x2 = 35;
         int y2 = 35;
-        for (int i = 0; i < MAX_MENU_ITEMS - 3; i++)
+        for (unsigned i = 0; i < MAX_MENU_ITEMS - 3; i++)
         {
             // If hack is on we display the text colour in green
             drawing_draw_filled_rect(x2, y2, (int)(factor*20), (int)(factor*20), hackMenu[i].bEnabled ? color_Green : color_LightGrey, d3dDevice);
