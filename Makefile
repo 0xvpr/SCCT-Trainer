@@ -19,8 +19,8 @@ RELEASE       = $(BUILD)/Release
 SOURCE        = Sources
 OBJECT        = $(BUILD)
 SOURCES       = $(wildcard $(SOURCE)/*.cpp)
-DBG_OBJECTS   = $(patsubst $(SOURCE)/%.cpp,$(DEBUG)/%.o,$(SOURCES))
-REL_OBJECTS   = $(patsubst $(SOURCE)/%.cpp,$(RELEASE)/%.o,$(SOURCES))
+DBG_OBJECTS   = $(patsubst $(SOURCE)/%.cpp,$(DEBUG)/%.obj,$(SOURCES))
+REL_OBJECTS   = $(patsubst $(SOURCE)/%.cpp,$(RELEASE)/%.obj,$(SOURCES))
 MINGW_OBJECTS = /usr/i686-w64-mingw32/lib/dllcrt2.o
 
 INCLUDE       = Includes
@@ -29,7 +29,7 @@ INCLUDES      = $(addprefix -I,$(INCLUDE))
 LINK_DIRS     = /usr/lib/gcc/i686-w64-mingw32/9.3-posix
 LINKS         = $(addprefix -L,$(LINK_DIRS))
 
-LIB_FILES     = d3d9 d3dx9 mingw32 moldname mingwex msvcrt user32 kernel32 msvcrt gcc
+LIB_FILES     = d3d9 d3dx9 mingw32 moldname mingwex msvcrt user32 kernel32 gcc
 LIBS          = $(addprefix -l,$(LIB_FILES))
 
 ASM_TARGET    = health_detour
@@ -57,10 +57,10 @@ $(PROJECT): $(BUILD) $(BIN) $(REL_OBJECTS)
 $(ASM_OBJECTS): $(ASM_OBJECT)/%.obj: $(ASM_SOURCE)/%.asm
 	$(ASM) $(ASFLAGS) $^ -o $@
 
-$(DBG_OBJECTS): $(DEBUG)/%.o: $(SOURCE)/%.cpp
+$(DBG_OBJECTS): $(DEBUG)/%.obj: $(SOURCE)/%.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
-$(REL_OBJECTS): $(RELEASE)/%.o: $(SOURCE)/%.cpp
+$(REL_OBJECTS): $(RELEASE)/%.obj: $(SOURCE)/%.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
 $(BUILD):
