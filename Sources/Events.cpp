@@ -1,78 +1,52 @@
 #include <windows.h>
-#include "events.h"
-#include "render.h"
+#include "Events.hpp"
+#include "Render.hpp"
 
-extern uintptr_t module_base_addr;
-
-extern unsigned int n_entities_changed;
-extern unsigned int total_doors_unlocked;
-
-extern bool bDisableEnemies;
-extern bool bDisableAlarms;
-extern bool bSuperWeapons;
-extern bool bMaximizeMenu;
-extern bool bGhostMode;
-extern bool bShutdown;
-extern bool bGodMode;
+using render::Resolution;
+using render::Coordinates;
+using render::HackMenu;
 
 extern Resolution resolution;
 extern Coordinates coordinates;
-extern HackMenu hackMenu[MAX_MENU_ITEMS];
+extern HackMenu hackMenu;
 
 static constexpr uint16_t key_registered = 1 <<  0;
 static constexpr uint16_t key_held       = 1 << 15;
 
-bool events_HandleKeyboard()
+bool events::HandleKeyboard()
 {
     /* Toggle GodMode */
-    if (GetAsyncKeyState(VK_NUMPAD1) & key_registered)
-    {
-        bGodMode = !bGodMode;
-        hackMenu[GOD_MODE].bEnabled = bGodMode;
-        hack_GodMode(bGodMode);
+    if (GetAsyncKeyState(VK_NUMPAD1) & key_registered) {
+        hacks::GodMode(hackMenu[GOD_MODE]);
     }
 
     /* Toggle GhostMode */
-    if (GetAsyncKeyState(VK_NUMPAD2) & key_registered)
-    {
-        bGhostMode = !bGhostMode;
-        hackMenu[GHOST_MODE].bEnabled = bGhostMode;
-        hack_GhostMode(bGhostMode);
+    if (GetAsyncKeyState(VK_NUMPAD2) & key_registered) {
+        hacks::GhostMode(hackMenu[GHOST_MODE]);
     }
 
     /* Toggle Super Weapons */
-    if (GetAsyncKeyState(VK_NUMPAD3) & key_registered)
-    {
-        bSuperWeapons = !bSuperWeapons;
-        hackMenu[SUPER_WEAPONS].bEnabled = bSuperWeapons;
-        hack_SuperWeapons(bSuperWeapons);
+    if (GetAsyncKeyState(VK_NUMPAD3) & key_registered) {
+        hacks::SuperWeapons(hackMenu[SUPER_WEAPONS]);
     }
 
     /*  Disable All Alarms */
-    if (GetAsyncKeyState(VK_NUMPAD4) & key_registered)
-    {
-        bDisableAlarms = !bDisableAlarms;
-        hackMenu[DISABLE_ALARMS].bEnabled = bDisableAlarms;
-        hack_DisableAlarms(bDisableAlarms);
+    if (GetAsyncKeyState(VK_NUMPAD4) & key_registered) {
+        hacks::DisableAlarms(hackMenu[DISABLE_ALARMS]);
     }
 
     /* Toggle DisableEnemies */
-    if (GetAsyncKeyState(VK_NUMPAD5) & key_registered)
-    {
-        bDisableEnemies = !bDisableEnemies;
-        hackMenu[DISABLE_ENEMIES].bEnabled = bDisableEnemies;
-        n_entities_changed = hack_DisableEnemies(bDisableEnemies);
+    if (GetAsyncKeyState(VK_NUMPAD5) & key_registered) {
+        (void)hacks::DisableEnemies(hackMenu[DISABLE_ENEMIES]);
     }
 
     /* Unlock All Doors */
-    if (GetAsyncKeyState(VK_NUMPAD6) & key_registered)
-    {
-        hackMenu[UNLOCK_ALL_DOORS].bEnabled = !hackMenu[UNLOCK_ALL_DOORS].bEnabled;
-        total_doors_unlocked = hack_UnlockAllDoors();
+    if (GetAsyncKeyState(VK_NUMPAD6) & key_registered) {
+        (void)hacks::UnlockAllDoors(hackMenu[UNLOCK_ALL_DOORS]);
     }
 
     // Control Menu Position
-    if (bMaximizeMenu) // When maximized
+    if (hackMenu.IsMaximized()) // When maximized
     {
         if (GetAsyncKeyState(VK_LEFT) & key_held)
         {
@@ -108,7 +82,7 @@ bool events_HandleKeyboard()
 
     }
 
-    if (bMaximizeMenu && (GetAsyncKeyState(VK_F3) & key_registered) > 0)
+    if (hackMenu.IsMaximized() && (GetAsyncKeyState(VK_F3) & key_registered) > 0)
     {
         coordinates.x = 30;
         coordinates.y = 25;
@@ -116,7 +90,7 @@ bool events_HandleKeyboard()
 
     if (GetAsyncKeyState(VK_F2) & key_registered)
     {
-        bMaximizeMenu = !bMaximizeMenu;
+        hackMenu();
     }
 
     if (GetAsyncKeyState(VK_END))

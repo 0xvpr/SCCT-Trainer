@@ -1,6 +1,8 @@
 #ifndef HACKS_HEADER
 #define HACKS_HEADER
 
+#include "Render.hpp"
+
 #ifndef WIN32_LEAN_AND_MEAN
 #   define WIN32_LEAN_AND_MEAN
 #endif // WIN32_LEAN_AND_MEAN
@@ -11,17 +13,23 @@
 #include <stdbool.h>
 #endif // __cplusplus
 
-constexpr uint32_t GOD_MODE         = 0x00000000;
-constexpr uint32_t GHOST_MODE       = 0x00000001;
-constexpr uint32_t SUPER_WEAPONS    = 0x00000002;
-constexpr uint32_t DISABLE_ALARMS   = 0x00000003;
-constexpr uint32_t DISABLE_ENEMIES  = 0x00000004;
-constexpr uint32_t UNLOCK_ALL_DOORS = 0x00000005;
-constexpr uint32_t MAX_MENU_ITEMS   = 0x00000006;
-constexpr uint32_t DOOR_ALL_ACCESS  = 0x00000004;
+using render::HackItem;
+
+constexpr uint16_t GOD_MODE         = 0;
+constexpr uint16_t GHOST_MODE       = 1;
+constexpr uint16_t SUPER_WEAPONS    = 2;
+constexpr uint16_t DISABLE_ALARMS   = 3;
+constexpr uint16_t DISABLE_ENEMIES  = 4;
+constexpr uint16_t UNLOCK_ALL_DOORS = 5;
+constexpr uint16_t MAX_MENU_ITEMS   = 6;
+
+constexpr uint32_t DOOR_ALL_ACCESS  = 4;
+
 constexpr uint32_t PLAYER           = 0x110E8B50;
 constexpr uint32_t DOOR             = 0x110FDDD8;
 constexpr uint32_t NPC              = 0x110F88D8;
+
+namespace hacks {
 
 /**
  * Prevents the game from subtracting the player's HP 
@@ -30,7 +38,7 @@ constexpr uint32_t NPC              = 0x110F88D8;
  * @param  bool bGodMode
  * @return void
  */
-void hack_GodMode(bool bGodMode);
+void GodMode(HackItem& item);
 
 /**
  * Prevents the visibility meter from rising above 0.001. 
@@ -43,7 +51,7 @@ void hack_GodMode(bool bGodMode);
  * @param  bool bGhostMode
  * @return void
  */
-void hack_GhostMode(bool bInvisible);
+void GhostMode(HackItem& item);
 
 /**
  * Toggles: rapid fire, infinite ammo (if previously non-zero), 
@@ -52,7 +60,7 @@ void hack_GhostMode(bool bInvisible);
  * @param  bool bSuperWeapons
  * @return void 
  */
-void hack_SuperWeapons(bool bSuperWeapons);
+void SuperWeapons(HackItem& item);
 
 /**
  * Disable alarms
@@ -60,7 +68,7 @@ void hack_SuperWeapons(bool bSuperWeapons);
  * @param  bDisableAlarms
  * @return void
  */
-void hack_DisableAlarms(bool bDisableAlarms);
+void DisableAlarms(HackItem& item);
 
 /**
  * Reduces all enemies in the current level's hp 
@@ -73,7 +81,8 @@ void hack_DisableAlarms(bool bDisableAlarms);
  * @param  bool bDisableEnemies
  * @return (unsigned int)n_entities_changed
  */
-unsigned int hack_DisableEnemies(bool bDisableEnemies);
+[[nodiscard]]
+uint16_t DisableEnemies(HackItem& item);
 
 /**
  * Unlock all of the doors in a level. 
@@ -81,6 +90,9 @@ unsigned int hack_DisableEnemies(bool bDisableEnemies);
  * @param  void 
  * @return (unsigned int)n_doors_unlocked
  */
-unsigned int hack_UnlockAllDoors(void);
+[[nodiscard]]
+uint16_t UnlockAllDoors(HackItem& item);
+
+} // namespace hacks
 
 #endif // HACKS_HEADER

@@ -1,5 +1,5 @@
-#ifndef D3D9HOOK_HPP
-#define D3D9HOOK_HPP
+#ifndef D3D9HOOK_HEADER
+#define D3D9HOOK_HEADER
 
 #ifndef WIN32_LEAN_AND_MEAN
 #   define WIN32_LEAN_AND_MEAN
@@ -16,4 +16,4 @@ BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam);
 
 HWND GetProcessWindow(void);
 
-#endif // D3D9HOOK_HPP
+#endif // D3D9HOOK_HEADER

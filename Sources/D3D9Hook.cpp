@@ -1,4 +1,4 @@
-#include "d3d9hook.h"
+#include "D3D9Hook.hpp"
 
 static HWND g_window;
 
@@ -50,23 +50,23 @@ BOOL GetD3D9Device(void** pTable, size_t Size)
     d3dpp.hDeviceWindow = GetProcessWindow();
     d3dpp.Windowed = TRUE;
 
-    HRESULT dummyDeviceCreated = IDirect3D9_CreateDevice(pD3D, D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dpp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDummyDevice);
+    HRESULT dummyDeviceCreated = pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dpp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDummyDevice);
 
     if (dummyDeviceCreated != S_OK)
     {
         // may fail in windowed fullscreen mode, trying again with g_windowed mode
         d3dpp.Windowed = !d3dpp.Windowed;
-        dummyDeviceCreated = IDirect3D9_CreateDevice(pD3D, D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dpp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDummyDevice);
+        dummyDeviceCreated = pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dpp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDummyDevice);
 
         if (dummyDeviceCreated != S_OK)
         {
-            IDirect3DDevice9_Release(pD3D);
+            pD3D->Release();
             return FALSE;
         }
     }
     memcpy(pTable, *(void ***)pDummyDevice, Size);
 
-    IDirect3DDevice9_Release(pDummyDevice);
-    IDirect3DDevice9_Release(pD3D);
+    pDummyDevice->Release();
+    pD3D->Release();
     return TRUE;
 }

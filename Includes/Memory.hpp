@@ -1,14 +1,16 @@
-#ifndef _MEM_H
-#define _MEM_H
+#ifndef MEM_HEADER
+#define MEM_HEADER
 
 #ifndef WIN32_LEAN_AND_MEAN
 #   define WIN32_LEAN_AND_MEAN
-#endif /* WIN32_LEAN_AND_MEAN */
+#endif // WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdint.h>
 #ifndef __cplusplus
 #include <stdbool.h>
-#endif /* __cplusplus */
+#endif // __cplusplus
+
+namespace memory {
 
 /**
  * Finds the Dynamic Memory Access address of an embedded process.
@@ -19,7 +21,8 @@
  *
  * @return: uintptr_t
 **/
-uintptr_t memory_find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t size);
+[[nodiscard]]
+uintptr_t find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t size);
 
 /**
  * Byte replacement from source to destination.
@@ -30,7 +33,8 @@ uintptr_t memory_find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t s
  *
  * @return: void
 **/
-bool memory_patch(void* dst, void* src, size_t size);
+[[nodiscard]]
+bool patch(void* dst, void* src, size_t size);
 
 /**
  * Hooks into a function and detours the target function to another function.
@@ -41,7 +45,8 @@ bool memory_patch(void* dst, void* src, size_t size);
  *
  * @return: bool
 **/
-bool memory_detour(void* targetFunc, void* myFunc, size_t size);
+[[nodiscard]]
+bool detour(void* targetFunc, void* myFunc, size_t size);
 
 /**
  * Hooks into a function and detours the target function to another function, then jumps back.
@@ -52,7 +57,8 @@ bool memory_detour(void* targetFunc, void* myFunc, size_t size);
  *
  * @return: char*
 **/
-char* memory_tramp_hook(char* targetFunc, char* myFunc, size_t size);
+[[nodiscard]]
+char* tramp_hook(char* targetFunc, char* myFunc, size_t size);
 
 /**
  * Scans a given chunk of data for the given pattern and mask.
@@ -64,6 +70,9 @@ char* memory_tramp_hook(char* targetFunc, char* myFunc, size_t size);
  *
  * @return: Pointer of the pattern found, 0 otherwise.
 **/
-unsigned char* memory_find_pattern(unsigned char* base_addr, size_t img_size, unsigned char* pattern, size_t pattern_size);
+[[nodiscard]]
+unsigned char* find_pattern(unsigned char* base_addr, size_t img_size, unsigned char* pattern, size_t pattern_size);
 
-#endif /* _MEM_H */
+} // namespace memory
+
+#endif // MEM_HEADER

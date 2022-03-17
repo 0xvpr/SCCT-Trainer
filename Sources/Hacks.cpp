@@ -1,88 +1,81 @@
-#include "hacks.h"
+#include "Hacks.hpp"
 
-#include "assembly.h"
-#include "offsets.h"
-#include "entity.h"
-#include "mem.h"
+#include "Assembly.hpp"
+#include "Offsets.hpp"
+#include "Entity.hpp"
+#include "Memory.hpp"
 
 #include <string.h>
 #include <windows.h>
+
+using render::HackItem;
 
 extern uintptr_t module_base_addr;
 
 extern unsigned int n_entities_changed;
 extern unsigned int total_doors_unlocked;
 
-bool bMaximizeMenu   = true;
-bool bDisableEnemies = false;
-bool bDisableAlarms  = false;
-bool bSuperWeapons   = false;
-bool bGhostMode      = false;
-bool bGodMode        = false;
+void hacks::GodMode(HackItem& item) {
 
-/*void health_detour(void); // maybe this works?*/
-
-void hack_GodMode(bool bEnabled)
-{
-    char* const health_op = (char *)(module_base_addr + offsets_health_base);
+    char* const health_op = (char *)(module_base_addr + offsets::health_base);
     char* const health_original = "\x2B\xC2"   // sub eax, edx
                                   "\x89\x03"   // mov dword ptr [ebx], eax
                                   "\x8B\xD8";  // mov ebx, eax
     size_t health_op_size = 6;
 
-    if (bEnabled)
+    if (item())
     {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-        memory_detour(health_op, (void *)health_detour, health_op_size);
+        (void)memory::detour(health_op, (void *)health_detour, health_op_size);
 #pragma GCC diagnostic pop
 
     }
     else
     {
-        memory_patch(health_op, health_original, health_op_size);
+        (void)memory::patch(health_op, health_original, health_op_size);
     }
 
 }
 
-void hack_GhostMode(bool bEnabled)
-{
-    char* const visibility_op = (char *)(module_base_addr + offsets_invisibility_base);
+void hacks::GhostMode(HackItem& item) {
+
+    char* const visibility_op = (char *)(module_base_addr + offsets::invisibility_base);
     char* const visibility_original = "\x8B\x86\x18\x15\x00\x00";  // mov eax, dword ptr [esi + 0x1518]
     char* const visibility_patch    = "\x90\x90\x90\x90\x90\x90";  // nop
     size_t visibility_size = 6;
 
-    char* const noise_op = (char *)(module_base_addr + offsets_noise_base);
+    char* const noise_op = (char *)(module_base_addr + offsets::noise_base);
     char* const noise_original = "\x3B\xF8";  // cmp edi, eax
     char* const noise_patch    = "\x39\xC0";  // cmp eax, eax
     size_t noise_size = 2;
 
     // Add third op for slider
 
-    if (bEnabled)
+    if (item())
     {
-        memory_patch(visibility_op, visibility_patch, visibility_size);
-        memory_patch(noise_op, noise_patch, noise_size);
+        (void)memory::patch(visibility_op, visibility_patch, visibility_size);
+        (void)memory::patch(noise_op, noise_patch, noise_size);
     }
     else
     {
-        memory_patch(visibility_op, visibility_original, visibility_size);
-        memory_patch(noise_op, noise_original, noise_size);
+        (void)memory::patch(visibility_op, visibility_original, visibility_size);
+        (void)memory::patch(noise_op, noise_original, noise_size);
     }
 
 }
 
-void hack_SuperWeapons(bool bEnabled)
-{
+void hacks::SuperWeapons(HackItem& item) {
+
     /* Main Weapon Ammo Operation */
-    char* const main_ammo_op = (char *)(module_base_addr + offsets_main_ammo_base);
+    char* const main_ammo_op = (char *)(module_base_addr + offsets::main_ammo_base);
     char* const main_ammo_original = "\x4B\x4F";  // dec ebx; dec edi
     char* const main_ammo_patch    = "\x90\x90";  // nop; nop
     size_t main_ammo_size = 2;
 
 
     /* Shotgun Ammo Operations */
-    char* const shotgun_ammo_op = (char *)(module_base_addr + offsets_shotgun_ammo_base);
+    char* const shotgun_ammo_op = (char *)(module_base_addr + offsets::shotgun_ammo_base);
     char* const shotgun_ammo_original = "\x49"                      // dec ecx
                                         "\x89\x8F\x1C\x04\x00\x00"  // mov [esi + 0x454], eax
                                         "\x8B\x8F\xFC\x03\x00\x00"  // mov eax, [esi + 0x45C]
@@ -95,7 +88,7 @@ void hack_SuperWeapons(bool bEnabled)
     size_t shotgun_ammo_size = 14;
 
     /* Sniper Ammo Operations */
-    char* const  sniper_ammo_op = (char *)(module_base_addr + offsets_sniper_ammo_base);
+    char* const  sniper_ammo_op = (char *)(module_base_addr + offsets::sniper_ammo_base);
     char* const  sniper_ammo_original  = "\x48"                      // dec eax
                                          "\x89\x86\x54\x04\x00\x00"  // mov [esi + 0x454], eax
                                          "\x8B\x86\x5C\x04\x00\x00"  // mov eax, [esi + 0x45C]
@@ -126,76 +119,77 @@ void hack_SuperWeapons(bool bEnabled)
     size_t recoil_op_size = 6;
 
     /* Rapid Fire Operation */
-    char* const rapid_fire_op = (char *)(module_base_addr + offsets_rapid_fire_base);
+    char* const rapid_fire_op = (char *)(module_base_addr + offsets::rapid_fire_base);
     char* const rapid_fire_original = "\x75\x47";  // jne short 0x47
     char* const rapid_fire_patch    = "\x90\x90";  // nop
     size_t rapid_fire_size = 2;
 
-    if (bEnabled)
+    if (item())
     {
-        memory_patch((BYTE *)main_ammo_op, (BYTE *)main_ammo_patch, main_ammo_size);
-        memory_patch((BYTE *)sniper_ammo_op, (BYTE *)sniper_ammo_patch, sniper_ammo_size);
-        memory_patch((BYTE *)shotgun_ammo_op, (BYTE *)shotgun_ammo_patch, shotgun_ammo_size);
-
+        (void)memory::patch((BYTE *)main_ammo_op, (BYTE *)main_ammo_patch, main_ammo_size);
+        (void)memory::patch((BYTE *)sniper_ammo_op, (BYTE *)sniper_ammo_patch, sniper_ammo_size);
+        (void)memory::patch((BYTE *)shotgun_ammo_op, (BYTE *)shotgun_ammo_patch, shotgun_ammo_size); 
         for (size_t i = 0; i < recoil_op_size; i++)
         {
             const char* recoil_op = (char *)(module_base_addr + recoil_op_offsets[i]);
-            memory_patch((BYTE *)recoil_op, (BYTE *)recoil_patch, recoil_op_size);
+            (void)memory::patch((BYTE *)recoil_op, (BYTE *)recoil_patch, recoil_op_size);
         }
 
-        memory_patch((BYTE *)rapid_fire_op, (BYTE *)rapid_fire_patch, rapid_fire_size);
+        (void)memory::patch((BYTE *)rapid_fire_op, (BYTE *)rapid_fire_patch, rapid_fire_size);
     }
     else
     {
-        memory_patch((BYTE *)main_ammo_op, (BYTE *)main_ammo_original, main_ammo_size);
-        memory_patch((BYTE *)sniper_ammo_op, (BYTE *)sniper_ammo_original, sniper_ammo_size);
-        memory_patch((BYTE *)shotgun_ammo_op, (BYTE *)shotgun_ammo_original, shotgun_ammo_size);
+        (void)memory::patch((BYTE *)main_ammo_op, (BYTE *)main_ammo_original, main_ammo_size);
+        (void)memory::patch((BYTE *)sniper_ammo_op, (BYTE *)sniper_ammo_original, sniper_ammo_size);
+        (void)memory::patch((BYTE *)shotgun_ammo_op, (BYTE *)shotgun_ammo_original, shotgun_ammo_size);
 
         for (size_t i = 0; i < recoil_op_size; i++)
         {
             const char* recoil_op = (char *)(module_base_addr + recoil_op_offsets[i]);
-            memory_patch((BYTE *)recoil_op, (BYTE *)recoil_original[i], recoil_op_size);
+            (void)memory::patch((BYTE *)recoil_op, (BYTE *)recoil_original[i], recoil_op_size);
         }
 
-        memory_patch((BYTE *)rapid_fire_op, (BYTE *)rapid_fire_original, rapid_fire_size);
+        (void)memory::patch((BYTE *)rapid_fire_op, (BYTE *)rapid_fire_original, rapid_fire_size);
     }
 
 }
 
-void hack_DisableAlarms(bool bEnabled)
-{
-    char* const alarm_op = (char *)(module_base_addr + offsets_alarm_base);
+void hacks::DisableAlarms(HackItem& item) {
+
+    char* const alarm_op = (char *)(module_base_addr + offsets::alarm_base);
     char* const alarm_original = "\x0F\x85\x35\x03\x00\x00"; // jne splintercell3.exe + 0x9BF9C
     char* const alarm_patch    = "\xE9\x36\x03\x00\x00\x90"; // jmp splintercell3.exe + 0x9BF9C
     size_t alarm_size = 6;
 
-    if (bEnabled)
+    if (item())
     {
-        memory_patch((BYTE *)alarm_op, (BYTE *)alarm_patch, alarm_size);
+        (void)memory::patch((BYTE *)alarm_op, (BYTE *)alarm_patch, alarm_size);
     }
     else
     {
-        memory_patch((BYTE *)alarm_op, (BYTE *)alarm_original, alarm_size);
+        (void)memory::patch((BYTE *)alarm_op, (BYTE *)alarm_original, alarm_size);
     }
+
 }
 
-unsigned int hack_DisableEnemies(bool bEnabled)
-{
-    EntityList* entity_list = *(EntityList **)memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                                             offsets_entity_list_pointers,
-                                                                                             offsets_entity_list_pointers_size);
+[[nodiscard]]
+uint16_t hacks::DisableEnemies(HackItem& item) {
 
-    size_t entity_list_size = *((int *)(memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                                       offsets_entity_list_pointers,
-                                                                                       offsets_entity_list_pointers_size)) + 1);
+    EntityList* entity_list = *(EntityList **)memory::find_dynamic_address(module_base_addr + offsets::entity_list_base,
+                                                                                              offsets::entity_list_pointers,
+                                                                                              offsets::entity_list_pointers_size);
 
-    unsigned int total_entities_changed = 0;
+    size_t entity_list_size = *((uintptr_t *)(memory::find_dynamic_address(module_base_addr + offsets::entity_list_base,
+                                                                                              offsets::entity_list_pointers,
+                                                                                              offsets::entity_list_pointers_size)) + 1);
+
+    uint16_t total_entities_changed = 0;
     for (size_t i = 0; i < entity_list_size; i++)
     {
         Entity* entity = entity_list->entities[i].entity;
         if (entity->entity_type == NPC)
         {
-            if (bEnabled)
+            if (item())
             {
                 entity->health = 0;
                 ++total_entities_changed;
@@ -209,20 +203,22 @@ unsigned int hack_DisableEnemies(bool bEnabled)
     }
 
     return total_entities_changed;
+
 }
 
-unsigned int hack_UnlockAllDoors(void)
-{
-    EntityList* _entity_list = *(EntityList **)memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                                              offsets_entity_list_pointers,
-                                                                                              offsets_entity_list_pointers_size);
+[[nodiscard]]
+uint16_t hacks::UnlockAllDoors(HackItem& item) {
 
-    size_t size = *((int *)(memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                           offsets_entity_list_pointers,
-                                                                           offsets_entity_list_pointers_size)) + 1);
+    EntityList* _entity_list = *(EntityList **)memory::find_dynamic_address(module_base_addr + offsets::entity_list_base,
+                                                                                               offsets::entity_list_pointers,
+                                                                                               offsets::entity_list_pointers_size);
 
-    unsigned int local_total = 0;
-    unsigned int n_doors_unlocked = 0;
+    size_t size = *((unsigned *)(memory::find_dynamic_address(module_base_addr + offsets::entity_list_base,
+                                                                                 offsets::entity_list_pointers,
+                                                                                 offsets::entity_list_pointers_size)) + 1);
+
+    uint16_t local_total = 0;
+    uint16_t n_doors_unlocked = 0;
     for (size_t i = 0; i < size; i++)
     {
         Entity* entity = _entity_list->entities[i].entity;
@@ -244,5 +240,8 @@ unsigned int hack_UnlockAllDoors(void)
     }
     total_doors_unlocked = local_total;
 
+    (void)item();
+
     return n_doors_unlocked;
+
 }

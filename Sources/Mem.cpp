@@ -1,25 +1,26 @@
-#include "mem.h"
+#include "Memory.hpp"
 
-uintptr_t memory_find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t size)
-{ 
+[[nodiscard]]
+uintptr_t memory::find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t size) { 
+
     uintptr_t addr = ptr;
 
-    for (size_t i = 0; i < size; i++)
-    {
+    for (size_t i = 0; i < size; i++) {
         addr = *(uintptr_t *)addr;
         addr += offsets[i];
 
-        if (*(uintptr_t *)addr == 0)
-        {
+        if (*(uintptr_t *)addr == 0) {
             return 0;
         }
     }
 
     return addr;
+
 }
 
-bool memory_patch(void* dst, void* src, size_t size)
-{
+[[nodiscard]]
+bool memory::patch(void* dst, void* src, size_t size) {
+
     DWORD oldprotect;
 
     VirtualProtect(dst, size, PAGE_EXECUTE_WRITECOPY, &oldprotect);
@@ -29,10 +30,8 @@ bool memory_patch(void* dst, void* src, size_t size)
     unsigned char* destination = (unsigned char *)dst;
     unsigned char* source = (unsigned char *)src;
 
-    for (size_t i = 0; i < size; i++, destination++, source++)
-    {
-        if (*destination != *source )
-        {
+    for (size_t i = 0; i < size; i++, destination++, source++) {
+        if (*destination != *source ) {
             return FALSE;
         }
     }
@@ -40,10 +39,10 @@ bool memory_patch(void* dst, void* src, size_t size)
     return TRUE;
 }
 
-bool memory_detour(void* targetFunc, void* myFunc, size_t size)
-{
-    if (size < 5)
-    {
+[[nodiscard]]
+bool memory::detour(void* targetFunc, void* myFunc, size_t size) {
+
+    if (size < 5) {
         return FALSE;
     }
 
@@ -60,10 +59,10 @@ bool memory_detour(void* targetFunc, void* myFunc, size_t size)
     return TRUE;
 }
 
-char* memory_tramp_hook(char* src, char* dst, size_t size)
-{
-    if (size < 5)
-    {
+[[nodiscard]]
+char* memory::tramp_hook(char* src, char* dst, size_t size) {
+
+    if (size < 5) {
         return 0;
     }
 
@@ -74,27 +73,21 @@ char* memory_tramp_hook(char* src, char* dst, size_t size)
     *(gateway + size) = (char)0xE9;
     *(uintptr_t *)(gateway + size + 1) = gateJmpAddress;
 
-    if (memory_detour(src, dst, size))
-    {
+    if (memory::detour(src, dst, size)) {
         return gateway;
-    }
-    else
-    {
+    } else {
         return NULL;
     }
 }
 
+[[nodiscard]]
 static inline
-int compare_byte_array(unsigned char* data, unsigned char* pattern, size_t pattern_size)
-{
-    for (size_t i = 0; i < pattern_size; i++, pattern++, data++)
-    {
-        if (*pattern == '\0')
-        {
+int compare_byte_array(unsigned char* data, unsigned char* pattern, size_t pattern_size) {
+
+    for (size_t i = 0; i < pattern_size; i++, pattern++, data++) {
+        if (*pattern == '\0') {
             continue;
-        }
-        else if (*data != *pattern)
-        {
+        } else if (*data != *pattern) {
             return FALSE;
         }
     }
@@ -102,22 +95,20 @@ int compare_byte_array(unsigned char* data, unsigned char* pattern, size_t patte
     return TRUE;
 }
 
-unsigned char* memory_find_pattern(unsigned char* base_addr, size_t img_size, unsigned char* pattern, size_t pattern_size)
-{
+[[nodiscard]]
+unsigned char* memory::find_pattern(unsigned char* base_addr, size_t img_size, unsigned char* pattern, size_t pattern_size) {
+
     BYTE first = pattern[0];
     PBYTE last = base_addr + img_size - pattern_size;
 
-    for (; base_addr < last; ++base_addr)
-    {
-        if (*base_addr != first)
-        {
+    for (; base_addr < last; ++base_addr) {
+        if (*base_addr != first) {
             continue;
-        }
-        else if (compare_byte_array(base_addr, pattern, pattern_size))
-        {
+        } else if (compare_byte_array(base_addr, pattern, pattern_size)) {
             return base_addr;
         }
     }
 
     return NULL;
+
 }

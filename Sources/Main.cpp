@@ -1,20 +1,20 @@
 /**
- * @Author    Malik Booker
- * @Created:  August 18, 2021
- * @Modified: September 6, 2021
+ * Author    Malik Booker
+ * Created:  August 18, 2021
+ * Modified: March 17, 2022
  * 
- * @Brief:
- * SCCT GUI
+ * Brief:
+ *     SCCT GUI
  * 
- * @Disclaimer:
- * I claim no liability/responsibility
- * for damage associated with however this code is used.
+ * Disclaimer:
+ *     I claim no liability/responsibility
+ *     for damage associated with however this code is used.
 **/
 
-#include "d3d9hook.h"
-#include "render.h"
-#include "events.h"
-#include "mem.h"
+#include "D3D9Hook.hpp"
+#include "Render.hpp"
+#include "Events.hpp"
+#include "Memory.hpp"
 
 unsigned int total_doors_unlocked = 0;
 unsigned int n_entities_changed   = 0;
@@ -29,46 +29,43 @@ unsigned char oEndScene_bytes[7] = { 0 };
 tEndScene oEndScene = NULL;
 LPDIRECT3DDEVICE9 pD3DDevice = NULL;
 
-HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 pDevice)
-{
-    if (!bInit)
-    {
+HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 pDevice) {
+
+    if (!bInit) {
         /*render_InitializeMenuItems();*/
         /*render_CreateFont(pDevice, 16);*/
 
         bInit = true;
     }
-    render_Menu(pDevice);
+    render::Menu(pDevice);
 
     return oEndScene(pDevice);
 }
 
-DWORD WINAPI MainThread(LPVOID lpReserved)
-{
+DWORD WINAPI MainThread(LPVOID lpReserved) {
+
     (void)lpReserved;
     module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
-    if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
-    {
+    if (GetD3D9Device(d3d9Device, sizeof(d3d9Device))) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
         memcpy(oEndScene_bytes, d3d9Device[42], sizeof(oEndScene_bytes));
-        oEndScene = (tEndScene)memory_tramp_hook((char *)d3d9Device[42], (char *)hkEndScene, 7);
+        oEndScene = (tEndScene)memory::tramp_hook((char *)d3d9Device[42], (char *)hkEndScene, 7);
 #pragma GCC diagnostic pop
     }
 
-    while (!(bShutdown = events_HandleKeyboard()))
-    {
+    while (!(bShutdown = events::HandleKeyboard())) {
         // Main Loop
     }
 
-    memory_patch(d3d9Device[42], oEndScene_bytes, sizeof(oEndScene_bytes));
+    (void)memory::patch(d3d9Device[42], oEndScene_bytes, sizeof(oEndScene_bytes));
     FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
     return TRUE;
 }
 
-BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
-{
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
+
     (void)lpReserved;
     switch (dwReason)
     {

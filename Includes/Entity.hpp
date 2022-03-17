@@ -1,5 +1,5 @@
-#ifndef _ENTITY_H
-#define _ENTITY_H
+#ifndef ENTITY_HEADER
+#define ENTITY_HEADER
 
 typedef struct Entity
 {
@@ -40,4 +40,4 @@ typedef struct Weapon
     float bloom_y;           // + 0x0524
 } Weapon;
 
-#endif
+#endif // ENTITY_HEADER
