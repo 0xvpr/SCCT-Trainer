@@ -190,14 +190,14 @@ unsigned int hack_DisableEnemies(bool bEnabled)
                                                                                              offsets_entity_list_pointers_size);
 
     size_t entity_list_size = *((size_t *)(memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                                       offsets_entity_list_pointers,
-                                                                                       offsets_entity_list_pointers_size)) + 1);
+                                                                                          offsets_entity_list_pointers,
+                                                                                          offsets_entity_list_pointers_size)) + 1);
 
     unsigned int total_entities_changed = 0;
     for (size_t i = 0; i < entity_list_size; i++)
     {
         Entity* entity = entity_list->entities[i].entity;
-        if (entity->entity_type == NPC)
+        if (TYPE(entity->lpVtable) == NPC)
         {
             if (bEnabled)
             {
@@ -222,15 +222,15 @@ unsigned int hack_UnlockAllDoors(void)
                                                                                               offsets_entity_list_pointers_size);
 
     size_t size = *((size_t *)(memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                           offsets_entity_list_pointers,
-                                                                           offsets_entity_list_pointers_size)) + 1);
+                                                                              offsets_entity_list_pointers,
+                                                                              offsets_entity_list_pointers_size)) + 1);
 
     unsigned int local_total = 0;
     unsigned int n_doors_unlocked = 0;
     for (size_t i = 0; i < size; i++)
     {
         Entity* entity = _entity_list->entities[i].entity;
-        if (entity->entity_type == DOOR)
+        if (TYPE(entity->lpVtable) == DOOR)
         {
             Door* door = (Door *)entity;
             if (door->access == 0)
