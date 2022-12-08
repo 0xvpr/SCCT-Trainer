@@ -117,7 +117,7 @@ bool events_HandleKeyboard(void)
         bMaximizeMenu = !bMaximizeMenu;
     }
 
-    if (GetAsyncKeyState(VK_END))
+    if (GetAsyncKeyState(VK_HOME))
     {
         return true;
     }

@@ -1,5 +1,5 @@
 -std=c99
---target=i686-pc-windows
+--target=i686-pc-windows-gnu
 -I/usr/lib/gcc/i686-w64-mingw32/9.3-win32/include
 -I/usr/lib/gcc/i686-w64-mingw32/9.3-win32/include-fixed
 -I/usr/lib/gcc/i686-w64-mingw32/9.3-win32/../../../../i686-w64-mingw32/include
@@ -7,4 +7,6 @@
 -Wall
 -Wextra
 -Werror
--pedantic
+-Wshadow
+-Wpedantic
+-Wconversion

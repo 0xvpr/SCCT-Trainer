@@ -1,7 +1,7 @@
 PROJECT = sp3
 
 CC      = i686-w64-mingw32-gcc
-CFLAGS  = -std=c99 -masm=intel -pedantic -Wall -Wextra -Werror -shared
+CFLAGS  = -std=c99 -O2 -masm=intel -Wall -Wextra -Werror -Wshadow -Wpedantic -Wconversion
 
 LD      = i686-w64-mingw32-gcc
 LDFLAGS = -shared
@@ -32,6 +32,8 @@ ASM_OBJ     = $(BUILD)/asm
 ASM_SOURCES = $(wildcard $(ASM_SRC)/*.asm)
 ASM_OBJECTS = $(patsubst $(ASM_SRC)/%.asm,$(ASM_OBJ)/%.obj,$(ASM_SOURCES))
 
+MAKEFLAGS  += $(addprefix -j,$(shell nproc))
+
 all: debug release
 
 debug: $(DEBUG)
@@ -43,7 +45,7 @@ $(DEBUG): $(OBJ) $(BIN) $(ASM_OBJECTS) $(DBG_OBJECTS)
 
 $(PROJECT): CFLAGS  += -O3 -fno-ident -fvisibility=hidden
 $(PROJECT): LDFLAGS += -s
-$(PROJECT): $(OBJ) $(BIN) $(REL_OBJECTS)
+$(PROJECT): $(OBJ) $(BIN) $(ASM_OBJECTS) $(REL_OBJECTS)
 	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(REL_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
 
 $(ASM_OBJECTS): $(ASM_OBJ)/%.obj: $(ASM_SRC)/%.asm

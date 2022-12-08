@@ -5,6 +5,7 @@
 - Project completed:    08/19/2021
 - Switch from CPP to C: 08/20/2021
 - Project revisited:    12/09/2021
+- Project revisited:    12/07/2022
 
 ## Overview & Demonstration
 The main purpose of this project was to get familiar with the C language while also  
