@@ -43,7 +43,7 @@ $(DEBUG): CFLAGS += -g
 $(DEBUG): $(OBJ) $(BIN) $(ASM_OBJECTS) $(DBG_OBJECTS) 
 	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(DBG_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
 
-$(PROJECT): CFLAGS  += -O3 -fno-ident -fvisibility=hidden
+$(PROJECT): CFLAGS  += -O3 -fno-ident -fvisibility=hidden -funroll-loops -fno-function-sections -fPIE
 $(PROJECT): LDFLAGS += -s
 $(PROJECT): $(OBJ) $(BIN) $(ASM_OBJECTS) $(REL_OBJECTS)
 	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(REL_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
