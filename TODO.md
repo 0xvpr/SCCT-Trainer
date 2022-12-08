@@ -1,4 +1,12 @@
-- [ ] Refactor Makefile
+# TODO
+- [ ] Reverse Engineer Entity Vtables
+  - [ ] Player
+  - [ ] Enemy
+- [ ] Create Dockerfile for reproduction
+- [ ] Refactor Makefile for docker support
+
+
+#TODONE
 - [x] Create toolchain script for contribution purposes
 - [x] Update README
 - [x] Remove inline assembly and change it into .asm
