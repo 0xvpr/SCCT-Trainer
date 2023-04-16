@@ -82,4 +82,10 @@ unsigned int hack_DisableEnemies(bool bDisableEnemies);
  */
 unsigned int hack_UnlockAllDoors(void);
 
+/**
+ * Test TODO
+ *
+*/
+void hack_test(void);
+
 #endif /* _HACKS_H */

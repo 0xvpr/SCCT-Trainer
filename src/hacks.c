@@ -250,3 +250,31 @@ unsigned int hack_UnlockAllDoors(void)
 
     return n_doors_unlocked;
 }
+
+void hack_test(void)
+{
+    EntityList* _entity_list = *(EntityList **)memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
+                                                                                              offsets_entity_list_pointers,
+                                                                                              offsets_entity_list_pointers_size);
+
+    size_t size = *((size_t *)(memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
+                                                                              offsets_entity_list_pointers,
+                                                                              offsets_entity_list_pointers_size)) + 1);
+
+    Entity* player = NULL;
+    for (size_t i = 0; i < size; ++i)
+    {
+        Entity* current_entity = _entity_list->entities[i].entity;
+        if (TYPE(current_entity->lpVtable) == PLAYER)
+        {
+            player = current_entity;
+            break;
+        }
+    }
+
+    if (player != NULL)
+    {
+        player->lpVtable->function_13(player, 1, 2);
+    }
+
+}

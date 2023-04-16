@@ -1,8 +1,7 @@
 #ifndef _EVENTS_H
 #define _EVENTS_H
 
-#include "hacks.h"
-#include "render.h"
+#include <stdbool.h>
 
 /**
  * Handles keyboard input

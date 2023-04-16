@@ -1,7 +1,7 @@
 PROJECT = sp3
 
 CC      = i686-w64-mingw32-gcc
-CFLAGS  = -std=c99 -O2 -masm=intel -Wall -Wextra -Werror -Wshadow -Wpedantic -Wconversion
+CFLAGS  = -std=c99 -O2 -masm=intel -Wall -Wextra #-Werror -Wshadow -Wpedantic -Wconversion
 
 LD      = i686-w64-mingw32-gcc
 LDFLAGS = -shared
@@ -17,7 +17,7 @@ RELEASE = $(OBJ)/release
 SRC     = src
 OBJ     = build
 SOURCES = $(wildcard $(SRC)/*.c)
-DBG_OBJECTS = $(patsubst $(SRC)/%.c,$(DEBUG)/%.o,$(SOURCES))
+DBG_OBJECTS = $(patsubst $(SRC)/%.c,$(DEBUG)/%_d.o,$(SOURCES))
 REL_OBJECTS = $(patsubst $(SRC)/%.c,$(RELEASE)/%.o,$(SOURCES))
 
 INCLUDE  = include 
@@ -32,7 +32,7 @@ ASM_OBJ     = $(BUILD)/asm
 ASM_SOURCES = $(wildcard $(ASM_SRC)/*.asm)
 ASM_OBJECTS = $(patsubst $(ASM_SRC)/%.asm,$(ASM_OBJ)/%.obj,$(ASM_SOURCES))
 
-MAKEFLAGS  += $(addprefix -j,$(shell nproc))
+#MAKEFLAGS  += $(addprefix -j,$(shell nproc))
 
 all: debug release
 
@@ -51,7 +51,7 @@ $(PROJECT): $(OBJ) $(BIN) $(ASM_OBJECTS) $(REL_OBJECTS)
 $(ASM_OBJECTS): $(ASM_OBJ)/%.obj: $(ASM_SRC)/%.asm
 	$(ASM) $(ASFLAGS) $^ -o $@
 
-$(DBG_OBJECTS): $(DEBUG)/%.o: $(SRC)/%.c
+$(DBG_OBJECTS): $(DEBUG)/%_d.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
 $(REL_OBJECTS): $(RELEASE)/%.o: $(SRC)/%.c
