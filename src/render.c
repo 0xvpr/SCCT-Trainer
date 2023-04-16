@@ -4,17 +4,20 @@
 
 extern bool bMaximizeMenu;
 
-D3DCOLOR color_LightGrey = D3DCOLOR_ARGB(255, 80, 80, 80);
-D3DCOLOR color_DarkGrey  = D3DCOLOR_ARGB(255, 25, 25, 25);
-D3DCOLOR color_White     = D3DCOLOR_ARGB(255, 255, 255, 255);
-D3DCOLOR color_Black     = D3DCOLOR_ARGB(255, 0, 0, 0);
-D3DCOLOR color_Green     = D3DCOLOR_ARGB(255, 10, 200, 10);
-D3DCOLOR color_Blue      = D3DCOLOR_ARGB(255, 0, 42, 255);
-D3DCOLOR color_Red       = D3DCOLOR_ARGB(255, 255, 0, 0);
+extern LPD3DXFONT m_font;
+extern LPD3DXFONT m_font_small;
 
-Resolution resolution = { 0, 0 };          // TODO: move to 
-Coordinates coordinates = { 30, 25 };      // TODO: move to render.c
-HackMenu hackMenu[MAX_MENU_ITEMS] = { 0 }; // TODO: move to render.c
+static const D3DCOLOR color_LightGrey = D3DCOLOR_ARGB( 255,  80,  80,  80 );
+static const D3DCOLOR color_DarkGrey  = D3DCOLOR_ARGB( 255,  25,  25,  25 );
+//static const D3DCOLOR color_White   = D3DCOLOR_ARGB( 255, 255, 255, 255 );
+static const D3DCOLOR color_Black     = D3DCOLOR_ARGB( 255,   0,   0,   0 );
+static const D3DCOLOR color_Green     = D3DCOLOR_ARGB( 255,  10, 200,  10 );
+//static const D3DCOLOR color_Blue    = D3DCOLOR_ARGB( 255,   0,  42, 255 );
+//static const D3DCOLOR color_Red     = D3DCOLOR_ARGB( 255, 255,   0,   0 );
+
+Resolution resolution = { 0, 0 };
+Coordinates coordinates = { 30, 25 };
+HackMenu hackMenu[MAX_MENU_ITEMS] = { 0 };
 
 void render_InitializeMenuItems()
 {

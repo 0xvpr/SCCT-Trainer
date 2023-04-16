@@ -1,7 +1,9 @@
-#include <windows.h>
 #include "events.h"
+
+#include "hacks.h"
 #include "render.h"
 
+#include <windows.h>
 
 extern uintptr_t module_base_addr;
 
@@ -67,6 +69,12 @@ bool events_HandleKeyboard(void)
     {
         hackMenu[UNLOCK_ALL_DOORS].bEnabled = !hackMenu[UNLOCK_ALL_DOORS].bEnabled;
         total_doors_unlocked = hack_UnlockAllDoors();
+    }
+
+    /* Unlock All Doors */
+    if (GetAsyncKeyState(VK_NUMPAD7) & 1)
+    {
+        hack_test();
     }
 
     // Control Menu Position
