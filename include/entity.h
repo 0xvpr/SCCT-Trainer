@@ -1,5 +1,5 @@
-#ifndef _ENTITY_H
-#define _ENTITY_H
+#ifndef ENTITY_HEADER
+#define ENTITY_HEADER
 
 #ifndef TYPE
 #define TYPE(x) ((uintptr_t)x)
@@ -37,46 +37,42 @@ typedef struct PlayerVtable
     void (__stdcall  * func_25_1092AFB0)(void);                                      // To Reverse Engineer
     void (__stdcall  * func_26_1092AFC0)(void);                                      // To Reverse Engineer
     void (__stdcall  * func_27_1092AFD0)(void);                                      // To Reverse Engineer
-    void (__thiscall * func_28_10B852D0)(void * unknown);                               // No fucking clue but its huge
+    void (__thiscall * func_28_10B852D0)(void * unknown);                            // No fucking clue but its huge
 } PlayerVtable;
 
-typedef struct Entity
+typedef struct _Entity
 {
-    PlayerVtable* lpVtable;   // + 0x0000
-    char _0xE8[0xE4];
-    float x;                  // + 0x00E8
-    float y;                  // + 0x00EC
-    float z;                  // + 0x00F0
-    char _0x420[0x32C];
-    int health;               // + 0x0420
+    PlayerVtable*   lpVtable;           // + 0x0000
+    char            __0x0E8__[0x0E4];   // [ padding ]
+    float           x;                  // + 0x00E8
+    float           y;                  // + 0x00EC
+    float           z;                  // + 0x00F0
+    char            __0x420__[0x32C];   // [ padding ]
+    int             health;             // + 0x0420
 } Entity;
 
-typedef struct EntityObject
+typedef struct _GameWorld
 {
-    struct Entity* entity;
-} EntityObject;
+    Entity**        entities;
+    unsigned        n_entities;
+} GameWorld;
 
-typedef struct EntityList
+typedef struct _Door
 {
-    struct EntityObject entities[99];
-} EntityList;
-
-typedef struct Door
-{
-    unsigned int door_type;  // + 0x0000
-    char _0x4B8[0x4B4];
-    int access;              // + 0x04B8
+    unsigned        door_type;          // + 0x0000
+    char            __0x4B8__[0x4B4];   // [ padding ]
+    int             access;             // + 0x04B8
 } Door;
 
-typedef struct Weapon
+typedef struct _Weapon
 {
-    int current_ammo;        // + 0x0000
-    int max_clip_size;       // + 0x0004
-    int total_ammo;          // + 0x0008
-    char _0x51C[0xF0];
-    float minimum_reticle;   // + 0x051C
-    float bloom_x;           // + 0x0520
-    float bloom_y;           // + 0x0524
+    int             current_ammo;       // + 0x0000
+    int             max_clip_size;      // + 0x0004
+    int             total_ammo;         // + 0x0008
+    char            __0x51C__[0x0F0];   // [ padding ]
+    float           minimum_reticle;    // + 0x051C
+    float           bloom_x;            // + 0x0520
+    float           bloom_y;            // + 0x0524
 } Weapon;
 
-#endif
+#endif /* ENTITY_HEADER */
