@@ -20,8 +20,6 @@ extern bool bGhostMode;
 extern bool bShutdown;
 extern bool bGodMode;
 
-/*void health_detour(void); // maybe this works?*/
-
 void hack_GodMode(bool bEnabled)
 {
     char* const health_op = (char *)(module_base_addr + offsets_health_base);
@@ -32,11 +30,7 @@ void hack_GodMode(bool bEnabled)
 
     if (bEnabled)
     {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpedantic"
         memory_detour(health_op, (void *)health_detour, health_op_size);
-#pragma GCC diagnostic pop
-
     }
     else
     {
@@ -288,4 +282,16 @@ void hack_test(void)
         /*player->lpVtable->function_12(player);*/
     }
 
+}
+
+void hack_no_clip(bool bEnabled)
+{
+    if (bEnabled)
+    {
+        // Stop xyz movements
+        
+        // X movement
+        // splintercell3.exe+19580D -> fstp dword ptr [edi]
+        // splintercell3.exe+19580D -> nop nop
+    }
 }
