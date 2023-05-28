@@ -51,7 +51,6 @@ BOOL GetD3D9Device(void** pTable, size_t Size)
     d3dpp.Windowed = TRUE;
 
     HRESULT dummyDeviceCreated = IDirect3D9_CreateDevice(pD3D, D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dpp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDummyDevice);
-
     if (dummyDeviceCreated != S_OK)
     {
         // may fail in windowed fullscreen mode, trying again with g_windowed mode

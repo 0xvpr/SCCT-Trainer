@@ -15,6 +15,7 @@
 #include "render.h"
 #include "events.h"
 #include "mem.h"
+#include <winnt.h>
 
 bool bDisableEnemies = false; // Possible unecessary?
 bool bDisableAlarms  = false; // Possible unecessary?
@@ -35,7 +36,9 @@ uint8_t             oEndScene_bytes[7]      = { 0 };
 tEndScene           oEndScene               = NULL;
 LPDIRECT3DDEVICE9   pD3DDevice              = NULL;
 
-HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 pDevice)
+HRESULT
+APIENTRY
+hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 {
     if (!bInit)
     {
@@ -49,17 +52,18 @@ HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 pDevice)
     return oEndScene(pDevice);
 }
 
-DWORD WINAPI MainThread(HINSTANCE hInstance)
+DWORD
+WINAPI
+MainThread(HINSTANCE hInstance)
 {
     module_base_addr = (uintptr_t)GetModuleHandle(NULL);
+    void* gateway = NULL;
 
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
     {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpedantic"
         memcpy(oEndScene_bytes, d3d9Device[42], sizeof(oEndScene_bytes));
-        oEndScene = (tEndScene)memory_tramp_hook((char *)d3d9Device[42], (char *)hkEndScene, 7);
-#pragma GCC diagnostic pop
+        gateway = memory_tramp_hook((char *)d3d9Device[42], (char *)hkEndScene, sizeof(oEndScene_bytes));
+        oEndScene = (tEndScene)gateway;
     }
 
     while (!(bShutdown = events_HandleKeyboard()))
@@ -67,14 +71,18 @@ DWORD WINAPI MainThread(HINSTANCE hInstance)
         // Main Loop
     }
 
+    VirtualFree(gateway, sizeof(oEndScene_bytes)+sizeof(char)+sizeof(void *), MEM_RELEASE);
     memory_patch(d3d9Device[42], oEndScene_bytes, sizeof(oEndScene_bytes));
     FreeLibraryAndExitThread(hInstance, 0);
     return TRUE;
 }
 
-BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
+BOOL
+WINAPI
+DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
-    (void)lpReserved;
+    UNREFERENCED_PARAMETER(lpReserved);
+
     switch (dwReason)
     {
         case DLL_PROCESS_ATTACH:

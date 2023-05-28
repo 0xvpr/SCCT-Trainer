@@ -274,7 +274,18 @@ void hack_test(void)
 
     if (player != NULL)
     {
-        player->lpVtable->function_13(player, 1, 2);
+        /*player->lpVtable->function_1(player);*/
+        /*player->lpVtable->function_2(player);*/
+        /*player->lpVtable->function_3(player);*/
+        player->lpVtable->func_10_1098DD40(player);
+        /*player->lpVtable->function_5(player);*/
+        /*player->lpVtable->function_6(player);*/
+        /*player->lpVtable->function_7(player);*/
+        /*player->lpVtable->function_8(player);*/
+        /*player->lpVtable->function_9(player);*/
+        /*player->lpVtable->function_10(player);*/
+        /*player->lpVtable->function_11(player);*/
+        /*player->lpVtable->function_12(player);*/
     }
 
 }
