@@ -20,8 +20,6 @@ extern bool bGhostMode;
 extern bool bShutdown;
 extern bool bGodMode;
 
-/*void health_detour(void); // maybe this works?*/
-
 void hack_GodMode(bool bEnabled)
 {
     char* const health_op = (char *)(module_base_addr + offsets_health_base);
@@ -32,11 +30,7 @@ void hack_GodMode(bool bEnabled)
 
     if (bEnabled)
     {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpedantic"
         memory_detour(health_op, (void *)health_detour, health_op_size);
-#pragma GCC diagnostic pop
-
     }
     else
     {
@@ -185,18 +179,16 @@ void hack_DisableAlarms(bool bEnabled)
 
 unsigned int hack_DisableEnemies(bool bEnabled)
 {
-    EntityList* entity_list = *(EntityList **)memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                                             offsets_entity_list_pointers,
-                                                                                             offsets_entity_list_pointers_size);
+    GameWorld* gameWorld = (GameWorld *)memory_find_dynamic_address(module_base_addr + offsets_game_world_base,
+                                                                                       offsets_game_world_pointers,
+                                                                                       offsets_game_world_pointers_size);
 
-    size_t entity_list_size = *((size_t *)(memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                                          offsets_entity_list_pointers,
-                                                                                          offsets_entity_list_pointers_size)) + 1);
+    size_t size = gameWorld->n_entities;
 
     unsigned int total_entities_changed = 0;
-    for (size_t i = 0; i < entity_list_size; i++)
+    for (size_t i = 0; i < size; i++)
     {
-        Entity* entity = entity_list->entities[i].entity;
+        Entity* entity = gameWorld->entities[i];
         if (TYPE(entity->lpVtable) == NPC)
         {
             if (bEnabled)
@@ -217,19 +209,17 @@ unsigned int hack_DisableEnemies(bool bEnabled)
 
 unsigned int hack_UnlockAllDoors(void)
 {
-    EntityList* _entity_list = *(EntityList **)memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                                              offsets_entity_list_pointers,
-                                                                                              offsets_entity_list_pointers_size);
+    GameWorld* gameWorld = (GameWorld *)memory_find_dynamic_address(module_base_addr + offsets_game_world_base,
+                                                                                       offsets_game_world_pointers,
+                                                                                       offsets_game_world_pointers_size);
 
-    size_t size = *((size_t *)(memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                              offsets_entity_list_pointers,
-                                                                              offsets_entity_list_pointers_size)) + 1);
+    size_t size = gameWorld->n_entities;
 
     unsigned int local_total = 0;
     unsigned int n_doors_unlocked = 0;
     for (size_t i = 0; i < size; i++)
     {
-        Entity* entity = _entity_list->entities[i].entity;
+        Entity* entity = gameWorld->entities[i];
         if (TYPE(entity->lpVtable) == DOOR)
         {
             Door* door = (Door *)entity;
@@ -253,18 +243,16 @@ unsigned int hack_UnlockAllDoors(void)
 
 void hack_test(void)
 {
-    EntityList* _entity_list = *(EntityList **)memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                                              offsets_entity_list_pointers,
-                                                                                              offsets_entity_list_pointers_size);
+    GameWorld* gameWorld = (GameWorld *)memory_find_dynamic_address(module_base_addr + offsets_game_world_base,
+                                                                                       offsets_game_world_pointers,
+                                                                                       offsets_game_world_pointers_size);
 
-    size_t size = *((size_t *)(memory_find_dynamic_address(module_base_addr + offsets_entity_list_base,
-                                                                              offsets_entity_list_pointers,
-                                                                              offsets_entity_list_pointers_size)) + 1);
+    size_t size = gameWorld->n_entities;
 
     Entity* player = NULL;
-    for (size_t i = 0; i < size; ++i)
+    for (size_t i = size-1; size > 0; --i)
     {
-        Entity* current_entity = _entity_list->entities[i].entity;
+        Entity* current_entity = gameWorld->entities[i];
         if (TYPE(current_entity->lpVtable) == PLAYER)
         {
             player = current_entity;
@@ -274,7 +262,42 @@ void hack_test(void)
 
     if (player != NULL)
     {
-        player->lpVtable->function_13(player, 1, 2);
+        // Teleport them all to me
+        /*for (size_t i = 0; i < size; ++i)*/
+        /*{*/
+            /*Entity* current_entity = gameWorld->entities[i];*/
+            /*if (TYPE(current_entity->lpVtable) == NPC)*/
+            /*{*/
+                /*current_entity->x = player->x;*/
+                /*current_entity->y = player->y;*/
+                /*current_entity->z = player->z;*/
+            /*}*/
+        /*}*/
+
+        /*player->lpVtable->function_1(player);*/
+        /*player->lpVtable->function_2(player);*/
+        /*player->lpVtable->function_3(player);*/
+        /*player->lpVtable->func_10_1098DD40(player);*/
+        /*player->lpVtable->function_5(player);*/
+        /*player->lpVtable->function_6(player);*/
+        /*player->lpVtable->function_7(player);*/
+        /*player->lpVtable->function_8(player);*/
+        /*player->lpVtable->function_9(player);*/
+        /*player->lpVtable->function_10(player);*/
+        /*player->lpVtable->function_11(player);*/
+        /*player->lpVtable->function_12(player);*/
     }
 
+}
+
+void hack_no_clip(bool bEnabled)
+{
+    if (bEnabled)
+    {
+        // Stop xyz movements
+        
+        // X movement
+        // splintercell3.exe+19580D -> fstp dword ptr [edi]
+        // splintercell3.exe+19580D -> nop nop
+    }
 }

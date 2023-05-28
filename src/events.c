@@ -127,6 +127,12 @@ bool events_HandleKeyboard(void)
 
     if (GetAsyncKeyState(VK_HOME))
     {
+        hack_GodMode(false);
+        hack_GhostMode(false);
+        hack_SuperWeapons(false);
+        hack_DisableAlarms(false);
+        hack_DisableEnemies(false);
+
         return true;
     }
 
