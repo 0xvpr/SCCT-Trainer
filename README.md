@@ -6,6 +6,7 @@
 - Switch from CPP to C: 08/20/2021
 - Project revisited:    12/09/2021
 - Project revisited:    12/07/2022
+- Project revisited:    05/26/2023
 
 ## Overview & Demonstration
 The main purpose of this project was to get familiar with the C language while also  
@@ -42,16 +43,18 @@ Once the DLL is injected, you will have access to the following Hacks:
 - Numpad 5: Disable Enemies
 - Numpad 6: Unlock All Doors
 
-## Build Instructions (Debian)
-#### Toolchain
+## Build Instructions
+#### Using WSL2 + Docker (Recommended Method)
 ```bash
-# Install toolchain for the required compiler
-chmod +x ./install-toolchain.sh
-sudo ./install-toolchain.sh # Modify it as you please before executing
+make docker-container && make docker-build
 ```
-#### Build
+#### Using own host (not recommended)
 ```bash
-make -j$(nproc) # defaults to both release and debug builds
+## if you need nasm and x86_64-w64-mingw32-gcc/ld and nasm
+## run uncomment the following two lines
+# sudo apt update && sudo apt upgrade -y --no-install-recommends
+# sudo apt install make build-essential mingw-w64-common mingw-w64-i686-dev mingw-w64-tools mingw-w64 nasm
+make # defaults to only make release build -> lib/sp3.dll
 ```
 
 ## Known Issues

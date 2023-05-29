@@ -80,7 +80,7 @@ bool events_HandleKeyboard(void)
     // Control Menu Position
     if (bMaximizeMenu) // When maximized
     {
-        if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+        if ((GetAsyncKeyState(VK_LEFT) & 1) > 0)
         {
             if (coordinates.x > 35)
             {
@@ -88,7 +88,7 @@ bool events_HandleKeyboard(void)
             }
         }
 
-        if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+        if ((GetAsyncKeyState(VK_RIGHT) & 1) > 0)
         {
             if (coordinates.x < resolution.x - 175)
             {
@@ -96,7 +96,7 @@ bool events_HandleKeyboard(void)
             }
         }
 
-        if (GetAsyncKeyState(VK_UP) & 0x8000)
+        if ((GetAsyncKeyState(VK_UP) & 1) > 0)
         {
             if (coordinates.y > 30)
             {
@@ -104,7 +104,7 @@ bool events_HandleKeyboard(void)
             }
         }
 
-        if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+        if ((GetAsyncKeyState(VK_DOWN) & 1) > 0)
         {
             if (coordinates.y < resolution.y - 120)
             {
