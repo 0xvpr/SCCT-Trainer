@@ -63,4 +63,34 @@ Ammo:
 		                             4F - dec edi
 	    length = 2
 
+----------------------
+
+Command line arguments that can be run with splintercell3.exe executable
+
+conflicts
+cam
+usecampos
+server
+warnresolve
+defaultres
+firstrun
+
+nohavokfile
+nodeviceid
+nohard
+nomagma
+nogc
+nokni
+nok6
+
+recordedtimedemo=
+playtimedemo=
+
+hwnd=
+cpuspeed=
+nomax=
+
+consolecommand=
+testrendev=
+delagbuffers=
 

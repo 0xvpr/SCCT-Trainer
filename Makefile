@@ -74,6 +74,13 @@ $(OBJ):
 $(BIN):
 	mkdir -p lib
 
+.PHONY: docker-container
+docker-container:
+	docker build -f "Dockerfile" -t "$(PROJECT)-dev" .
+.PHONY: docker-build
+docker-build:
+	docker run -v "$(shell pwd):/var/$(PROJECT)-dev/$(PROJECT)" -u "$(shell id -u):$(shell id -g)" "$(PROJECT)-dev" make
+
 clean:
 	rm -f `find ./lib -name "*.dll"`
 	rm -f `find ./build -name "*.o"`
