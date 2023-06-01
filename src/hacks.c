@@ -1,187 +1,118 @@
-#include <windows.h>
-#include <string.h>
+#include "hacks.h"
 
 #include "assembly.h"
 #include "offsets.h"
+#include "patches.h"
 #include "entity.h"
-#include "hacks.h"
 #include "mem.h"
 
-extern uintptr_t module_base_addr;
+extern uintptr_t g_module_base_addr;
 
-extern unsigned int n_entities_changed;
-extern unsigned int total_doors_unlocked;
-
-extern bool bDisableEnemies;
-extern bool bDisableAlarms;
-extern bool bSuperWeapons;
-extern bool bMaximizeMenu;
-extern bool bGhostMode;
-extern bool bShutdown;
-extern bool bGodMode;
-
-void hack_GodMode(bool bEnabled)
+void hack_god_mode(int bEnabled)
 {
-    char* const health_op = (char *)(module_base_addr + offsets_health_base);
-    char* const health_original = "\x2B\xC2"   // sub eax, edx
-                                  "\x89\x03"   // mov dword ptr [ebx], eax
-                                  "\x8B\xD8";  // mov ebx, eax
-    size_t health_op_size = 6;
+    void* const health_addr = (void *)(g_module_base_addr + offsets_health_base);
 
     if (bEnabled)
     {
-        memory_detour(health_op, (void *)health_detour, health_op_size);
+        memory_detour(health_addr, health_detour, sizeof(patch_health_original));
     }
     else
     {
-        memory_patch(health_op, health_original, health_op_size);
+        memory_patch(health_addr, patch_health_original, sizeof(patch_health_original));
+    }
+}
+
+void hack_ghost_mode(int bEnabled)
+{
+    void* const visibility_addr = (void *)(g_module_base_addr + offsets_invisibility_base);
+    void* const noise_addr = (void *)(g_module_base_addr + offsets_noise_base);
+
+    // TODO: Add third op for slider
+
+    if (bEnabled)
+    {
+        memory_nop(visibility_addr, sizeof(patch_visibility_original));
+        memory_patch(noise_addr, patch_noise_patch, sizeof(patch_noise_patch));
+    }
+    else
+    {
+        memory_patch(visibility_addr, patch_visibility_original, sizeof(patch_visibility_original));
+        memory_patch(noise_addr, patch_noise_original, sizeof(patch_noise_original));
     }
 
 }
 
-void hack_GhostMode(bool bEnabled)
+void hack_super_weapons(int bEnabled)
 {
-    char* const visibility_op = (char *)(module_base_addr + offsets_invisibility_base);
-    char* const visibility_original = "\x8B\x86\x18\x15\x00\x00";  // mov eax, dword ptr [esi + 0x1518]
-    char* const visibility_patch    = "\x90\x90\x90\x90\x90\x90";  // nop
-    size_t visibility_size = 6;
+    void* const main_ammo_addr    = (void *)(g_module_base_addr + offsets_main_ammo_base);
+    void* const shotgun_ammo_addr = (void *)(g_module_base_addr + offsets_shotgun_ammo_base);
+    void* const sniper_ammo_addr  = (void *)(g_module_base_addr + offsets_sniper_ammo_base);
 
-    char* const noise_op = (char *)(module_base_addr + offsets_noise_base);
-    char* const noise_original = "\x3B\xF8";  // cmp edi, eax
-    char* const noise_patch    = "\x39\xC0";  // cmp eax, eax
-    size_t noise_size = 2;
+    void* const rapid_fire_addr   = (void *)(g_module_base_addr + offsets_rapid_fire_base);
 
-    // Add third op for slider
+    void* const recoil_addr_0     = (void *)(g_module_base_addr + offsets_recoil_bases[0]);
+    void* const recoil_addr_1     = (void *)(g_module_base_addr + offsets_recoil_bases[1]);
+    void* const recoil_addr_2     = (void *)(g_module_base_addr + offsets_recoil_bases[2]);
+    void* const recoil_addr_3     = (void *)(g_module_base_addr + offsets_recoil_bases[3]);
+    void* const recoil_addr_4     = (void *)(g_module_base_addr + offsets_recoil_bases[4]);
+    void* const recoil_addr_5     = (void *)(g_module_base_addr + offsets_recoil_bases[5]);
 
     if (bEnabled)
     {
-        memory_patch(visibility_op, visibility_patch, visibility_size);
-        memory_patch(noise_op, noise_patch, noise_size);
+        memory_nop(main_ammo_addr, sizeof(patch_main_ammo_original));
+        memory_patch(sniper_ammo_addr, patch_sniper_ammo_patch, sizeof(patch_sniper_ammo_patch));
+        memory_patch(shotgun_ammo_addr, patch_shotgun_ammo_patch, sizeof(patch_shotgun_ammo_patch)); 
+
+        memory_nop(rapid_fire_addr, sizeof(patch_rapid_fire_original));
+
+        memory_patch(recoil_addr_0, patch_recoil_patches[0], sizeof(patch_recoil_patches[0]));
+        memory_patch(recoil_addr_1, patch_recoil_patches[1], sizeof(patch_recoil_patches[1]));
+        memory_patch(recoil_addr_2, patch_recoil_patches[2], sizeof(patch_recoil_patches[2]));
+        memory_patch(recoil_addr_3, patch_recoil_patches[3], sizeof(patch_recoil_patches[3]));
+        memory_patch(recoil_addr_4, patch_recoil_patches[4], sizeof(patch_recoil_patches[4]));
+        memory_patch(recoil_addr_5, patch_recoil_patches[5], sizeof(patch_recoil_patches[5]));
     }
     else
     {
-        memory_patch(visibility_op, visibility_original, visibility_size);
-        memory_patch(noise_op, noise_original, noise_size);
+        memory_patch(main_ammo_addr, patch_main_ammo_original, sizeof(patch_main_ammo_original));
+        memory_patch(sniper_ammo_addr, patch_sniper_ammo_original, sizeof(patch_sniper_ammo_original));
+        memory_patch(shotgun_ammo_addr, patch_shotgun_ammo_original, sizeof(patch_shotgun_ammo_original));
+
+        memory_patch(rapid_fire_addr, patch_rapid_fire_original, sizeof(patch_rapid_fire_original));
+
+        memory_patch(recoil_addr_0, patch_recoil_originals[0], sizeof(patch_recoil_originals[0]));
+        memory_patch(recoil_addr_1, patch_recoil_originals[1], sizeof(patch_recoil_originals[1]));
+        memory_patch(recoil_addr_2, patch_recoil_originals[2], sizeof(patch_recoil_originals[2]));
+        memory_patch(recoil_addr_3, patch_recoil_originals[3], sizeof(patch_recoil_originals[3]));
+        memory_patch(recoil_addr_4, patch_recoil_originals[4], sizeof(patch_recoil_originals[4]));
+        memory_patch(recoil_addr_5, patch_recoil_originals[5], sizeof(patch_recoil_originals[5]));
     }
 
 }
 
-void hack_SuperWeapons(bool bEnabled)
+void hack_disable_alarms(int bEnabled)
 {
-    /* Main Weapon Ammo Operation */
-    char* main_ammo_op = (char *)(module_base_addr + offsets_main_ammo_base);
-    char* main_ammo_original = "\x4B\x4F";  // dec ebx; dec edi
-    char* main_ammo_patch    = "\x90\x90";  // nop; nop
-    size_t main_ammo_size = 2;
-
-
-    /* Shotgun Ammo Operations */
-    char* shotgun_ammo_op = (char *)(module_base_addr + offsets_shotgun_ammo_base);
-    char* shotgun_ammo_original       = "\x49"                      // dec ecx
-                                        "\x89\x8F\x1C\x04\x00\x00"  // mov [esi + 0x454], eax
-                                        "\x8B\x8F\xFC\x03\x00\x00"  // mov eax, [esi + 0x45C]
-                                        "\x48";                     // dec eax
-
-    char* shotgun_ammo_patch          = "\x90"                      // nop
-                                        "\x89\x8F\x1C\x04\x00\x00"  // mov [esi + 0x454], eax
-                                        "\x8B\x8F\xFC\x03\x00\x00"  // mov eax, [esi + 0x45C]
-                                        "\x90";                     // nop
-    size_t shotgun_ammo_size = 14;
-
-    /* Sniper Ammo Operations */
-    char* sniper_ammo_op = (char *)(module_base_addr + offsets_sniper_ammo_base);
-    char* sniper_ammo_original         = "\x48"                      // dec eax
-                                         "\x89\x86\x54\x04\x00\x00"  // mov [esi + 0x454], eax
-                                         "\x8B\x86\x5C\x04\x00\x00"  // mov eax, [esi + 0x45C]
-                                         "\x48";                     // dec eax
-
-    char* sniper_ammo_patch            = "\x90"                      // nop
-                                         "\x89\x86\x54\x04\x00\x00"  // mov [esi + 0x454], eax
-                                         "\x8B\x86\x5C\x04\x00\x00"  // mov eax, [esi + 0x45C]
-                                         "\x90";                     // nop
-    size_t sniper_ammo_size = 14;
-
-    /* Recoil & Spread Operations */
-    unsigned recoil_op_offsets[6]      = { 0x2F83BE,
-                                           0x2F8409,
-                                           0x2F845B,
-                                           0x2F855E,
-                                           0x2F84D5,
-                                           0x2F8578 };
-
-    char* const recoil_original[6]     = { "\xD9\x9E\x2C\x05\x00\x00",    // fstp dword ptr [esi + 0x52C]
-                                           "\xD9\x9E\x2C\x05\x00\x00",    // fstp dword ptr [esi + 0x52C]
-                                           "\xD9\x9E\x2C\x05\x00\x00",    // fstp dword ptr [esi + 0x52C]
-                                           "\xD9\x9E\x30\x05\x00\x00",    // fstp dword ptr [esi + 0x530]
-                                           "\x89\x96\x30\x05\x00\x00",    // mov  dword ptr [esi + 0x530], edx
-                                           "\x89\x8E\x34\x05\x00\x00" };  // mov  dword ptr [esi + 0x534], ecx
-
-    char* const recoil_patches[6]      = { "\x89\x8E\x2C\x05\x00\x00",    // mov dword ptr [esi + 0x52C], ecx
-                                           "\x89\x8E\x2C\x05\x00\x00",    // mov dword ptr [esi + 0x52C], ecx
-                                           "\x89\x8E\x2C\x05\x00\x00",    // mov dword ptr [esi + 0x52C], ecx
-                                           "\x89\x8E\x30\x05\x00\x00",    // mov dword ptr [esi + 0x530], ecx
-                                           "\x89\x8E\x30\x05\x00\x00",    // mov dword ptr [esi + 0x530], ecx
-                                           "\x89\xBE\x34\x05\x00\x00" };  // mov dword ptr [esi + 0x534], edi
-    size_t recoil_op_size = 6;
-
-    /* Rapid Fire Operation */
-    char* rapid_fire_op = (char *)(module_base_addr + offsets_rapid_fire_base);
-    char* rapid_fire_original = "\x75\x47";  // jne short 0x47
-    char* rapid_fire_patch    = "\x90\x90";  // nop
-    size_t rapid_fire_size = 2;
+    void* const alarm_addr = (char *)(g_module_base_addr + offsets_alarm_base);
 
     if (bEnabled)
     {
-        (void)memory_patch((BYTE *)main_ammo_op, (BYTE *)main_ammo_patch, main_ammo_size);
-        (void)memory_patch((BYTE *)sniper_ammo_op, (BYTE *)sniper_ammo_patch, sniper_ammo_size);
-        (void)memory_patch((BYTE *)shotgun_ammo_op, (BYTE *)shotgun_ammo_patch, shotgun_ammo_size); 
-        for (size_t i = 0; i < recoil_op_size; i++)
-        {
-            const char* recoil_op = (char *)(module_base_addr + recoil_op_offsets[i]);
-            (void)memory_patch((BYTE *)recoil_op, (BYTE *)recoil_patches[i], recoil_op_size);
-        }
-
-        (void)memory_patch((BYTE *)rapid_fire_op, (BYTE *)rapid_fire_patch, rapid_fire_size);
+        memory_patch(alarm_addr, patch_alarm_patch, sizeof(patch_alarm_patch));
     }
     else
     {
-        (void)memory_patch((BYTE *)main_ammo_op, (BYTE *)main_ammo_original, main_ammo_size);
-        (void)memory_patch((BYTE *)sniper_ammo_op, (BYTE *)sniper_ammo_original, sniper_ammo_size);
-        (void)memory_patch((BYTE *)shotgun_ammo_op, (BYTE *)shotgun_ammo_original, shotgun_ammo_size);
-
-        for (size_t i = 0; i < recoil_op_size; i++)
-        {
-            const char* recoil_op = (char *)(module_base_addr + recoil_op_offsets[i]);
-            (void)memory_patch((BYTE *)recoil_op, (BYTE *)recoil_original[i], recoil_op_size);
-        }
-
-        (void)memory_patch((BYTE *)rapid_fire_op, (BYTE *)rapid_fire_original, rapid_fire_size);
-    }
-
-}
-
-void hack_DisableAlarms(bool bEnabled)
-{
-    char* const alarm_op = (char *)(module_base_addr + offsets_alarm_base);
-    char* const alarm_original = "\x0F\x85\x35\x03\x00\x00"; // jne splintercell3.exe + 0x9BF9C
-    char* const alarm_patch    = "\xE9\x36\x03\x00\x00\x90"; // jmp splintercell3.exe + 0x9BF9C
-    size_t alarm_size = 6;
-
-    if (bEnabled)
-    {
-        memory_patch((BYTE *)alarm_op, (BYTE *)alarm_patch, alarm_size);
-    }
-    else
-    {
-        memory_patch((BYTE *)alarm_op, (BYTE *)alarm_original, alarm_size);
+        memory_patch(alarm_addr, patch_alarm_original, sizeof(patch_alarm_original));
     }
 }
 
-unsigned int hack_DisableEnemies(bool bEnabled)
+unsigned int hack_disable_enemies(int bEnabled)
 {
-    GameWorld* gameWorld = (GameWorld *)memory_find_dynamic_address(module_base_addr + offsets_game_world_base,
-                                                                                       offsets_game_world_pointers,
-                                                                                       offsets_game_world_pointers_size);
+    GameWorld* gameWorld = (GameWorld *)memory_find_dynamic_address(g_module_base_addr + offsets_game_world_base,
+                                                                                         offsets_game_world_pointers,
+                                                                                         (sizeof(offsets_game_world_pointers)/sizeof(offsets_game_world_pointers[0])));
+    if (!gameWorld)
+    {
+        return 0;
+    }
 
     size_t size = gameWorld->n_entities;
 
@@ -189,6 +120,11 @@ unsigned int hack_DisableEnemies(bool bEnabled)
     for (size_t i = 0; i < size; i++)
     {
         Entity* entity = gameWorld->entities[i];
+        if (!entity)
+        {
+            break;
+        }
+
         if (TYPE(entity->lpVtable) == NPC)
         {
             if (bEnabled)
@@ -207,15 +143,19 @@ unsigned int hack_DisableEnemies(bool bEnabled)
     return total_entities_changed;
 }
 
-unsigned int hack_UnlockAllDoors(void)
+unsigned int hack_unlock_all_doors(void)
 {
-    GameWorld* gameWorld = (GameWorld *)memory_find_dynamic_address(module_base_addr + offsets_game_world_base,
-                                                                                       offsets_game_world_pointers,
-                                                                                       offsets_game_world_pointers_size);
+    GameWorld* gameWorld = (GameWorld *)memory_find_dynamic_address(g_module_base_addr + offsets_game_world_base,
+                                                                                         offsets_game_world_pointers,
+                                                                                         (sizeof(offsets_game_world_pointers)/sizeof(offsets_game_world_pointers[0])));
+
+    if (!gameWorld)
+    {
+        return 0;
+    }
 
     size_t size = gameWorld->n_entities;
 
-    unsigned int local_total = 0;
     unsigned int n_doors_unlocked = 0;
     for (size_t i = 0; i < size; i++)
     {
@@ -228,24 +168,22 @@ unsigned int hack_UnlockAllDoors(void)
                 door->access = DOOR_ALL_ACCESS;
                 ++n_doors_unlocked;
             }
-
-            if (door->access == DOOR_ALL_ACCESS)
-            {
-                ++local_total;
-            }
-
         }
     }
-    total_doors_unlocked = local_total;
 
     return n_doors_unlocked;
 }
 
 void hack_test(void)
 {
-    GameWorld* gameWorld = (GameWorld *)memory_find_dynamic_address(module_base_addr + offsets_game_world_base,
-                                                                                       offsets_game_world_pointers,
-                                                                                       offsets_game_world_pointers_size);
+    GameWorld* gameWorld = (GameWorld *)memory_find_dynamic_address(g_module_base_addr + offsets_game_world_base,
+                                                                                         offsets_game_world_pointers,
+                                                                                         sizeof(offsets_game_world_pointers)/(sizeof(offsets_game_world_pointers[0])));
+
+    if (!gameWorld)
+    {
+        return;
+    }
 
     size_t size = gameWorld->n_entities;
 
@@ -290,7 +228,7 @@ void hack_test(void)
 
 }
 
-void hack_no_clip(bool bEnabled)
+void hack_no_clip(int bEnabled)
 {
     if (bEnabled)
     {

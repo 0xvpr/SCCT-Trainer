@@ -1,12 +1,5 @@
-#ifndef _HACKS_H
-#define _HACKS_H
-
-#ifndef WIN32_LEAN_AND_MEAN
-#   define WIN32_LEAN_AND_MEAN
-#endif // WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <tlhelp32.h>
-#include <stdbool.h>
+#ifndef HACKS_HEADER
+#define HACKS_HEADER
 
 #define GOD_MODE         0x00000000
 #define GHOST_MODE       0x00000001
@@ -29,7 +22,7 @@
  * @param  bool bGodMode
  * @return void
  */
-void hack_GodMode(bool bGodMode);
+void hack_god_mode(int);
 
 /**
  * Prevents the visibility meter from rising above 0.001. 
@@ -42,7 +35,7 @@ void hack_GodMode(bool bGodMode);
  * @param  bool bGhostMode
  * @return void
  */
-void hack_GhostMode(bool bInvisible);
+void hack_ghost_mode(int);
 
 /**
  * Toggles: rapid fire, infinite ammo (if previously non-zero), 
@@ -51,7 +44,7 @@ void hack_GhostMode(bool bInvisible);
  * @param  bool bSuperWeapons
  * @return void 
  */
-void hack_SuperWeapons(bool bSuperWeapons);
+void hack_super_weapons(int);
 
 /**
  * Disable alarms
@@ -59,7 +52,7 @@ void hack_SuperWeapons(bool bSuperWeapons);
  * @param  bDisableAlarms
  * @return void
  */
-void hack_DisableAlarms(bool bDisableAlarms);
+void hack_disable_alarms(int);
 
 /**
  * Reduces all enemies in the current level's hp 
@@ -72,7 +65,7 @@ void hack_DisableAlarms(bool bDisableAlarms);
  * @param  bool bDisableEnemies
  * @return (unsigned int)n_entities_changed
  */
-unsigned int hack_DisableEnemies(bool bDisableEnemies);
+unsigned int hack_disable_enemies(int);
 
 /**
  * Unlock all of the doors in a level. 
@@ -80,7 +73,7 @@ unsigned int hack_DisableEnemies(bool bDisableEnemies);
  * @param  void 
  * @return (unsigned int)n_doors_unlocked
  */
-unsigned int hack_UnlockAllDoors(void);
+unsigned int hack_unlock_all_doors(void);
 
 /**
  * Test TODO
@@ -88,4 +81,4 @@ unsigned int hack_UnlockAllDoors(void);
 */
 void hack_test(void);
 
-#endif /* _HACKS_H */
+#endif /* HACKS_HEADER */

@@ -1,5 +1,7 @@
 #include "mem.h"
 
+#include <memoryapi.h>
+
 uintptr_t memory_find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t size)
 { 
     uintptr_t addr = ptr;
@@ -18,29 +20,25 @@ uintptr_t memory_find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t s
     return addr;
 }
 
-bool memory_patch(void* dst, void* src, size_t size)
+void memory_nop(void* dst, size_t size)
+{
+    DWORD oldprotect;
+
+    VirtualProtect(dst, size, PAGE_EXECUTE_WRITECOPY, &oldprotect);
+    memset(dst, 0x90, size); 
+    VirtualProtect(dst, size, oldprotect, &oldprotect);
+}
+
+void memory_patch(void* dst, const void* src, size_t size)
 {
     DWORD oldprotect;
 
     VirtualProtect(dst, size, PAGE_EXECUTE_WRITECOPY, &oldprotect);
     memcpy(dst, src, size); 
     VirtualProtect(dst, size, oldprotect, &oldprotect);
-
-    unsigned char* destination = (unsigned char *)dst;
-    unsigned char* source = (unsigned char *)src;
-
-    for (size_t i = 0; i < size; i++, destination++, source++)
-    {
-        if (*destination != *source )
-        {
-            return FALSE;
-        }
-    }
-
-    return TRUE;
 }
 
-bool memory_detour(void* targetFunc, void* myFunc, size_t size)
+int memory_detour(void* targetFunc, void(* myFunc)(), size_t size)
 {
     if (size < 5)
     {
@@ -74,50 +72,13 @@ char* memory_tramp_hook(char* src, char* dst, size_t size)
     *(gateway + size) = (char)0xE9;
     *(uintptr_t *)(gateway + size + 1) = gateJmpAddress;
 
-    if (memory_detour(src, dst, size))
+    if (memory_detour(src, (void(*)())dst, size))
     {
         return gateway;
     }
     else
     {
+        VirtualFree(gateway, size+5, MEM_RELEASE);
         return NULL;
     }
-}
-
-static inline
-int compare_byte_array(unsigned char* data, unsigned char* pattern, size_t pattern_size)
-{
-    for (size_t i = 0; i < pattern_size; i++, pattern++, data++)
-    {
-        if (*pattern == '\0')
-        {
-            continue;
-        }
-        else if (*data != *pattern)
-        {
-            return FALSE;
-        }
-    }
-
-    return TRUE;
-}
-
-unsigned char* memory_find_pattern(unsigned char* base_addr, size_t img_size, unsigned char* pattern, size_t pattern_size)
-{
-    BYTE first = pattern[0];
-    PBYTE last = base_addr + img_size - pattern_size;
-
-    for (; base_addr < last; ++base_addr)
-    {
-        if (*base_addr != first)
-        {
-            continue;
-        }
-        else if (compare_byte_array(base_addr, pattern, pattern_size))
-        {
-            return base_addr;
-        }
-    }
-
-    return NULL;
 }

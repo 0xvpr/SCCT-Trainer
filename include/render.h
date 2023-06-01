@@ -1,18 +1,8 @@
-#ifndef _RENDER_H
-#define _RENDER_H
+#ifndef RENDER_HEADER
+#define RENDER_HEADER
 
 #include "d3d9hook.h"
-#ifndef __cplusplus
-#include <stdbool.h>
-#endif // __cplusplus
-
-/**
- * Initializes each menu item
- *
- * @param void
- * @return void
- */
-void render_InitializeMenuItems(void);
+#include <stdint.h>
 
 /**
  * Draw main UI.
@@ -20,29 +10,25 @@ void render_InitializeMenuItems(void);
  * @param pDevice
  * @return void
  */
-void render_Menu(IDirect3DDevice9* pDevice);
+void render_menu(IDirect3DDevice9* pDevice);
 
-/**
- * TODO
-**/
-void render_CreateFont(LPDIRECT3DDEVICE9 pDevice, int size);
 
 typedef struct _HackMenu
 {
-    bool bEnabled;
+    int bEnabled;
     char name[64];
 } HackMenu;
 
 typedef struct _Resolution
 {
-    int x;
-    int y;
+    uint16_t x;
+    uint16_t y;
 } Resolution;
 
 typedef struct _Coordinates
 {
-    int x;
-    int y;
+    uint16_t x;
+    uint16_t y;
 } Coordinates;
 
-#endif /* _RENDER_H */
+#endif /* RENDER_HEADER */

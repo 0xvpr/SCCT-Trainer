@@ -21,13 +21,20 @@ uint16_t offsets_game_world_pointers[2] = {
     0x78,
     0x5E4
 };
-size_t offsets_game_world_pointers_size = ( sizeof(offsets_game_world_pointers)/sizeof(uint16_t) );
 
-uint16_t offsets_weapon_pointers[3] = {
-    0x84,
-    0x6E0,
-    0x434
+/*uint16_t offsets_weapon_pointers[3] = {*/
+    /*0x84,*/
+    /*0x6E0,*/
+    /*0x434*/
+/*};*/
+
+uintptr_t offsets_recoil_bases[6] = {
+    0x2F83BE,
+    0x2F8409,
+    0x2F845B,
+    0x2F855E,
+    0x2F84D5,
+    0x2F8578
 };
-size_t offsets_weapon_pointers_size = ( sizeof(offsets_weapon_pointers)/sizeof(uint16_t) );
 
 #endif /* OFFSETS_HEADER */

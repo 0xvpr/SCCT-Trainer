@@ -3,7 +3,7 @@
  * Created:         August 18, 2021
  *
  * Updated by:      VPR
- * Updated:         December 7th, 2022
+ * Updated:         May 31th, 2023
  * 
  * Brief:           SCCT GUI
  * 
@@ -15,39 +15,20 @@
 #include "render.h"
 #include "events.h"
 #include "mem.h"
-#include <winnt.h>
 
-bool bDisableEnemies = false; // Possible unecessary?
-bool bDisableAlarms  = false; // Possible unecessary?
-bool bSuperWeapons   = false; // Possible unecessary?
-bool bMaximizeMenu   = true;  // Possible unecessary?
-bool bGhostMode      = false; // Possible unecessary?
-bool bShutdown       = false; // Possible unecessary?
-bool bGodMode        = false; // Possible unecessary?
-bool bInit           = false; // Possible unecessary? 
+uintptr_t g_module_base_addr = 0;
 
-unsigned int        total_doors_unlocked    = 0;
-unsigned int        n_entities_changed      = 0;
+static uint8_t oEndScene_bytes[7] = { 0 };
+static void* d3d9Device[119] = { 0 };
 
-uintptr_t           module_base_addr        = 0;
-
-void*               d3d9Device[119]         = { 0 };
-uint8_t             oEndScene_bytes[7]      = { 0 };
-tEndScene           oEndScene               = NULL;
-LPDIRECT3DDEVICE9   pD3DDevice              = NULL;
+static tEndScene oEndScene = NULL;
+static PVOID gateway = NULL;
 
 HRESULT
 APIENTRY
 hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 {
-    if (!bInit)
-    {
-        /*render_InitializeMenuItems();*/
-        /*render_CreateFont(pDevice, 16);*/
-
-        bInit = true;
-    }
-    render_Menu(pDevice);
+    render_menu(pDevice);
 
     return oEndScene(pDevice);
 }
@@ -56,17 +37,16 @@ DWORD
 WINAPI
 MainThread(HINSTANCE hInstance)
 {
-    module_base_addr = (uintptr_t)GetModuleHandle(NULL);
-    void* gateway = NULL;
+    g_module_base_addr = (uintptr_t)GetModuleHandle(NULL);
 
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device)))
     {
         memcpy(oEndScene_bytes, d3d9Device[42], sizeof(oEndScene_bytes));
-        gateway = memory_tramp_hook((char *)d3d9Device[42], (char *)hkEndScene, sizeof(oEndScene_bytes));
+        gateway = memory_tramp_hook(d3d9Device[42], (PVOID)hkEndScene, sizeof(oEndScene_bytes));
         oEndScene = (tEndScene)gateway;
     }
 
-    while (!(bShutdown = events_HandleKeyboard()))
+    while (!events_handle_keyboard())
     {
         // Main Loop
     }
@@ -74,7 +54,6 @@ MainThread(HINSTANCE hInstance)
     VirtualFree(gateway, sizeof(oEndScene_bytes)+sizeof(char)+sizeof(void *), MEM_RELEASE);
     memory_patch(d3d9Device[42], oEndScene_bytes, sizeof(oEndScene_bytes));
     FreeLibraryAndExitThread(hInstance, 0);
-    return TRUE;
 }
 
 BOOL

@@ -7,68 +7,56 @@
 
 extern uintptr_t module_base_addr;
 
-extern unsigned int n_entities_changed;
-extern unsigned int total_doors_unlocked;
+extern int g_maximized;
 
-extern bool bDisableEnemies;
-extern bool bDisableAlarms;
-extern bool bSuperWeapons;
-extern bool bMaximizeMenu;
-extern bool bGhostMode;
-extern bool bShutdown;
-extern bool bGodMode;
+extern Resolution g_resolution;
+extern Coordinates g_coordinates;
+extern HackMenu g_hack_menu[MAX_MENU_ITEMS];
 
-extern Resolution resolution;
-extern Coordinates coordinates;
-extern HackMenu hackMenu[MAX_MENU_ITEMS];
-
-bool events_HandleKeyboard(void)
+int events_handle_keyboard(void)
 {
     /* Toggle GodMode */
     if (GetAsyncKeyState(VK_NUMPAD1) & 1)
     {
-        bGodMode = !bGodMode;
-        hackMenu[GOD_MODE].bEnabled = bGodMode;
-        hack_GodMode(bGodMode);
+        g_hack_menu[GOD_MODE].bEnabled = !g_hack_menu[GOD_MODE].bEnabled;
+        hack_god_mode(g_hack_menu[GOD_MODE].bEnabled);
     }
 
     /* Toggle GhostMode */
     if (GetAsyncKeyState(VK_NUMPAD2) & 1)
     {
-        bGhostMode = !bGhostMode;
-        hackMenu[GHOST_MODE].bEnabled = bGhostMode;
-        hack_GhostMode(bGhostMode);
+        g_hack_menu[GHOST_MODE].bEnabled = !g_hack_menu[GHOST_MODE].bEnabled;
+        hack_ghost_mode(g_hack_menu[GHOST_MODE].bEnabled);
     }
 
     /* Toggle Super Weapons */
     if (GetAsyncKeyState(VK_NUMPAD3) & 1)
     {
-        bSuperWeapons = !bSuperWeapons;
-        hackMenu[SUPER_WEAPONS].bEnabled = bSuperWeapons;
-        hack_SuperWeapons(bSuperWeapons);
+        g_hack_menu[SUPER_WEAPONS].bEnabled = !g_hack_menu[SUPER_WEAPONS].bEnabled;
+        hack_super_weapons(g_hack_menu[SUPER_WEAPONS].bEnabled);
     }
 
     /*  Disable All Alarms */
     if (GetAsyncKeyState(VK_NUMPAD4) & 1)
     {
-        bDisableAlarms = !bDisableAlarms;
-        hackMenu[DISABLE_ALARMS].bEnabled = bDisableAlarms;
-        hack_DisableAlarms(bDisableAlarms);
+        g_hack_menu[DISABLE_ALARMS].bEnabled = !g_hack_menu[DISABLE_ALARMS].bEnabled;
+        hack_disable_alarms(g_hack_menu[DISABLE_ALARMS].bEnabled);
     }
 
     /* Toggle DisableEnemies */
     if (GetAsyncKeyState(VK_NUMPAD5) & 1)
     {
-        bDisableEnemies = !bDisableEnemies;
-        hackMenu[DISABLE_ENEMIES].bEnabled = bDisableEnemies;
-        n_entities_changed = hack_DisableEnemies(bDisableEnemies);
+        g_hack_menu[DISABLE_ENEMIES].bEnabled = !g_hack_menu[DISABLE_ENEMIES].bEnabled;
+        /*n_entities_changed = */
+        hack_disable_enemies(g_hack_menu[DISABLE_ENEMIES].bEnabled);
     }
 
     /* Unlock All Doors */
     if (GetAsyncKeyState(VK_NUMPAD6) & 1)
     {
-        hackMenu[UNLOCK_ALL_DOORS].bEnabled = !hackMenu[UNLOCK_ALL_DOORS].bEnabled;
-        total_doors_unlocked = hack_UnlockAllDoors();
+        //g_hack_menu[UNLOCK_ALL_DOORS].bEnabled = !g_hack_menu[UNLOCK_ALL_DOORS].bEnabled;
+        /*total_doors_unlocked = */
+        hack_unlock_all_doors();
     }
 
     /* Unlock All Doors */
@@ -78,63 +66,63 @@ bool events_HandleKeyboard(void)
     }
 
     // Control Menu Position
-    if (bMaximizeMenu) // When maximized
+    if (g_maximized) // When maximized
     {
         if ((GetAsyncKeyState(VK_LEFT) & 1) > 0)
         {
-            if (coordinates.x > 35)
+            if (g_coordinates.x > 35)
             {
-                coordinates.x -= 5;
+                g_coordinates.x -= 5;
             }
         }
 
         if ((GetAsyncKeyState(VK_RIGHT) & 1) > 0)
         {
-            if (coordinates.x < resolution.x - 175)
+            if (g_coordinates.x < g_resolution.x - 175)
             {
-                coordinates.x += 5;
+                g_coordinates.x += 5;
             }
         }
 
         if ((GetAsyncKeyState(VK_UP) & 1) > 0)
         {
-            if (coordinates.y > 30)
+            if (g_coordinates.y > 30)
             {
-                coordinates.y -= 5;
+                g_coordinates.y -= 5;
             }
         }
 
         if ((GetAsyncKeyState(VK_DOWN) & 1) > 0)
         {
-            if (coordinates.y < resolution.y - 120)
+            if (g_coordinates.y < g_resolution.y - 120)
             {
-                coordinates.y += 5;
+                g_coordinates.y += 5;
             }
         }
 
     }
 
-    if (bMaximizeMenu && (GetAsyncKeyState(VK_F3) & 1) > 0)
+    if (g_maximized && (GetAsyncKeyState(VK_F3) & 1) > 0)
     {
-        coordinates.x = 30;
-        coordinates.y = 25;
+        g_coordinates.x = 30;
+        g_coordinates.y = 25;
     }
 
     if (GetAsyncKeyState(VK_F2) & 1)
     {
-        bMaximizeMenu = !bMaximizeMenu;
+        g_maximized = !g_maximized;
     }
 
     if (GetAsyncKeyState(VK_HOME))
     {
-        hack_GodMode(false);
-        hack_GhostMode(false);
-        hack_SuperWeapons(false);
-        hack_DisableAlarms(false);
-        hack_DisableEnemies(false);
+        hack_god_mode(0);
+        hack_ghost_mode(0);
+        hack_super_weapons(0);
+        hack_disable_alarms(0);
+        hack_disable_enemies(0);
 
-        return true;
+        return 1;
     }
 
-    return false;
+    return 0;
 }

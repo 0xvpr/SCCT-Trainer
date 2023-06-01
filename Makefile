@@ -2,8 +2,8 @@ PROJECT     = sp3
 
 CC          = i686-w64-mingw32-gcc
 CFLAGS      = -std=c99 -O2 -m32\
-              -Wall -Wextra -Werror -Wshadow -Wpedantic -Wconversion\
-              -Wno-error=attributes -Wno-error=pedantic
+              -Wall -Wextra -Werror -Wshadow -Wconversion\
+              -Wno-attributes\
 
 LD          = i686-w64-mingw32-ld
 LDFLAGS     = -shared --entry=_DllMain@12
@@ -49,6 +49,7 @@ $(PROJECT): CFLAGS  += -march=native -Ofast -fPIE -funsafe-math-optimizations -f
 $(PROJECT): CFLAGS  += -funroll-loops -funsafe-loop-optimizations -funswitch-loops -floop-parallelize-all
 $(PROJECT): CFLAGS  += -finline-functions -falign-functions -falign-loops -falign-jumps -fno-function-sections
 $(PROJECT): CFLAGS  += -fno-ident -fvisibility=hidden -fstrict-aliasing
+$(PROJECT): CFLAGS  += -DUNICODE -D_WIN32 -DVC_EXTRALEAN
 $(PROJECT): LDFLAGS += -s
 
 $(BIN)/$(PROJECT)_d.dll: $(OBJ) $(BIN) $(ASM_OBJECTS) $(DBG_OBJECTS) 
