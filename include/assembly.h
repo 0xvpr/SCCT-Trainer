@@ -1,6 +1,6 @@
-#ifndef _ASSEMBLY_H
-#define _ASSEMBLY_H
+#ifndef ASSEMBLY_HEADER
+#define ASSEMBLY_HEADER
 
 void health_detour(void);
 
-#endif /* _ASSEMBLY_H */
+#endif /* ASSEMBLY_HEADER */

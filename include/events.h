@@ -1,7 +1,5 @@
-#ifndef _EVENTS_H
-#define _EVENTS_H
-
-#include <stdbool.h>
+#ifndef EVENTS_HEADER
+#define EVENTS_HEADER
 
 /**
  * Handles keyboard input
@@ -9,6 +7,6 @@
  * @param void
  * @return bool
  */
-bool events_HandleKeyboard(void);
+int events_handle_keyboard(void);
 
-#endif /* _EVENTS_H */
+#endif /* EVENTS_HEADER */
