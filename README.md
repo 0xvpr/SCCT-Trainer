@@ -1,4 +1,13 @@
-# Splinter Cell Chaos Theory Trainer
+<h1 align="center">Splinter Cell Chaos Theory Trainer</h1>
+<p align="center">
+  <img src="https://img.shields.io/badge/Windows--x86-supported-green?style=flat-square"/>
+  <a href="https://mit-license.org/"/>
+    <img src="https://img.shields.io/github/license/0xvpr/scct-trainer?style=flat-square"/>
+  </a>
+  <img src="https://img.shields.io/github/actions/workflow/status/0xvpr/scct-trainer/docker_build.yml?style=flat-square"/>
+</p>
+<br>
+
 ### Timeline
 - Project started:      08/18/2021
 - Switch from C to CPP: 08/18/2021
