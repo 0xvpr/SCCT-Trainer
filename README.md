@@ -1,8 +1,8 @@
 <h1 align="center">Splinter Cell Chaos Theory Trainer</h1>
 <p align="center">
-  <img src="https://img.shields.io/badge/Windows--x86-supported-00B140"/>
+  <img src="https://img.shields.io/badge/Windows--x86-supported-44CC11"/>
   <a href="https://mit-license.org/"/>
-    <img src="https://img.shields.io/badge/License-MIT-00B140"/>
+    <img src="https://img.shields.io/badge/License-MIT-44CC11"/>
   </a>
   <img src="https://img.shields.io/github/actions/workflow/status/0xvpr/scct-trainer/docker_build.yml?label=Build"/>
 </p>
