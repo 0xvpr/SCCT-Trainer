@@ -6,8 +6,11 @@
 #include "entity.h"
 #include "mem.h"
 
+#include <memoryapi.h>
+
 extern uintptr_t g_module_base_addr;
 
+__attribute__((always_inline))
 void hack_god_mode(int bEnabled)
 {
     void* const health_addr = (void *)(g_module_base_addr + offsets_health_base);
@@ -22,6 +25,7 @@ void hack_god_mode(int bEnabled)
     }
 }
 
+__attribute__((always_inline))
 void hack_ghost_mode(int bEnabled)
 {
     void* const visibility_addr = (void *)(g_module_base_addr + offsets_invisibility_base);
@@ -31,7 +35,12 @@ void hack_ghost_mode(int bEnabled)
 
     if (bEnabled)
     {
-        memory_nop(visibility_addr, sizeof(patch_visibility_original));
+        DWORD old_protect = 0;
+        VirtualProtect(visibility_addr, sizeof(patch_visibility_original), PAGE_EXECUTE_WRITECOPY, &old_protect);
+        *((uint64_t *)visibility_addr) = 0x05D9909090909090;
+        VirtualProtect(visibility_addr, sizeof(patch_visibility_original), old_protect, &old_protect);
+
+        /*memory_nop(visibility_addr, sizeof(patch_visibility_original));*/
         memory_patch(noise_addr, patch_noise_patch, sizeof(patch_noise_patch));
     }
     else

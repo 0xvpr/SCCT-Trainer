@@ -2,6 +2,7 @@
 
 #include <memoryapi.h>
 
+__attribute__((always_inline))
 uintptr_t memory_find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t size)
 { 
     uintptr_t addr = ptr;
@@ -20,6 +21,7 @@ uintptr_t memory_find_dynamic_address(uintptr_t ptr, uint16_t* offsets, size_t s
     return addr;
 }
 
+__attribute__((always_inline))
 void memory_nop(void* dst, size_t size)
 {
     DWORD oldprotect;
@@ -29,6 +31,7 @@ void memory_nop(void* dst, size_t size)
     VirtualProtect(dst, size, oldprotect, &oldprotect);
 }
 
+__attribute__((always_inline))
 void memory_patch(void* dst, const void* src, size_t size)
 {
     DWORD oldprotect;
@@ -38,6 +41,7 @@ void memory_patch(void* dst, const void* src, size_t size)
     VirtualProtect(dst, size, oldprotect, &oldprotect);
 }
 
+__attribute__((always_inline))
 int memory_detour(void* targetFunc, void(* myFunc)(), size_t size)
 {
     if (size < 5)
@@ -58,6 +62,7 @@ int memory_detour(void* targetFunc, void(* myFunc)(), size_t size)
     return TRUE;
 }
 
+__attribute__((always_inline))
 char* memory_tramp_hook(char* src, char* dst, size_t size)
 {
     if (size < 5)

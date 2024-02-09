@@ -30,8 +30,8 @@ LIB_FILES   = d3d9 d3dx9 kernel32 user32 msvcrt
 LIBS        = $(addprefix -l,$(LIB_FILES))
 
 ASM_TARGET  = health_detour
-ASM_SRC     = $(SRC)/asm
-ASM_OBJ     = $(BUILD)/asm
+ASM_SRC     = $(SRC)
+ASM_OBJ     = $(BUILD)
 ASM_SOURCES = $(wildcard $(ASM_SRC)/*.asm)
 ASM_OBJECTS = $(patsubst $(ASM_SRC)/%.asm,$(ASM_OBJ)/%.obj,$(ASM_SOURCES))
 
@@ -45,12 +45,12 @@ $(DEBUG): CFLAGS += -g
 
 release: $(PROJECT)
 $(PROJECT): $(BIN)/$(PROJECT).dll
-$(PROJECT): CFLAGS  += -march=native -Ofast -fPIE -funsafe-math-optimizations -fomit-frame-pointer
+$(PROJECT): CFLAGS  += -march=native -mavx2 -Ofast -fPIE -funsafe-math-optimizations -fomit-frame-pointer
 $(PROJECT): CFLAGS  += -funroll-loops -funsafe-loop-optimizations -funswitch-loops -floop-parallelize-all
 $(PROJECT): CFLAGS  += -finline-functions -falign-functions -falign-loops -falign-jumps -fno-function-sections
 $(PROJECT): CFLAGS  += -fno-ident -fvisibility=hidden -fstrict-aliasing
 $(PROJECT): CFLAGS  += -DUNICODE -D_WIN32 -DVC_EXTRALEAN
-$(PROJECT): LDFLAGS += -s
+#$(PROJECT): LDFLAGS += -s
 
 $(BIN)/$(PROJECT)_d.dll: $(OBJ) $(BIN) $(ASM_OBJECTS) $(DBG_OBJECTS) 
 	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(DBG_OBJECTS) $(LIBS) -o $@

@@ -8,12 +8,9 @@
 
 TARGET="splintercell3.exe"      # Change as necessary
 PAYLOAD="lib/sp3.dll"           # Change as necessary
-PIDJEON_PATH="${HOME}/.toolkit" # Change as necessary
-
-export PATH=$PATH:"${PIDJEON_PATH}"
 
 function inject {
-    vpr-pidjeon "${TARGET}" "${PAYLOAD}" -i ManualMap
+    vpr-pidjeon-x86.exe "${TARGET}" "${PAYLOAD}" -i ManualMap
 }
 
 inject

@@ -44,6 +44,7 @@ void memory_patch(void* dst, const void* src, size_t size);
  *
  * @return: bool
 **/
+/*__attribute__((always_inline))*/
 int memory_detour(void* targetFunc, void(* myFunc)(), size_t size);
 
 /**

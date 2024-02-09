@@ -12,7 +12,9 @@ static const D3DCOLOR c_dark_grey  = D3DCOLOR_ARGB( 255,  25,  25,  25 );
 static const D3DCOLOR c_black      = D3DCOLOR_ARGB( 255,   0,   0,   0 );
 static const D3DCOLOR c_neon_green = D3DCOLOR_ARGB( 255,  10, 200,  10 );
 
-void render_menu(IDirect3DDevice9* d3dDevice)
+void
+WINAPI
+render_menu(IDirect3DDevice9* d3dDevice)
 {
     g_resolution = *((Resolution *)(0x0009D2A8));
 
