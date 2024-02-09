@@ -10,7 +10,7 @@
  * @param pDevice
  * @return void
  */
-void render_menu(IDirect3DDevice9* pDevice);
+void WINAPI render_menu(IDirect3DDevice9* pDevice);
 
 
 typedef struct _HackMenu
