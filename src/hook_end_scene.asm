@@ -1,13 +1,13 @@
-extern          _oEndScene
-extern          _render_menu@4
+extern      _oEndScene
+extern      _render_menu@4
 
-section         .text
-global          _hook_end_scene
+section     .text
+global      _hook_end_scene
 
 _hook_end_scene:
-    push        dword [ esp + 0x4 ]
-    call        _render_menu@4
-    jmp         [_oEndScene]
+    push    dword [ esp + 0x4 ]
+    call    _render_menu@4
+    jmp     [_oEndScene]
     ;push   ebx
     ;sub    esp,0x18
     ;mov    ebx, dword [esp+0x20]
