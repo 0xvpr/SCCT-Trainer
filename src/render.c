@@ -1,5 +1,6 @@
 #include "render.h"
-#include "drawing.h"
+
+#include "assembly.h"
 #include "hacks.h"
 
 int g_maximized = 1;

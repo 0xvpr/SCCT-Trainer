@@ -45,7 +45,7 @@ $(DEBUG): CFLAGS += -g
 
 release: $(PROJECT)
 $(PROJECT): $(BIN)/$(PROJECT).dll
-$(PROJECT): CFLAGS  += -march=native -mavx2 -Ofast -fPIE -funsafe-math-optimizations -fomit-frame-pointer
+$(PROJECT): CFLAGS  += -march=native -mavx2 -mtune=native -Ofast -fPIE -funsafe-math-optimizations -fomit-frame-pointer
 $(PROJECT): CFLAGS  += -funroll-loops -funsafe-loop-optimizations -funswitch-loops -floop-parallelize-all
 $(PROJECT): CFLAGS  += -finline-functions -falign-functions -falign-loops -falign-jumps -fno-function-sections
 $(PROJECT): CFLAGS  += -fno-ident -fvisibility=hidden -fstrict-aliasing
