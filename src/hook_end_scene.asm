@@ -2,9 +2,9 @@ extern          _oEndScene
 extern          _render_menu@4
 
 section         .text
-global          _hook_end_scene@4
+global          _hook_end_scene
 
-_hook_end_scene@4:
+_hook_end_scene:
     push        dword [ esp + 0x4 ]
     call        _render_menu@4
     jmp         [_oEndScene]
