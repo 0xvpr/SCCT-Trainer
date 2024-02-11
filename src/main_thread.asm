@@ -1,23 +1,52 @@
-section     .data
-global      _oEndScene
+; --------------------------------------------------------------------------- ;
+;                              Exported Functions                             ;
+; --------------------------------------------------------------------------- ;
+
+global      _MainThread@4
+
+; --------------------------------------------------------------------------- ;
+;                              Exported Variables                             ;
+; --------------------------------------------------------------------------- ;
+
 global      _g_module_base_addr
 
+; --------------------------------------------------------------------------- ;
+;                              Imported Functions                             ;
+; --------------------------------------------------------------------------- ;
+
+extern      _GetD3D9Device@8
+
+extern      _VirtualFree@12
+extern      _GetModuleHandleA@4
+extern      _FreeLibraryAndExitThread@8
+
+extern      _events_handle_keyboard
+
+extern      _memory_tramp_hook
+extern      _memory_patch
+
+extern      _render_menu@4
+
+; --------------------------------------------------------------------------- ;
+;                                  Variables                                  ;
+; --------------------------------------------------------------------------- ;
+
+section     .data
 _g_module_base_addr:
     dd      0
 _oEndScene:
     dd      0
 
-section     .text
-extern      _FreeLibraryAndExitThread@8
-extern      _VirtualFree@12
-extern      _GetModuleHandleA@4
-extern      _GetD3D9Device@8
-extern      _events_handle_keyboard
-extern      _memory_tramp_hook
-extern      _memory_patch
-extern      _hook_end_scene
+; --------------------------------------------------------------------------- ;
+;                               Executable Code                               ;
+; --------------------------------------------------------------------------- ;
 
-global      _MainThread@4
+section     .text
+_hook_end_scene:
+    push    dword [ esp + 0x4 ]
+    call    _render_menu@4
+    jmp     [_oEndScene]
+
 _MainThread@4:                                      ; 10002480: <_MainThread@4>:
     push    edi                                     ; 10002480: 57                     
     push    esi                                     ; 10002481: 56                     
