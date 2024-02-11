@@ -15,51 +15,51 @@ extern HackMenu g_hack_menu[MAX_MENU_ITEMS];
 
 int events_handle_keyboard(void)
 {
-    /* Toggle GodMode */
+    /*[> Toggle GodMode <]*/
     if (GetAsyncKeyState(VK_NUMPAD1) & 1)
     {
         g_hack_menu[GOD_MODE].bEnabled = !g_hack_menu[GOD_MODE].bEnabled;
         hack_god_mode(g_hack_menu[GOD_MODE].bEnabled);
     }
 
-    /* Toggle GhostMode */
+    /*[> Toggle GhostMode <]*/
     if (GetAsyncKeyState(VK_NUMPAD2) & 1)
     {
         g_hack_menu[GHOST_MODE].bEnabled = !g_hack_menu[GHOST_MODE].bEnabled;
         hack_ghost_mode(g_hack_menu[GHOST_MODE].bEnabled);
     }
 
-    /* Toggle Super Weapons */
+    /*[> Toggle Super Weapons <]*/
     if (GetAsyncKeyState(VK_NUMPAD3) & 1)
     {
         g_hack_menu[SUPER_WEAPONS].bEnabled = !g_hack_menu[SUPER_WEAPONS].bEnabled;
         hack_super_weapons(g_hack_menu[SUPER_WEAPONS].bEnabled);
     }
 
-    /*  Disable All Alarms */
+    /*[>  Disable All Alarms <]*/
     if (GetAsyncKeyState(VK_NUMPAD4) & 1)
     {
         g_hack_menu[DISABLE_ALARMS].bEnabled = !g_hack_menu[DISABLE_ALARMS].bEnabled;
         hack_disable_alarms(g_hack_menu[DISABLE_ALARMS].bEnabled);
     }
 
-    /* Toggle DisableEnemies */
+    /*[> Toggle DisableEnemies <]*/
     if (GetAsyncKeyState(VK_NUMPAD5) & 1)
     {
         g_hack_menu[DISABLE_ENEMIES].bEnabled = !g_hack_menu[DISABLE_ENEMIES].bEnabled;
-        /*n_entities_changed = */
+        /*[>n_entities_changed = <]*/
         hack_disable_enemies(g_hack_menu[DISABLE_ENEMIES].bEnabled);
     }
 
-    /* Unlock All Doors */
+    /*[> Unlock All Doors <]*/
     if (GetAsyncKeyState(VK_NUMPAD6) & 1)
     {
         //g_hack_menu[UNLOCK_ALL_DOORS].bEnabled = !g_hack_menu[UNLOCK_ALL_DOORS].bEnabled;
-        /*total_doors_unlocked = */
+        /*[>total_doors_unlocked = <]*/
         hack_unlock_all_doors();
     }
 
-    /* Unlock All Doors */
+    /*[> Unlock All Doors <]*/
     if (GetAsyncKeyState(VK_NUMPAD7) & 1)
     {
         hack_test();

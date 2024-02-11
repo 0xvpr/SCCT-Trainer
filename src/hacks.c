@@ -10,47 +10,6 @@
 
 extern uintptr_t g_module_base_addr;
 
-__attribute__((always_inline))
-void hack_god_mode(int bEnabled)
-{
-    void* const health_addr = (void *)(g_module_base_addr + offsets_health_base);
-
-    if (bEnabled)
-    {
-        memory_detour(health_addr, health_detour, sizeof(patch_health_original));
-    }
-    else
-    {
-        memory_patch(health_addr, patch_health_original, sizeof(patch_health_original));
-    }
-}
-
-__attribute__((always_inline))
-void hack_ghost_mode(int bEnabled)
-{
-    void* const visibility_addr = (void *)(g_module_base_addr + offsets_invisibility_base);
-    void* const noise_addr = (void *)(g_module_base_addr + offsets_noise_base);
-
-    // TODO: Add third op for slider
-
-    if (bEnabled)
-    {
-        DWORD old_protect = 0;
-        VirtualProtect(visibility_addr, sizeof(patch_visibility_original), PAGE_EXECUTE_WRITECOPY, &old_protect);
-        *((uint64_t *)visibility_addr) = 0x05D9909090909090;
-        VirtualProtect(visibility_addr, sizeof(patch_visibility_original), old_protect, &old_protect);
-
-        /*memory_nop(visibility_addr, sizeof(patch_visibility_original));*/
-        memory_patch(noise_addr, patch_noise_patch, sizeof(patch_noise_patch));
-    }
-    else
-    {
-        memory_patch(visibility_addr, patch_visibility_original, sizeof(patch_visibility_original));
-        memory_patch(noise_addr, patch_noise_original, sizeof(patch_noise_original));
-    }
-
-}
-
 void hack_super_weapons(int bEnabled)
 {
     void* const main_ammo_addr    = (void *)(g_module_base_addr + offsets_main_ammo_base);
@@ -97,20 +56,6 @@ void hack_super_weapons(int bEnabled)
         memory_patch(recoil_addr_5, patch_recoil_originals[5], sizeof(patch_recoil_originals[5]));
     }
 
-}
-
-void hack_disable_alarms(int bEnabled)
-{
-    void* const alarm_addr = (char *)(g_module_base_addr + offsets_alarm_base);
-
-    if (bEnabled)
-    {
-        memory_patch(alarm_addr, patch_alarm_patch, sizeof(patch_alarm_patch));
-    }
-    else
-    {
-        memory_patch(alarm_addr, patch_alarm_original, sizeof(patch_alarm_original));
-    }
 }
 
 unsigned int hack_disable_enemies(int bEnabled)

@@ -8,18 +8,9 @@
 </p>
 <br>
 
-### Timeline
-- Project started:      08/18/2021
-- Switch from C to CPP: 08/18/2021
-- Project completed:    08/19/2021
-- Switch from CPP to C: 08/20/2021
-- Project revisited:    12/09/2021
-- Project revisited:    12/07/2022
-- Project revisited:    05/26/2023
-
 ## Overview & Demonstration
-The main purpose of this project was to get familiar with the C language while also  
-familiarizing myself with the Directx9c API.  
+The main purpose of this repository was to see if I could write cheats  
+in pure assembly.
 
 <img src="./resources/demo.gif"/>
 Demonstration of God Mode, Disable Alarms, and Disable Enemies.  
