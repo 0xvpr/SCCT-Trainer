@@ -1,0 +1,242 @@
+section     .text
+
+extern      _GetAsyncKeyState@4
+
+extern      _g_hack_menu
+extern      _g_maximized
+extern      _g_resolution
+extern      _g_coordinates
+
+extern      _hack_test
+extern      _hack_no_clip
+extern      _hack_god_mode
+extern      _hack_ghost_mode
+extern      _hack_super_weapons
+extern      _hack_disable_alarms
+extern      _hack_disable_enemies
+extern      _hack_unlock_all_doors
+
+global      _events_handle_keyboard
+_events_handle_keyboard:
+    push   ebx                                          ; 10001bc0:   _events_handle_keyboard
+    sub    esp, 0x18                                    ; 10001bc0:    53                    
+    mov    dword [esp], 0x61                            ; 10001bc1:    83 ec 18              
+    mov    ebx, _GetAsyncKeyState@4                     ; 10001bc4:    c7 04 24 61 00 00 00  
+    call   ebx                                          ; 10001bcb:    8b 1d e8 70 00 10     
+    sub    esp, 0x4                                     ; 10001bd1:    ff d3                 
+    test   al, 0x1                                      ; 10001bd3:    83 ec 04              
+    jne    god_mode                                     ; 10001bd6:    a8 01                 
+    mov    dword [esp], 0x62                            ; 10001bd8:    0f 85 ca 00 00 00     
+    call   ebx                                          ; 10001bde:    c7 04 24 62 00 00 00  
+    sub    esp,0x4                                      ; 10001be5:    ff d3                 
+    test   al,0x1                                       ; 10001be7:    83 ec 04              
+    jne    ghost_mode                                   ; 10001bea:    a8 01                 
+    mov    dword [esp],0x63                             ; 10001bec:    0f 85 e4 00 00 00     
+    call   ebx                                          ; 10001bf2:    c7 04 24 63 00 00 00  
+    sub    esp,0x4                                      ; 10001bf9:    ff d3                 
+    test   al,0x1                                       ; 10001bfb:    83 ec 04              
+    jne    super_weapons                                ; 10001bfe:    a8 01                 
+    mov    dword [esp],0x64                             ; 10001c00:    0f 85 fe 00 00 00     
+    call   ebx                                          ; 10001c06:    c7 04 24 64 00 00 00  
+    sub    esp,0x4                                      ; 10001c0d:    ff d3                 
+    test   al,0x1                                       ; 10001c0f:    83 ec 04              
+    jne    disable_alarms                               ; 10001c12:    a8 01                 
+    mov    dword [esp],0x65                             ; 10001c14:    0f 85 18 01 00 00     
+    call   ebx                                          ; 10001c1a:    c7 04 24 65 00 00 00  
+    sub    esp,0x4                                      ; 10001c21:    ff d3                 
+    test   al,0x1                                       ; 10001c23:    83 ec 04              
+    jne    disable_enemies                              ; 10001c26:    a8 01                 
+    mov    dword [esp],0x66                             ; 10001c28:    0f 85 32 01 00 00     
+    call   ebx                                          ; 10001c2e:    c7 04 24 66 00 00 00  
+    sub    esp,0x4                                      ; 10001c35:    ff d3                 
+    test   al,0x1                                       ; 10001c37:    83 ec 04              
+    jne    unlock_all_doors                             ; 10001c3a:    a8 01                 
+    mov    dword [esp],0x67                             ; 10001c3c:    0f 85 4c 01 00 00     
+    call   ebx                                          ; 10001c42:    c7 04 24 67 00 00 00  
+    sub    esp,0x4                                      ; 10001c49:    ff d3                 
+    test   al,0x1                                       ; 10001c4b:    83 ec 04              
+    jne    _events_handle_keyboard+0x1e7                ; 10001c4e:    a8 01                 
+    mov    ecx,dword [_g_maximized]                     ; 10001c50:    0f 85 51 01 00 00     
+menu_up:
+    test   ecx,ecx                                      ; 10001c56:    8b 0d 10 30 00 10     
+    jne    _events_handle_keyboard+0x1fa                ; 10001c5c:    85 c9                 
+    mov    dword [esp],0x71                         ; 10001c5e:    0f 85 56 01 00 00     
+    call   ebx                                          ; 10001c64:    c7 04 24 71 00 00 00  
+    sub    esp,0x4                                      ; 10001c6b:    ff d3                 
+    test   al,0x1                                       ; 10001c6d:    83 ec 04              
+    je     _events_handle_keyboard+0xc6                 ; 10001c70:    a8 01                 
+    mov    edx,dword [_g_maximized]                  ; 10001c72:    74 12                 
+    xor    eax,eax                                      ; 10001c74:    8b 15 10 30 00 10     
+    test   edx,edx                                      ; 10001c7a:    31 c0                 
+    sete   al                                           ; 10001c7c:    85 d2                 
+    mov    [_g_maximized],eax                            ; 10001c7e:    0f 94 c0              
+    mov    dword [esp],0x24                         ; 10001c81:    a3 10 30 00 10        
+    call   ebx                                          ; 10001c86:    c7 04 24 24 00 00 00  
+    mov    ebx,eax                                      ; 10001c8d:    ff d3                 
+    sub    esp,0x4                                      ; 10001c8f:    89 c3                 
+    xor    eax,eax                                      ; 10001c91:    83 ec 04              
+    test   bx,bx                                        ; 10001c94:    31 c0                 
+    jne    _events_handle_keyboard+0x280                ; 10001c96:    66 85 db              
+    add    esp,0x18                                     ; 10001c99:    0f 85 a1 01 00 00     
+    pop    ebx                                          ; 10001c9f:    83 c4 18              
+    ret                                                 ; 10001ca2:    5b                    
+    lea    esi,[esi+0x0]                                ; 10001ca3:    c3                    
+    mov    edx,dword [_g_hack_menu+0x44*0]              ; 10001ca4:    8d 74 26 00           
+god_mode:
+    xor    eax,eax                                      ; 10001ca8:    8b 15 14 30 00 10     
+    test   edx,edx                                      ; 10001cae:    31 c0                 
+    sete   al                                           ; 10001cb0:    85 d2                 
+    mov    dword [esp],eax                              ; 10001cb2:    0f 94 c0              
+    mov    dword [_g_hack_menu+0x44*0],eax              ; 10001cb5:    89 04 24              
+    call   _hack_god_mode                               ; 10001cb8:    a3 14 30 00 10        
+    mov    dword [esp],0x62                             ; 10001cbd:    e8 6e 02 00 00        
+    call   ebx                                          ; 10001cc2:    c7 04 24 62 00 00 00  
+    sub    esp,0x4                                      ; 10001cc9:    ff d3                 
+    test   al,0x1                                       ; 10001ccb:    83 ec 04              
+    je     _events_handle_keyboard+0x32                 ; 10001cce:    a8 01                 
+    mov    ecx,dword [_g_hack_menu+0x44*1]              ; 10001cd0:    0f 84 1c ff ff ff     
+ghost_mode:
+    xor    eax,eax                                      ; 10001cd6:    8b 0d 58 30 00 10     
+    test   ecx,ecx                                      ; 10001cdc:    31 c0                 
+    sete   al                                           ; 10001cde:    85 c9                 
+    mov    dword [esp],eax                              ; 10001ce0:    0f 94 c0              
+    mov    [_g_hack_menu+0x44*1],eax                    ; 10001ce3:    89 04 24              
+    call   _hack_ghost_mode                             ; 10001ce6:    a3 58 30 00 10        
+    mov    dword [esp],0x63                             ; 10001ceb:    e8 90 02 00 00        
+    call   ebx                                          ; 10001cf0:    c7 04 24 63 00 00 00  
+    sub    esp,0x4                                      ; 10001cf7:    ff d3                 
+    test   al,0x1                                       ; 10001cf9:    83 ec 04              
+    je     _events_handle_keyboard+0x46                 ; 10001cfc:    a8 01                 
+    mov    edx,dword [_g_hack_menu+0x44*2]              ; 10001cfe:    0f 84 02 ff ff ff     
+super_weapons:
+    xor    eax,eax                                      ; 10001d04:    8b 15 9c 30 00 10     
+    test   edx,edx                                      ; 10001d0a:    31 c0                 
+    sete   al                                           ; 10001d0c:    85 d2                 
+    mov    dword [esp],eax                              ; 10001d0e:    0f 94 c0              
+    mov    [_g_hack_menu+0x44*2],eax                    ; 10001d11:    89 04 24              
+    call   _hack_super_weapons                          ; 10001d14:    a3 9c 30 00 10        
+    mov    dword [esp],0x64                             ; 10001d19:    e8 42 03 00 00        
+    call   ebx                                          ; 10001d1e:    c7 04 24 64 00 00 00  
+    sub    esp,0x4                                      ; 10001d25:    ff d3                 
+    test   al,0x1                                       ; 10001d27:    83 ec 04              
+    je     _events_handle_keyboard+0x5a                 ; 10001d2a:    a8 01                 
+    mov    ecx,dword [_g_hack_menu+0x44*3]                  ; 10001d2c:    0f 84 e8 fe ff ff     
+disable_alarms:
+    xor    eax,eax                                      ; 10001d32:    8b 0d e0 30 00 10     
+    test   ecx,ecx                                      ; 10001d38:    31 c0                 
+    sete   al                                           ; 10001d3a:    85 c9                 
+    mov    dword [esp],eax                          ; 10001d3c:    0f 94 c0              
+    mov    [_g_hack_menu+0x44*3],eax                            ; 10001d3f:    89 04 24              
+    call   _hack_disable_alarms                         ; 10001d42:    a3 e0 30 00 10        
+    mov    dword [esp],0x65                         ; 10001d47:    e8 a4 05 00 00        
+    call   ebx                                          ; 10001d4c:    c7 04 24 65 00 00 00  
+    sub    esp,0x4                                      ; 10001d53:    ff d3                 
+    test   al,0x1                                       ; 10001d55:    83 ec 04              
+    je     _events_handle_keyboard+0x6e                 ; 10001d58:    a8 01                 
+    mov    edx,dword [_g_hack_menu+0x44*4]                  ; 10001d5a:    0f 84 ce fe ff ff     
+disable_enemies:
+    xor    eax,eax                                      ; 10001d60:    8b 15 24 31 00 10     
+    test   edx,edx                                      ; 10001d66:    31 c0                 
+    sete   al                                           ; 10001d68:    85 d2                 
+    mov    dword [esp],eax                          ; 10001d6a:    0f 94 c0              
+    mov    [_g_hack_menu+0x44*4],eax                            ; 10001d6d:    89 04 24              
+    call   _hack_disable_enemies                        ; 10001d70:    a3 24 31 00 10        
+    mov    dword [esp],0x66                         ; 10001d75:    e8 c6 05 00 00        
+    call   ebx                                          ; 10001d7a:    c7 04 24 66 00 00 00  
+    sub    esp,0x4                                      ; 10001d81:    ff d3                 
+    test   al,0x1                                       ; 10001d83:    83 ec 04              
+    je     _events_handle_keyboard+0x82                 ; 10001d86:    a8 01                 
+    call   _hack_unlock_all_doors                       ; 10001d88:    0f 84 b4 fe ff ff     
+unlock_all_doors:
+    mov    dword [esp],0x67                         ; 10001d8e:    e8 3d 0b 00 00        
+    call   ebx                                          ; 10001d93:    c7 04 24 67 00 00 00  
+    sub    esp,0x4                                      ; 10001d9a:    ff d3                 
+    test   al,0x1                                       ; 10001d9c:    83 ec 04              
+    je     menu_up                                      ; 10001d9f:    a8 01                 
+    call   _hack_test                                   ; 10001da1:    0f 84 af fe ff ff     
+    mov    ecx,dword [_g_maximized]                  ; 10001da7:    e8 74 0e 00 00        
+    test   ecx,ecx                                      ; 10001dac:    8b 0d 10 30 00 10     
+    je     _events_handle_keyboard+0xa4                 ; 10001db2:    85 c9                 
+    mov    dword [esp],0x25                         ; 10001db4:    0f 84 aa fe ff ff     
+    call   ebx                                          ; 10001dba:    c7 04 24 25 00 00 00  
+    sub    esp,0x4                                      ; 10001dc1:    ff d3                 
+    test   al,0x1                                       ; 10001dc3:    83 ec 04              
+    jne    _events_handle_keyboard+0x350                ; 10001dc6:    a8 01                 
+    mov    dword [esp],0x27                         ; 10001dc8:    0f 85 42 01 00 00     
+    call   ebx                                          ; 10001dce:    c7 04 24 27 00 00 00  
+    sub    esp,0x4                                      ; 10001dd5:    ff d3                 
+    test   al,0x1                                       ; 10001dd7:    83 ec 04              
+    jne    _events_handle_keyboard+0x320                ; 10001dda:    a8 01                 
+    mov    dword [esp],0x26                         ; 10001ddc:    0f 85 fe 00 00 00     
+    call   ebx                                          ; 10001de2:    c7 04 24 26 00 00 00  
+    sub    esp,0x4                                      ; 10001de9:    ff d3                 
+    test   al,0x1                                       ; 10001deb:    83 ec 04              
+    jne    _events_handle_keyboard+0x300                ; 10001dee:    a8 01                 
+    mov    dword [esp],0x28                         ; 10001df0:    0f 85 ca 00 00 00     
+    call   ebx                                          ; 10001df6:    c7 04 24 28 00 00 00  
+    sub    esp,0x4                                      ; 10001dfd:    ff d3                 
+    test   al,0x1                                       ; 10001dff:    83 ec 04              
+    jne    _events_handle_keyboard+0x2d0                ; 10001e02:    a8 01                 
+    mov    ecx,dword [_g_maximized]                  ; 10001e04:    0f 85 86 00 00 00     
+    test   ecx,ecx                                      ; 10001e0a:    8b 0d 10 30 00 10     
+    je     _events_handle_keyboard+0xa4                 ; 10001e10:    85 c9                 
+    mov    dword [esp],0x72                         ; 10001e12:    0f 84 4c fe ff ff     
+    call   ebx                                          ; 10001e18:    c7 04 24 72 00 00 00  
+    sub    esp,0x4                                      ; 10001e1f:    ff d3                 
+    test   al,0x1                                       ; 10001e21:    83 ec 04              
+    je     _events_handle_keyboard+0xa4                 ; 10001e24:    a8 01                 
+    mov    dword [_g_coordinates],0x19001e             ; 10001e26:    0f 84 38 fe ff ff     
+                                                        ; 10001e2c:    c7 05 ac 31 00 10 1e  
+    jmp    _events_handle_keyboard+0xa4                 ; 10001e33:    00 19 00 
+    lea    esi,[esi+0x0]                                ; 10001e36:    e9 29 fe ff ff        
+    nop                                                 ; 10001e3b:    8d 74 26 00           
+    mov    dword [esp],0x0                          ; 10001e3f:    90                    
+    call   _hack_god_mode                               ; 10001e40:    c7 04 24 00 00 00 00  
+    mov    dword [esp],0x0                          ; 10001e47:    e8 e4 00 00 00        
+    call   _hack_ghost_mode                             ; 10001e4c:    c7 04 24 00 00 00 00  
+    mov    dword [esp],0x0                          ; 10001e53:    e8 28 01 00 00        
+    call   _hack_super_weapons                          ; 10001e58:    c7 04 24 00 00 00 00  
+    mov    dword [esp],0x0                          ; 10001e5f:    e8 fc 01 00 00        
+    call   _hack_disable_alarms                         ; 10001e64:    c7 04 24 00 00 00 00  
+    mov    dword [esp],0x0                          ; 10001e6b:    e8 80 04 00 00        
+    call   _hack_disable_enemies                        ; 10001e70:    c7 04 24 00 00 00 00  
+    add    esp,0x18                                     ; 10001e77:    e8 c4 04 00 00        
+    mov    eax,0x1                                      ; 10001e7c:    83 c4 18              
+    pop    ebx                                          ; 10001e7f:    b8 01 00 00 00        
+    ret                                                 ; 10001e84:    5b                    
+    lea    esi,[esi+0x0]                                ; 10001e85:    c3                    
+    lea    esi,[esi+0x0]                                ; 10001e86:    8d b4 26 00 00 00 00  
+    movzx  eax,word [_g_resolution+0x2]                   ; 10001e8d:    8d 76 00              
+    movzx  ecx,word [_g_coordinates+0x2]                   ; 10001e90:    0f b7 05 0e 30 00 10  
+    sub    eax,0x78                                     ; 10001e97:    0f b7 0d ae 31 00 10  
+    mov    edx,ecx                                      ; 10001e9e:    83 e8 78              
+    cmp    ecx,eax                                      ; 10001ea1:    89 ca                 
+    jge    _events_handle_keyboard+0x24a                ; 10001ea3:    39 c1                 
+    add    edx,0x5                                      ; 10001ea5:    0f 8d 5f ff ff ff     
+    mov    word [_g_coordinates+0x2],dx                    ; 10001eab:    83 c2 05              
+    jmp    _events_handle_keyboard+0x24a                ; 10001eae:    66 89 15 ae 31 00 10  
+    lea    esi,[esi+0x0]                                ; 10001eb5:    e9 50 ff ff ff        
+    movzx  ecx,word [_g_coordinates+0x2]                   ; 10001eba:    8d b6 00 00 00 00     
+    cmp    cx,0x1e                                      ; 10001ec0:    0f b7 0d ae 31 00 10  
+    jbe    _events_handle_keyboard+0x236                ; 10001ec7:    66 83 f9 1e           
+    sub    ecx,0x5                                      ; 10001ecb:    0f 86 25 ff ff ff     
+    mov    word [_g_coordinates+0x2],cx                    ; 10001ed1:    83 e9 05              
+    jmp    _events_handle_keyboard+0x236                ; 10001ed4:    66 89 0d ae 31 00 10  
+    movzx  eax,word [_g_resolution]                   ; 10001edb:    e9 16 ff ff ff        
+    movzx  ecx,word [_g_coordinates]                   ; 10001ee0:    0f b7 05 0c 30 00 10  
+    sub    eax,0xaf                                     ; 10001ee7:    0f b7 0d ac 31 00 10  
+    mov    edx,ecx                                      ; 10001eee:    2d af 00 00 00        
+    cmp    ecx,eax                                      ; 10001ef3:    89 ca                 
+    jge    _events_handle_keyboard+0x222                ; 10001ef5:    39 c1                 
+    add    edx,0x5                                      ; 10001ef7:    0f 8d e5 fe ff ff     
+    mov    word [_g_coordinates],dx                    ; 10001efd:    83 c2 05              
+    jmp    _events_handle_keyboard+0x222                ; 10001f00:    66 89 15 ac 31 00 10  
+    lea    esi,[esi+0x0]                                ; 10001f07:    e9 d6 fe ff ff        
+    movzx  eax,word [_g_coordinates]                   ; 10001f0c:    8d 74 26 00           
+    cmp    ax,0x23                                      ; 10001f10:    0f b7 05 ac 31 00 10  
+    jbe    _events_handle_keyboard+0x20e                ; 10001f17:    66 83 f8 23           
+    sub    eax,0x5                                      ; 10001f1b:    0f 86 ad fe ff ff     
+    mov    [_g_coordinates],ax                             ; 10001f21:    83 e8 05              
+    jmp    _events_handle_keyboard+0x20e                ; 10001f24:    66 a3 ac 31 00 10     
+    nop                                                 ; 10001f2a:    e9 9f fe ff ff        
+                                                        ; 10001f2f:    90                    
