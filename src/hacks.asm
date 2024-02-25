@@ -57,8 +57,6 @@ skip_player:
 
 visibility_original:
     mov     eax, dword [esi + 0x1518]
-;   mov     eax, 0x1
-;   nop
 
 noise_original:
     cmp     edi, eax
@@ -128,8 +126,8 @@ ghost_mode_enabled:
     call    edi                                     ; 10001fcc:   ff d7                  
     sub     esp,0x10                                ; 10001fce:   83 ec 10               
     mov     edx,dword [esp+0x1c]                    ; 10001fd1:   8b 54 24 1c            
-    mov     dword [esi],0x90909090                  ; 10001fd5:   c7 06 90 90 90 90      
-    mov     dword [esi+0x4],0x5d99090               ; 10001fdb:   c7 46 04 90 90 d9 05   
+    mov     dword [esi],0x000001B8                  ; 10001fd5:   c7 06 b8 01 00 00
+    mov     dword [esi+0x4],0x5d99000               ; 10001fdb:   c7 46 04 00 90 d9 05   
     mov     dword [esp+0xc],ebp                     ; 10001fe2:   89 6c 24 0c            
     mov     dword [esp+0x8],edx                     ; 10001fe6:   89 54 24 08            
     mov     dword [esp],esi                         ; 10001fea:   89 34 24               
