@@ -4,17 +4,22 @@
 
 global      _hack_god_mode
 global      _hack_ghost_mode
+global      _hack_super_weapons
 global      _hack_disable_alarms
+global      _hack_unlock_all_doors
 
 ; --------------------------------------------------------------------------- ;
 ;                                Definitions                                  ;
 ; --------------------------------------------------------------------------- ;
 
+TYPE_NPC            EQU 0x110F88D8
+TYPE_DOOR           EQU 0x110FDDD8
 TYPE_PLAYER         EQU 0x110E8B50
-OFFSET_HEALTH       EQU 0x003F07C8
-OFFSET_VISIBILITY   EQU 0x0027F12C
-OFFSET_NOISE        EQU 0x00417E5D
+
 OFFSET_ALARMS       EQU 0x0009BC61
+OFFSET_HEALTH       EQU 0x003F07C8
+OFFSET_NOISE        EQU 0x00417E5D
+OFFSET_VISIBILITY   EQU 0x0027F12C
 
 ; --------------------------------------------------------------------------- ;
 ;                            Imported Functions                               ;
@@ -22,8 +27,10 @@ OFFSET_ALARMS       EQU 0x0009BC61
 
 extern      _VirtualProtect@16
 
+extern      _memory_nop
 extern      _memory_patch
 extern      _memory_detour
+extern      _memory_find_dynamic_address
 
 ; --------------------------------------------------------------------------- ;
 ;                            Imported Variables                               ;
@@ -32,7 +39,46 @@ extern      _memory_detour
 extern      _g_module_base_addr
 
 ; --------------------------------------------------------------------------- ;
-;                              Executable Code                                ;
+;                                Variables                                    ;
+; --------------------------------------------------------------------------- ;
+section     .data
+game_world_base:
+    dd      0x00A0DFEC
+game_world_offsets:
+    dw      0x78
+    dw      0x5E4
+
+primary_weapons_base:
+    dd      0x00A0F434
+primary_weapons_offsets:
+    dw      0x84
+    dw      0x6E0
+    dw      0x434
+
+main_ammo_base:
+    dd      0x002F9E4A
+shotgun_ammo_base:
+    dd      0x002FCFF0
+sniper_ammo_base:
+    dd      0x002FBC58
+rapid_fire_base:
+    dd      0x00178FA2
+
+recoil_base_1:
+    dd      0x002F83BE
+recoil_base_2:
+    dd      0x002F8409
+recoil_base_3:
+    dd      0x002F845B
+recoil_base_4:
+    dd      0x002F855E
+recoil_base_5:
+    dd      0x002F84D5
+recoil_base_6:
+    dd      0x002F8578
+
+; --------------------------------------------------------------------------- ;
+;                             Local Executable Code                           ;
 ; --------------------------------------------------------------------------- ;
 section     .text
 health_original:
@@ -65,13 +111,73 @@ noise_patch:
     cmp     eax, eax
 
 alarm_original:
-    jne     $ + 0x33b
+    jne     $ + 0x33B
 
 alarm_patch:
-    jmp     $ + 0x33b
+    jmp     $ + 0x33B
     nop
 
-_hack_god_mode:                                     ; 0001f30:   <_hack_god_mode>:
+main_ammo_original:
+    dec     ebx
+    dec     edi
+
+shotgun_ammo_original:
+    dec     ecx
+    mov     dword [edi + 0x41C], ecx
+    mov     ecx, dword [edi + 0x3FC]                                        
+    dec     eax
+
+shotgun_ammo_patch:
+    nop
+    mov     dword [edi + 0x41C], ecx
+    mov     ecx, dword [edi + 0x3FC]                                        
+    nop
+
+sniper_ammo_original:
+    dec     eax
+    mov     dword [esi + 0x454], eax
+    mov     eax, dword [esi + 0x45C]
+    dec     eax
+
+sniper_ammo_patch:
+    nop
+    mov     dword [esi + 0x454], eax
+    mov     eax, dword [esi + 0x45C]
+    nop
+
+rapid_fire_original:
+    jne     $ + 0x49
+
+recoil_original_1:
+    fstp    dword [esi + 0x52C]
+recoil_original_2:
+    fstp    dword [esi + 0x52C]
+recoil_original_3:
+    fstp    dword [esi + 0x52C]
+recoil_original_4:
+    fstp    dword [esi + 0x530]
+recoil_original_5:
+    mov     dword [esi + 0x530], edx
+recoil_original_6:
+    mov     dword [esi + 0x534], ecx
+
+recoil_patch_1:
+    mov     dword [esi + 0x52C], ecx
+recoil_patch_2:
+    mov     dword [esi + 0x52C], ecx
+recoil_patch_3:
+    mov     dword [esi + 0x52C], ecx
+recoil_patch_4:
+    mov     dword [esi + 0x530], ecx
+recoil_patch_5:
+    mov     dword [esi + 0x530], ecx
+recoil_patch_6:
+    mov     dword [esi + 0x534], edi
+
+; --------------------------------------------------------------------------- ;
+;                            Global Executable Code                           ;
+; --------------------------------------------------------------------------- ;
+_hack_god_mode:                                     ; 0001f30:   <_hack_god_mode>
     sub     esp,0x1c                                ; 0001f30:   83 ec 1c                
     mov     eax,OFFSET_HEALTH                       ; 0001f33:   a1 e0 31 00 10          
     mov     edx,dword [esp+0x20]                    ; 0001f38:   8b 54 24 20             
@@ -99,13 +205,13 @@ god_mode_disabled:
     nop
     nop
 
-_hack_ghost_mode:                                   ; 10001f80    <_hack_ghost_mode>:
+_hack_ghost_mode:                                   ; 10001f80:   <_hack_ghost_mode>
     push    ebp                                     ; 10001f80:   55                     
     push    edi                                     ; 10001f81:   57                     
     push    esi                                     ; 10001f82:   56                     
     push    ebx                                     ; 10001f83:   53                     
     sub     esp,0x2c                                ; 10001f84:   83 ec 2c               
-    mov     ebx,dword [_g_module_base_addr]         ; 10001f87:   8b 1d 04 30 00 10      
+    mov     ebx, dword [_g_module_base_addr]        ; 10001f87:   8b 1d 04 30 00 10      
     mov     esi, OFFSET_VISIBILITY                  ; 10001f8d:   8b 35 e8 31 00 10      
     mov     eax,dword [esp+0x40]                    ; 10001f93:   8b 44 24 40            
     add     esi,ebx                                 ; 10001f97:   01 de                  
@@ -126,8 +232,8 @@ ghost_mode_enabled:
     call    edi                                     ; 10001fcc:   ff d7                  
     sub     esp,0x10                                ; 10001fce:   83 ec 10               
     mov     edx,dword [esp+0x1c]                    ; 10001fd1:   8b 54 24 1c            
-    mov     dword [esi],0x000001B8                  ; 10001fd5:   c7 06 90 90 90 90      
-    mov     dword [esi+0x4],0x5d99000               ; 10001fdb:   c7 46 04 90 90 d9 05   
+    mov     dword [esi],0x90909090                  ; 10001fd5:   c7 06 90 90 90 90      
+    mov     dword [esi+0x4],0x5d99090               ; 10001fdb:   c7 46 04 90 90 d9 05   
     mov     dword [esp+0xc],ebp                     ; 10001fe2:   89 6c 24 0c            
     mov     dword [esp+0x8],edx                     ; 10001fe6:   89 54 24 08            
     mov     dword [esp],esi                         ; 10001fea:   89 34 24               
@@ -177,181 +283,224 @@ ghost_mode_disabled:
     nop
     nop
 
-;_hack_super_weapons                                ; 10002060 <_hack_super_weapons>:
-;    push    ebp                                    ; 10002060:   55                     
-;    push    edi                                    ; 10002061:   57                     
-;    push    esi                                    ; 10002062:   56                     
-;    push    ebx                                    ; 10002063:   53                     
-;    sub     esp,0x3c                               ; 10002064:   83 ec 3c               
-;    mov     eax,[_g_module_base_addr]              ; 10002067:   a1 04 30 00 10         
-;    mov     ebx,DWORD PTR ds:0x100031b0            ; 1000206c:   8b 1d b0 31 00 10      
-;    mov     esi,DWORD PTR ds:0x100031b4            ; 10002072:   8b 35 b4 31 00 10      
-;    add     ebx,eax                                ; 10002078:   01 c3                  
-;    mov     DWORD PTR [esp+0x1c],ebx               ; 1000207a:   89 5c 24 1c            
-;    mov     ebx,DWORD PTR ds:0x100031b8            ; 1000207e:   8b 1d b8 31 00 10      
-;    add     esi,eax                                ; 10002084:   01 c6                  
-;    add     ebx,eax                                ; 10002086:   01 c3                  
-;    mov     DWORD PTR [esp+0x20],esi               ; 10002088:   89 74 24 20            
-;    mov     DWORD PTR [esp+0x24],ebx               ; 1000208c:   89 5c 24 24            
-;    mov     ecx,DWORD PTR ds:0x100031d8            ; 10002090:   8b 0d d8 31 00 10      
-;    mov     ebp,DWORD PTR ds:0x100031d4            ; 10002096:   8b 2d d4 31 00 10      
-;    mov     edx,DWORD PTR ds:0x100031d0            ; 1000209c:   8b 15 d0 31 00 10      
-;    mov     edi,DWORD PTR ds:0x100031cc            ; 100020a2:   8b 3d cc 31 00 10      
-;    mov     esi,DWORD PTR ds:0x100031bc            ; 100020a8:   8b 35 bc 31 00 10      
-;    mov     ebx,DWORD PTR ds:0x100031c0            ; 100020ae:   8b 1d c0 31 00 10      
-;    add     edx,eax                                ; 100020b4:   01 c2                  
-;    add     ecx,eax                                ; 100020b6:   01 c1                  
-;    add     ebp,eax                                ; 100020b8:   01 c5                  
-;    add     edi,eax                                ; 100020ba:   01 c7                  
-;    add     esi,eax                                ; 100020bc:   01 c6                  
-;    add     ebx,eax                                ; 100020be:   01 c3                  
-;    add     eax,DWORD PTR ds:0x100031c4            ; 100020c0:   03 05 c4 31 00 10      
-;    cmp     DWORD PTR [esp+0x50],0x0               ; 100020c6:   83 7c 24 50 00         
-;    mov     DWORD PTR [esp+0x2c],eax               ; 100020cb:   89 44 24 2c            
-;    mov     DWORD PTR [esp+0x28],edx               ; 100020cf:   89 54 24 28            
-;    je      100021d8 <_hack_super_weapons+0x178>   ; 100020d3:   0f 84 ff 00 00 00      
-;    mov     DWORD PTR [esp],ecx                    ; 100020d9:   89 0c 24               
-;    mov     DWORD PTR [esp+0x4],0x2                ; 100020dc:   c7 44 24 04 02 00 00   
-;                                                   ; 100020e3:   00 
-;    call    10001637 <_memory_nop>                 ; 100020e4:   e8 4e f5 ff ff         
-;    mov     eax,DWORD PTR [esp+0x28]               ; 100020e9:   8b 44 24 28            
-;    mov     DWORD PTR [esp+0x8],0xe                ; 100020ed:   c7 44 24 08 0e 00 00   
-;                                                   ; 100020f4:   00 
-;    mov     DWORD PTR [esp],eax                    ; 100020f5:   89 04 24               
-;    mov     DWORD PTR [esp+0x4],0x10004088         ; 100020f8:   c7 44 24 04 88 40 00   
-;                                                   ; 100020ff:   10 
-;    call    1000169f <_memory_patch>               ; 10002100:   e8 9a f5 ff ff         
-;    mov     DWORD PTR [esp],ebp                    ; 10002105:   89 2c 24               
-;    mov     DWORD PTR [esp+0x8],0xe                ; 10002108:   c7 44 24 08 0e 00 00   
-;                                                   ; 1000210f:   00 
-;    mov     DWORD PTR [esp+0x4],0x100040a8         ; 10002110:   c7 44 24 04 a8 40 00   
-;                                                   ; 10002117:   10 
-;    call    1000169f <_memory_patch>               ; 10002118:   e8 82 f5 ff ff         
-;    mov     DWORD PTR [esp],edi                    ; 1000211d:   89 3c 24               
-;    mov     DWORD PTR [esp+0x4],0x2                ; 10002120:   c7 44 24 04 02 00 00   
-;                                                   ; 10002127:   00 
-;    call    10001637 <_memory_nop>                 ; 10002128:   e8 0a f5 ff ff         
-;    mov     ecx,DWORD PTR [esp+0x1c]               ; 1000212d:   8b 4c 24 1c            
-;    mov     DWORD PTR [esp+0x8],0x6                ; 10002131:   c7 44 24 08 06 00 00   
-;                                                   ; 10002138:   00 
-;    mov     DWORD PTR [esp],ecx                    ; 10002139:   89 0c 24               
-;    mov     DWORD PTR [esp+0x4],0x10004020         ; 1000213c:   c7 44 24 04 20 40 00   
-;                                                   ; 10002143:   10 
-;    call    1000169f <_memory_patch>               ; 10002144:   e8 56 f5 ff ff         
-;    mov     ebp,DWORD PTR [esp+0x20]               ; 10002149:   8b 6c 24 20            
-;    mov     DWORD PTR [esp+0x8],0x6                ; 1000214d:   c7 44 24 08 06 00 00   
-;                                                   ; 10002154:   00 
-;    mov     DWORD PTR [esp],ebp                    ; 10002155:   89 2c 24               
-;    mov     DWORD PTR [esp+0x4],0x10004026         ; 10002158:   c7 44 24 04 26 40 00   
-;                                                   ; 1000215f:   10 
-;    call    1000169f <_memory_patch>               ; 10002160:   e8 3a f5 ff ff         
-;    mov     edx,DWORD PTR [esp+0x24]               ; 10002165:   8b 54 24 24            
-;    mov     DWORD PTR [esp+0x8],0x6                ; 10002169:   c7 44 24 08 06 00 00   
-;                                                   ; 10002170:   00 
-;    mov     DWORD PTR [esp],edx                    ; 10002171:   89 14 24               
-;    mov     DWORD PTR [esp+0x4],0x1000402c         ; 10002174:   c7 44 24 04 2c 40 00   
-;                                                   ; 1000217b:   10 
-;    call    1000169f <_memory_patch>               ; 1000217c:   e8 1e f5 ff ff         
-;    mov     DWORD PTR [esp],esi                    ; 10002181:   89 34 24               
-;    mov     DWORD PTR [esp+0x8],0x6                ; 10002184:   c7 44 24 08 06 00 00   
-;                                                   ; 1000218b:   00 
-;    mov     DWORD PTR [esp+0x4],0x10004032         ; 1000218c:   c7 44 24 04 32 40 00   
-;                                                   ; 10002193:   10 
-;    call    1000169f <_memory_patch>               ; 10002194:   e8 06 f5 ff ff         
-;    mov     DWORD PTR [esp],ebx                    ; 10002199:   89 1c 24               
-;    mov     DWORD PTR [esp+0x8],0x6                ; 1000219c:   c7 44 24 08 06 00 00   
-;                                                   ; 100021a3:   00 
-;    mov     DWORD PTR [esp+0x4],0x10004038         ; 100021a4:   c7 44 24 04 38 40 00   
-;                                                   ; 100021ab:   10 
-;    call    1000169f <_memory_patch>               ; 100021ac:   e8 ee f4 ff ff         
-;    mov     esi,DWORD PTR [esp+0x2c]               ; 100021b1:   8b 74 24 2c            
-;    mov     DWORD PTR [esp+0x8],0x6                ; 100021b5:   c7 44 24 08 06 00 00   
-;                                                   ; 100021bc:   00 
-;    mov     DWORD PTR [esp],esi                    ; 100021bd:   89 34 24               
-;    mov     DWORD PTR [esp+0x4],0x1000403e         ; 100021c0:   c7 44 24 04 3e 40 00   
-;                                                   ; 100021c7:   10 
-;    call    1000169f <_memory_patch>               ; 100021c8:   e8 d2 f4 ff ff         
-;    add     esp,0x3c                               ; 100021cd:   83 c4 3c               
-;    pop     ebx                                    ; 100021d0:   5b                     
-;    pop     esi                                    ; 100021d1:   5e                     
-;    pop     edi                                    ; 100021d2:   5f                     
-;    pop     ebp                                    ; 100021d3:   5d                     
-;    ret                                            ; 100021d4:   c3                     
-;    lea     esi,[esi+0x0]                          ; 100021d5:   8d 76 00               
-;    mov     DWORD PTR [esp],ecx                    ; 100021d8:   89 0c 24               
-;    mov     DWORD PTR [esp+0x8],0x2                ; 100021db:   c7 44 24 08 02 00 00   
-;                                                   ; 100021e2:   00 
-;    mov     DWORD PTR [esp+0x4],0x100040c6         ; 100021e3:   c7 44 24 04 c6 40 00   
-;                                                   ; 100021ea:   10 
-;    call    1000169f <_memory_patch>               ; 100021eb:   e8 af f4 ff ff         
-;    mov     eax,DWORD PTR [esp+0x28]               ; 100021f0:   8b 44 24 28            
-;    mov     DWORD PTR [esp+0x8],0xe                ; 100021f4:   c7 44 24 08 0e 00 00   
-;                                                   ; 100021fb:   00 
-;    mov     DWORD PTR [esp],eax                    ; 100021fc:   89 04 24               
-;    mov     DWORD PTR [esp+0x4],0x10004098         ; 100021ff:   c7 44 24 04 98 40 00   
-;                                                   ; 10002206:   10 
-;    call    1000169f <_memory_patch>               ; 10002207:   e8 93 f4 ff ff         
-;    mov     DWORD PTR [esp],ebp                    ; 1000220c:   89 2c 24               
-;    mov     DWORD PTR [esp+0x8],0xe                ; 1000220f:   c7 44 24 08 0e 00 00   
-;                                                   ; 10002216:   00 
-;    mov     DWORD PTR [esp+0x4],0x100040b8         ; 10002217:   c7 44 24 04 b8 40 00   
-;                                                   ; 1000221e:   10 
-;    call    1000169f <_memory_patch>               ; 1000221f:   e8 7b f4 ff ff         
-;    mov     DWORD PTR [esp],edi                    ; 10002224:   89 3c 24               
-;    mov     DWORD PTR [esp+0x8],0x2                ; 10002227:   c7 44 24 08 02 00 00   
-;                                                   ; 1000222e:   00 
-;    mov     DWORD PTR [esp+0x4],0x10004084         ; 1000222f:   c7 44 24 04 84 40 00   
-;                                                   ; 10002236:   10 
-;    call    1000169f <_memory_patch>               ; 10002237:   e8 63 f4 ff ff         
-;    mov     ecx,DWORD PTR [esp+0x1c]               ; 1000223c:   8b 4c 24 1c            
-;    mov     DWORD PTR [esp+0x8],0x6                ; 10002240:   c7 44 24 08 06 00 00   
-;                                                   ; 10002247:   00 
-;    mov     DWORD PTR [esp],ecx                    ; 10002248:   89 0c 24               
-;    mov     DWORD PTR [esp+0x4],0x10004060         ; 1000224b:   c7 44 24 04 60 40 00   
-;                                                   ; 10002252:   10 
-;    call    1000169f <_memory_patch>               ; 10002253:   e8 47 f4 ff ff         
-;    mov     ebp,DWORD PTR [esp+0x20]               ; 10002258:   8b 6c 24 20            
-;    mov     DWORD PTR [esp+0x8],0x6                ; 1000225c:   c7 44 24 08 06 00 00   
-;                                                   ; 10002263:   00 
-;    mov     DWORD PTR [esp],ebp                    ; 10002264:   89 2c 24               
-;    mov     DWORD PTR [esp+0x4],0x10004066         ; 10002267:   c7 44 24 04 66 40 00   
-;                                                   ; 1000226e:   10 
-;    call    1000169f <_memory_patch>               ; 1000226f:   e8 2b f4 ff ff         
-;    mov     edx,DWORD PTR [esp+0x24]               ; 10002274:   8b 54 24 24            
-;    mov     DWORD PTR [esp+0x8],0x6                ; 10002278:   c7 44 24 08 06 00 00   
-;                                                   ; 1000227f:   00 
-;    mov     DWORD PTR [esp],edx                    ; 10002280:   89 14 24               
-;    mov     DWORD PTR [esp+0x4],0x1000406c         ; 10002283:   c7 44 24 04 6c 40 00   
-;                                                   ; 1000228a:   10 
-;    call    1000169f <_memory_patch>               ; 1000228b:   e8 0f f4 ff ff         
-;    mov     DWORD PTR [esp],esi                    ; 10002290:   89 34 24               
-;    mov     DWORD PTR [esp+0x8],0x6                ; 10002293:   c7 44 24 08 06 00 00   
-;                                                   ; 1000229a:   00 
-;    mov     DWORD PTR [esp+0x4],0x10004072         ; 1000229b:   c7 44 24 04 72 40 00   
-;                                                   ; 100022a2:   10 
-;    call    1000169f <_memory_patch>               ; 100022a3:   e8 f7 f3 ff ff         
-;    mov     DWORD PTR [esp],ebx                    ; 100022a8:   89 1c 24               
-;    mov     DWORD PTR [esp+0x8],0x6                ; 100022ab:   c7 44 24 08 06 00 00   
-;                                                   ; 100022b2:   00 
-;    mov     DWORD PTR [esp+0x4],0x10004078         ; 100022b3:   c7 44 24 04 78 40 00   
-;                                                   ; 100022ba:   10 
-;    call    1000169f <_memory_patch>               ; 100022bb:   e8 df f3 ff ff         
-;    mov     edi,DWORD PTR [esp+0x2c]               ; 100022c0:   8b 7c 24 2c            
-;    mov     DWORD PTR [esp+0x8],0x6                ; 100022c4:   c7 44 24 08 06 00 00   
-;                                                   ; 100022cb:   00 
-;    mov     DWORD PTR [esp],edi                    ; 100022cc:   89 3c 24               
-;    mov     DWORD PTR [esp+0x4],0x1000407e         ; 100022cf:   c7 44 24 04 7e 40 00   
-;                                                   ; 100022d6:   10 
-;    call    1000169f <_memory_patch>               ; 100022d7:   e8 c3 f3 ff ff         
-;    add     esp,0x3c                               ; 100022dc:   83 c4 3c               
-;    pop     ebx                                    ; 100022df:   5b                     
-;    pop     esi                                    ; 100022e0:   5e                     
-;    pop     edi                                    ; 100022e1:   5f                     
-;    pop     ebp                                    ; 100022e2:   5d                     
-;    ret                                            ; 100022e3:   c3                     
-;    lea     esi,[esi+eiz*1+0x0]                    ; 100022e4:   8d b4 26 00 00 00 00   
-;    lea     esi,[esi+eiz*1+0x0]                    ; 100022eb:   8d 74 26 00            
-;    nop                                            ; 100022ef:   90                     
+_hack_super_weapons:                                ; 10002130:   <_hack_super_weapons>
+    push   ebp                                      ; 10002130:   55                      
+    push   edi                                      ; 10002131:   57                      
+    push   esi                                      ; 10002132:   56                      
+    push   ebx                                      ; 10002133:   53                      
+    sub    esp,0x3c                                 ; 10002134:   83 ec 3c                
+    mov    eax, dword [_g_module_base_addr]         ; 10002137:   a1 0c 30 00 10          
+    mov    ebx, dword [recoil_base_1]               ; 1000213c:   8b 1d b8 31 00 10       
+    mov    esi, dword [recoil_base_2]               ; 10002142:   8b 35 bc 31 00 10       
+    add    ebx,eax                                  ; 10002148:   01 c3                   
+    mov    dword [esp+0x1c],ebx                     ; 1000214a:   89 5c 24 1c             
+    mov    ebx, dword [recoil_base_3]               ; 1000214e:   8b 1d c0 31 00 10       
+    add    esi,eax                                  ; 10002154:   01 c6                   
+    add    ebx,eax                                  ; 10002156:   01 c3                   
+    mov    dword [esp+0x20],esi                     ; 10002158:   89 74 24 20             
+    mov    dword [esp+0x24],ebx                     ; 1000215c:   89 5c 24 24             
+    mov    ecx, dword [main_ammo_base]              ; 10002160:   8b 0d e0 31 00 10       
+    mov    ebp, dword [shotgun_ammo_base]           ; 10002166:   8b 2d dc 31 00 10       
+    mov    edx, dword [sniper_ammo_base]            ; 1000216c:   8b 15 d8 31 00 10       
+    mov    edi, dword [rapid_fire_base]             ; 10002172:   8b 3d d4 31 00 10       
+    mov    esi, dword [recoil_base_4]               ; 10002178:   8b 35 c4 31 00 10       
+    mov    ebx, dword [recoil_base_5]               ; 1000217e:   8b 1d c8 31 00 10       
+    add    edx,eax                                  ; 10002184:   01 c2                   
+    add    ecx,eax                                  ; 10002186:   01 c1                   
+    add    ebp,eax                                  ; 10002188:   01 c5                   
+    add    edi,eax                                  ; 1000218a:   01 c7                   
+    add    esi,eax                                  ; 1000218c:   01 c6                   
+    add    ebx,eax                                  ; 1000218e:   01 c3                   
+    add    eax, dword [recoil_base_6]               ; 10002190:   03 05 cc 31 00 10       
+    cmp    dword [esp+0x50],0x0                     ; 10002196:   83 7c 24 50 00          
+    mov    dword [esp+0x2c],eax                     ; 1000219b:   89 44 24 2c             
+    mov    dword [esp+0x28],edx                     ; 1000219f:   89 54 24 28             
+    je     super_weapons_disabled                   ; 100021a3:   0f 84 ff 00 00 00       
+    mov    dword [esp],ecx                          ; 100021a9:   89 0c 24                
+    mov    dword [esp+0x4],0x2                      ; 100021ac:   c7 44 24 04 02 00 00    
+                                                    ; 100021b3:   00 
+    call   _memory_nop                              ; 100021b4:   e8 ee f9 ff ff          
+    mov    eax, dword [esp+0x28]                    ; 100021b9:   8b 44 24 28             
+    mov    dword [esp+0x8],0xe                      ; 100021bd:   c7 44 24 08 0e 00 00    
+                                                    ; 100021c4:   00 
+    mov    dword [esp],eax                          ; 100021c5:   89 04 24                
+    mov    dword [esp+0x4], sniper_ammo_patch       ; 100021c8:   c7 44 24 04 88 40 00    
+                                                    ; 100021cf:   10 
+    call   _memory_patch                            ; 100021d0:   e8 3a fa ff ff          
+    mov    dword [esp],ebp                          ; 100021d5:   89 2c 24                
+    mov    dword [esp+0x8],0xe                      ; 100021d8:   c7 44 24 08 0e 00 00    
+                                                    ; 100021df:   00 
+    mov    dword [esp+0x4], shotgun_ammo_patch      ; 100021e0:   c7 44 24 04 a8 40 00    
+                                                    ; 100021e7:   10 
+    call   _memory_patch                            ; 100021e8:   e8 22 fa ff ff          
+    mov    dword [esp],edi                          ; 100021ed:   89 3c 24                
+    mov    dword [esp+0x4],0x2                      ; 100021f0:   c7 44 24 04 02 00 00    
+                                                    ; 100021f7:   00 
+    call   _memory_nop                              ; 100021f8:   e8 aa f9 ff ff          
+    mov    ecx, dword [esp+0x1c]                    ; 100021fd:   8b 4c 24 1c             
+    mov    dword [esp+0x8],0x6                      ; 10002201:   c7 44 24 08 06 00 00    
+                                                    ; 10002208:   00 
+    mov    dword [esp],ecx                          ; 10002209:   89 0c 24                
+    mov    dword [esp+0x4], recoil_patch_1          ; 1000220c:   c7 44 24 04 20 40 00    
+                                                    ; 10002213:   10 
+    call   _memory_patch                            ; 10002214:   e8 f6 f9 ff ff          
+    mov    ebp, dword [esp+0x20]                    ; 10002219:   8b 6c 24 20             
+    mov    dword [esp+0x8],0x6                      ; 1000221d:   c7 44 24 08 06 00 00    
+                                                    ; 10002224:   00 
+    mov    dword [esp],ebp                          ; 10002225:   89 2c 24                
+    mov    dword [esp+0x4], recoil_patch_2          ; 10002228:   c7 44 24 04 26 40 00    
+                                                    ; 1000222f:   10 
+    call   _memory_patch                            ; 10002230:   e8 da f9 ff ff          
+    mov    edx, dword [esp+0x24]                    ; 10002235:   8b 54 24 24             
+    mov    dword [esp+0x8],0x6                      ; 10002239:   c7 44 24 08 06 00 00    
+                                                    ; 10002240:   00 
+    mov    dword [esp],edx                          ; 10002241:   89 14 24                
+    mov    dword [esp+0x4], recoil_patch_3          ; 10002244:   c7 44 24 04 2c 40 00    
+                                                    ; 1000224b:   10 
+    call   _memory_patch                            ; 1000224c:   e8 be f9 ff ff          
+    mov    dword [esp],esi                          ; 10002251:   89 34 24                
+    mov    dword [esp+0x8],0x6                      ; 10002254:   c7 44 24 08 06 00 00    
+                                                    ; 1000225b:   00 
+    mov    dword [esp+0x4], recoil_patch_4          ; 1000225c:   c7 44 24 04 32 40 00    
+                                                    ; 10002263:   10 
+    call   _memory_patch                            ; 10002264:   e8 a6 f9 ff ff          
+    mov    dword [esp],ebx                          ; 10002269:   89 1c 24                
+    mov    dword [esp+0x8],0x6                      ; 1000226c:   c7 44 24 08 06 00 00    
+                                                    ; 10002273:   00 
+    mov    dword [esp+0x4], recoil_patch_5          ; 10002274:   c7 44 24 04 38 40 00    
+                                                    ; 1000227b:   10 
+    call   _memory_patch                            ; 1000227c:   e8 8e f9 ff ff          
+    mov    esi, dword [esp+0x2c]                    ; 10002281:   8b 74 24 2c             
+    mov    dword [esp+0x8],0x6                      ; 10002285:   c7 44 24 08 06 00 00    
+                                                    ; 1000228c:   00 
+    mov    dword [esp],esi                          ; 1000228d:   89 34 24                
+    mov    dword [esp+0x4], recoil_patch_6          ; 10002290:   c7 44 24 04 3e 40 00    
+                                                    ; 10002297:   10 
+    call   _memory_patch                            ; 10002298:   e8 72 f9 ff ff          
+    add    esp,0x3c                                 ; 1000229d:   83 c4 3c                
+    pop    ebx                                      ; 100022a0:   5b                      
+    pop    esi                                      ; 100022a1:   5e                      
+    pop    edi                                      ; 100022a2:   5f                      
+    pop    ebp                                      ; 100022a3:   5d                      
+    ret                                             ; 100022a4:   c3                      
+    lea    esi,[esi+0x0]                            ; 100022a5:   8d 76 00                
+    nop
+    nop
+    nop
+    nop
+    nop
+super_weapons_disabled:
+    mov    dword [esp],ecx                          ; 100022a8:   89 0c 24                
+    mov    dword [esp+0x8],0x2                      ; 100022ab:   c7 44 24 08 02 00 00    
+                                                    ; 100022b2:   00 
+    mov    dword [esp+0x4], main_ammo_original      ; 100022b3:   c7 44 24 04 c6 40 00    
+                                                    ; 100022ba:   10 
+    call   _memory_patch                            ; 100022bb:   e8 4f f9 ff ff          
+    mov    eax, dword [esp+0x28]                    ; 100022c0:   8b 44 24 28             
+    mov    dword [esp+0x8],0xe                      ; 100022c4:   c7 44 24 08 0e 00 00    
+                                                    ; 100022cb:   00 
+    mov    dword [esp],eax                          ; 100022cc:   89 04 24                
+    mov    dword [esp+0x4], sniper_ammo_original    ; 100022cf:   c7 44 24 04 98 40 00    
+                                                    ; 100022d6:   10 
+    call   _memory_patch                            ; 100022d7:   e8 33 f9 ff ff          
+    mov    dword [esp],ebp                          ; 100022dc:   89 2c 24                
+    mov    dword [esp+0x8],0xe                      ; 100022df:   c7 44 24 08 0e 00 00    
+                                                    ; 100022e6:   00 
+    mov    dword [esp+0x4], shotgun_ammo_original   ; 100022e7:   c7 44 24 04 b8 40 00    
+                                                    ; 100022ee:   10 
+    call   _memory_patch                            ; 100022ef:   e8 1b f9 ff ff          
+    mov    dword [esp],edi                          ; 100022f4:   89 3c 24                
+    mov    dword [esp+0x8],0x2                      ; 100022f7:   c7 44 24 08 02 00 00    
+                                                    ; 100022fe:   00 
+    mov    dword [esp+0x4], rapid_fire_original     ; 100022ff:   c7 44 24 04 84 40 00    
+                                                    ; 10002306:   10 
+    call   _memory_patch                            ; 10002307:   e8 03 f9 ff ff          
+    mov    ecx, dword [esp+0x1c]                    ; 1000230c:   8b 4c 24 1c             
+    mov    dword [esp+0x8],0x6                      ; 10002310:   c7 44 24 08 06 00 00    
+                                                    ; 10002317:   00 
+    mov    dword [esp],ecx                          ; 10002318:   89 0c 24                
+    mov    dword [esp+0x4], recoil_original_1       ; 1000231b:   c7 44 24 04 60 40 00    
+                                                    ; 10002322:   10 
+    call   _memory_patch                            ; 10002323:   e8 e7 f8 ff ff          
+    mov    ebp, dword [esp+0x20]                    ; 10002328:   8b 6c 24 20             
+    mov    dword [esp+0x8],0x6                      ; 1000232c:   c7 44 24 08 06 00 00    
+                                                    ; 10002333:   00 
+    mov    dword [esp],ebp                          ; 10002334:   89 2c 24                
+    mov    dword [esp+0x4], recoil_original_2       ; 10002337:   c7 44 24 04 66 40 00    
+                                                    ; 1000233e:   10 
+    call   _memory_patch                            ; 1000233f:   e8 cb f8 ff ff          
+    mov    edx, dword [esp+0x24]                    ; 10002344:   8b 54 24 24             
+    mov    dword [esp+0x8],0x6                      ; 10002348:   c7 44 24 08 06 00 00    
+                                                    ; 1000234f:   00 
+    mov    dword [esp],edx                          ; 10002350:   89 14 24                
+    mov    dword [esp+0x4], recoil_original_3       ; 10002353:   c7 44 24 04 6c 40 00    
+                                                    ; 1000235a:   10 
+    call   _memory_patch                            ; 1000235b:   e8 af f8 ff ff          
+    mov    dword [esp],esi                          ; 10002360:   89 34 24                
+    mov    dword [esp+0x8],0x6                      ; 10002363:   c7 44 24 08 06 00 00    
+                                                    ; 1000236a:   00 
+    mov    dword [esp+0x4], recoil_original_4       ; 1000236b:   c7 44 24 04 72 40 00    
+                                                    ; 10002372:   10 
+    call   _memory_patch                            ; 10002373:   e8 97 f8 ff ff          
+    mov    dword [esp],ebx                          ; 10002378:   89 1c 24                
+    mov    dword [esp+0x8],0x6                      ; 1000237b:   c7 44 24 08 06 00 00    
+                                                    ; 10002382:   00 
+    mov    dword [esp+0x4], recoil_original_5       ; 10002383:   c7 44 24 04 78 40 00    
+                                                    ; 1000238a:   10 
+    call   _memory_patch                            ; 1000238b:   e8 7f f8 ff ff          
+    mov    edi, dword [esp+0x2c]                    ; 10002390:   8b 7c 24 2c             
+    mov    dword [esp+0x8],0x6                      ; 10002394:   c7 44 24 08 06 00 00    
+                                                    ; 1000239b:   00 
+    mov    dword [esp],edi                          ; 1000239c:   89 3c 24                
+    mov    dword [esp+0x4], recoil_original_6       ; 1000239f:   c7 44 24 04 7e 40 00    
+                                                    ; 100023a6:   10 
+    call   _memory_patch                            ; 100023a7:   e8 63 f8 ff ff          
+    add    esp,0x3c                                 ; 100023ac:   83 c4 3c                
+    pop    ebx                                      ; 100023af:   5b                      
+    pop    esi                                      ; 100023b0:   5e                      
+    pop    edi                                      ; 100023b1:   5f                      
+    pop    ebp                                      ; 100023b2:   5d                      
+    ret                                             ; 100023b3:   c3                      
+;   lea    esi,[esi+eiz*1+0x0]                      ; 100023b4:   8d b4 26 00 00 00 00    
+;   lea    esi,[esi+eiz*1+0x0]                      ; 100023bb:   8d 74 26 00             
+    nop
+    nop
+    nop
+    nop
+
+_hack_unlock_all_doors:                             
+    push    ebx
+    sub     esp,0x1c                                
+    mov     eax, dword [game_world_base]            
+    mov     dword [esp+0x8],0x2                    
+    add     eax, dword [_g_module_base_addr]     
+    mov     dword [esp+0x4], game_world_offsets 
+    mov     dword [esp],eax                   
+    call    _memory_find_dynamic_address     
+    test    eax,eax                         
+    jz      unlock_all_doors_exit
+    xor     ecx, ecx
+    mov     edx, dword [eax+0x4]                    ; n_entities
+    mov     eax, dword [eax]
+unlock_all_doors_main_loop:
+    cmp     ecx,edx
+    je      unlock_all_doors_exit
+    lea     ebx, [eax+ecx*0x4]
+    mov     ebx, dword [ebx+0x0]
+    cmp     dword [ebx], TYPE_DOOR                  ; Check type
+    jne     not_door
+    cmp     dword [ebx + 0x4B8], 0
+    jne     not_door
+    mov     dword [ebx + 0x4B8], 0x4                ; set door access to 4
+not_door:
+    inc     ecx
+    jmp     unlock_all_doors_main_loop
+unlock_all_doors_exit:
+    xor     eax, eax
+    xor     ecx, eax
+    add     esp, 0x1c
+    pop     ebx
+    ret
 
 _hack_disable_alarms:                               ; 100022f0:   <_hack_disable_alarms>
     sub     esp,0x1c                                ; 100022f0:   83 ec 1c               

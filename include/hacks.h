@@ -63,7 +63,7 @@ void hack_disable_alarms(int);
  * mission.
  *
  * @param  bool bDisableEnemies
- * @return (unsigned int)n_entities_changed
+ * @return unsigned int
  */
 unsigned int hack_disable_enemies(int);
 
@@ -71,9 +71,9 @@ unsigned int hack_disable_enemies(int);
  * Unlock all of the doors in a level. 
  *
  * @param  void 
- * @return (unsigned int)n_doors_unlocked
+ * @return void
  */
-unsigned int hack_unlock_all_doors(void);
+unsigned hack_unlock_all_doors(void);
 
 /**
  * Test TODO
