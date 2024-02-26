@@ -7,6 +7,8 @@ global              _hack_ghost_mode
 global              _hack_super_weapons
 global              _hack_disable_alarms
 global              _hack_unlock_all_doors
+global              _hack_no_clip
+global              _hack_test
 
 ; --------------------------------------------------------------------------- ;
 ;                                Definitions                                  ;
@@ -531,6 +533,18 @@ alarms_disabled:
     ret                                             
     lea     esi,[esi]                               
     nop
+    nop
+    nop
+    nop
+
+_hack_no_clip:
+    ret
+    nop
+    nop
+    nop
+
+_hack_test:
+    ret
     nop
     nop
     nop
