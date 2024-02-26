@@ -6,6 +6,7 @@ global              _hack_god_mode
 global              _hack_ghost_mode
 global              _hack_super_weapons
 global              _hack_disable_alarms
+global              _hack_disable_enemies
 global              _hack_unlock_all_doors
 global              _hack_no_clip
 global              _hack_test
@@ -468,6 +469,40 @@ super_weapons_disabled:
     nop
     nop
     nop
+
+_hack_disable_enemies:                             
+    push    ebx
+    sub     esp,0x1C                                
+    mov     eax, dword [game_world_base]            
+    mov     dword [esp+0x8],0x2                    
+    add     eax, dword [_g_module_base_addr]     
+    mov     dword [esp+0x4], game_world_offsets 
+    mov     dword [esp],eax                   
+    call    _memory_find_dynamic_address     
+    test    eax,eax                         
+    jz      disable_enemies_exit
+    xor     ecx, ecx
+    mov     edx, dword [eax+0x4]                    ; n_entities
+    mov     eax, dword [eax]
+    xor     dword [esp + 0x24], 0x1                 ; flip bEnabled
+disable_enemies_main_loop:
+    cmp     ecx,edx
+    je      disable_enemies_exit
+    lea     ebx, [eax+ecx*0x4]
+    mov     ebx, dword [ebx+0x0]
+    cmp     dword [ebx], TYPE_NPC                   ; Check type
+    jne     not_npc
+    imul    edi, dword [esp + 0x24], 0x96           ; !bEnabled * 150
+    mov     dword [ebx + 0x420], edi
+not_npc:
+    inc     ecx
+    jmp     disable_enemies_main_loop
+disable_enemies_exit:
+    xor     eax, eax
+    xor     ecx, eax
+    add     esp, 0x1c
+    pop     ebx
+    ret
 
 _hack_unlock_all_doors:                             
     push    ebx

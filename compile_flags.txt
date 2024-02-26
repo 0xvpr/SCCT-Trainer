@@ -1,9 +1,0 @@
--std=c99
---target=i686-pc-windows-gnu
--Iinclude
--Wall
--Wextra
--Werror
--Wshadow
--Wpedantic
--Wconversion
