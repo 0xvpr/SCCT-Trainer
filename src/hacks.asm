@@ -46,23 +46,23 @@ extern          _g_module_base_addr
 ; --------------------------------------------------------------------------- ;
 
 section .data
-game_world_base:    dd 0x00A0DFEC
-game_world_offsets: dw 0x78,0x5E4
+game_world_base:         dd     0x00A0DFEC
+game_world_offsets:      dw     0x78,0x5E4
 
-primary_weapons_base:    dd 0x00A0F434
-primary_weapons_offsets: dw 0x84,0x6E0,0x434
+primary_weapons_base:    dd     0x00A0F434
+primary_weapons_offsets: dw     0x84,0x6E0,0x434
 
-main_ammo_base:    dd 0x002F9E4A
-shotgun_ammo_base: dd 0x002FCFF0
-sniper_ammo_base:  dd 0x002FBC58
-rapid_fire_base:   dd 0x00178FA2
+main_ammo_base:          dd     0x002F9E4A
+shotgun_ammo_base:       dd     0x002FCFF0
+sniper_ammo_base:        dd     0x002FBC58
+rapid_fire_base:         dd     0x00178FA2
 
-recoil_base_1: dd 0x002F83BE
-recoil_base_2: dd 0x002F8409
-recoil_base_3: dd 0x002F845B
-recoil_base_4: dd 0x002F855E
-recoil_base_5: dd 0x002F84D5
-recoil_base_6: dd 0x002F8578
+recoil_base_1:           dd     0x002F83BE
+recoil_base_2:           dd     0x002F8409
+recoil_base_3:           dd     0x002F845B
+recoil_base_4:           dd     0x002F855E
+recoil_base_5:           dd     0x002F84D5
+recoil_base_6:           dd     0x002F8578
 
 ; --------------------------------------------------------------------------- ;
 ;                             Local Executable Code                           ;
