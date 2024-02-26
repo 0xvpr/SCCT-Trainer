@@ -316,6 +316,7 @@ _hack_super_weapons:
     mov    dword [esp+0x2c],eax                     
     mov    dword [esp+0x28],edx                     
     je     super_weapons_disabled                   
+super_weapons_enabled:
     mov    dword [esp],ecx                          
     mov    dword [esp+0x4],0x2                      
                                                     
