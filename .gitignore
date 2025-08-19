@@ -409,3 +409,7 @@ FodyWeavers.xsd
 *.tlog
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,c++
+
+*.gpr*
+*.rep
+*.rep/**
