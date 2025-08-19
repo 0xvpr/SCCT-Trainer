@@ -1,74 +1,80 @@
-PROJECT = sp3
+PROJECT         = sp3
 
-CC      = i686-w64-mingw32-gcc
-CFLAGS  = -std=c99 -O2 -masm=intel -Wall -Wextra -Werror -Wshadow -Wpedantic -Wconversion
+CC              = i686-w64-mingw32-g++
+CFLAGS          = -std=c++23 -Wall -Wextra -Werror -Wshadow -Wpedantic -Wconversion
+CFLAGS         += -Wno-missing-field-initializers -Wno-attributes -Wno-cast-function-type -Wno-unused-but-set-parameter
+CFLAGS         += -fno-rtti -fno-exceptions -fno-asynchronous-unwind-tables
 
-LD      = i686-w64-mingw32-gcc
-LDFLAGS = -shared
+LD              = i686-w64-mingw32-g++
+LDFLAGS         = -static -shared -ld3d9 -ld3dx9
 
-ASM     = nasm
-ASFLAGS = -f win32
+ASM             = nasm
+ASFLAGS         = -f win32
 
-BIN     = bin
-BUILD   = build
-DEBUG   = $(OBJ)/debug
-RELEASE = $(OBJ)/release
+LIB             = lib
+BUILD           = build
 
-SRC     = src
-OBJ     = build
-SOURCES = $(wildcard $(SRC)/*.c)
-DBG_OBJECTS = $(patsubst $(SRC)/%.c,$(DEBUG)/%.o,$(SOURCES))
-REL_OBJECTS = $(patsubst $(SRC)/%.c,$(RELEASE)/%.o,$(SOURCES))
+INCLUDE         = $(PROJECT)
+INCLUDES        = $(addprefix -I,$(INCLUDE))
 
-INCLUDE  = include 
-INCLUDES = $(addprefix -I,$(INCLUDE))
+SOURCE          = $(PROJECT)
+SOURCES         = $(wildcard $(SOURCE)/*.cpp)
+DEBUG_OBJECTS   = $(patsubst $(SOURCE)/%.cpp,$(BUILD)/%_d.o,$(SOURCES))
+RELEASE_OBJECTS = $(patsubst $(SOURCE)/%.cpp,$(BUILD)/%.o,$(SOURCES))
 
-LIB_FILES = d3d9 d3dx9
-LIBS      = $(addprefix -l,$(LIB_FILES))
+ASM_SOURCE      = $(PROJECT)
+ASM_SOURCES     = $(wildcard $(ASM_SOURCE)/*.asm)
+ASM_OBJECTS     = $(patsubst $(ASM_SOURCE)/%.asm,$(BUILD)/%.obj,$(ASM_SOURCES))
 
-ASM_TARGET  = health_detour
-ASM_SRC     = $(SRC)/asm
-ASM_OBJ     = $(BUILD)/asm
-ASM_SOURCES = $(wildcard $(ASM_SRC)/*.asm)
-ASM_OBJECTS = $(patsubst $(ASM_SRC)/%.asm,$(ASM_OBJ)/%.obj,$(ASM_SOURCES))
+### COMMENT IF YOU USE A TOASTER ###
+MAKEFLAGS      += -j$(shell nproc)
+### COMMENT IF YOU USE A TOASTER ###
 
-MAKEFLAGS  += $(addprefix -j,$(shell nproc))
+all: $(LIB) $(BUILD) $(PROJECT)
+$(PROJECT): release
 
-all: debug release
+debug:   CFLAGS  += -O2 -g
+release: CFLAGS  += -mtune=native -march=native -mavx512f -Ofast -fPIE -funsafe-math-optimizations -fomit-frame-pointer
+release: CFLAGS  += -funroll-loops -funsafe-loop-optimizations -funswitch-loops -floop-parallelize-all
+release: CFLAGS  += -finline-functions -falign-functions -falign-loops -falign-jumps -fno-function-sections
+release: CFLAGS  += -fno-ident -fvisibility=hidden -fstrict-aliasing
+release: CFLAGS  += -DWIN32_LEAN_AND_MEAN -DVC_EXTRALEAN
+release: LDFLAGS += -s
 
-debug: $(DEBUG)
-release: $(PROJECT)
+debug: $(ASM_OBJECTS) $(DEBUG_OBJECTS)
+	$(LD) $(DEBUG_OBJECTS) $(ASM_OBJECTS) $(LDFLAGS) -o $(LIB)/$(PROJECT)_d.dll
 
-$(DEBUG): CFLAGS += -g
-$(DEBUG): $(OBJ) $(BIN) $(ASM_OBJECTS) $(DBG_OBJECTS) 
-	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(DBG_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT)_d.dll
+release: $(ASM_OBJECTS) $(RELEASE_OBJECTS)
+	$(LD) $(RELEASE_OBJECTS) $(ASM_OBJECTS) $(LDFLAGS) -o $(LIB)/$(PROJECT).dll
 
-$(PROJECT): CFLAGS  += -O3 -fno-ident -fvisibility=hidden
-$(PROJECT): LDFLAGS += -s
-$(PROJECT): $(OBJ) $(BIN) $(ASM_OBJECTS) $(REL_OBJECTS)
-	$(LD) $(LDFLAGS) $(ASM_OBJECTS) $(REL_OBJECTS) $(LIBS) -o $(BIN)/$(PROJECT).dll
+$(DEBUG_OBJECTS): $(BUILD)/%_d.o : $(SOURCE)/%.cpp
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ 
 
-$(ASM_OBJECTS): $(ASM_OBJ)/%.obj: $(ASM_SRC)/%.asm
-	$(ASM) $(ASFLAGS) $^ -o $@
+$(RELEASE_OBJECTS): $(BUILD)/%.o : $(SOURCE)/%.cpp
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(DBG_OBJECTS): $(DEBUG)/%.o: $(SRC)/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
+$(ASM_OBJECTS): $(BUILD)/%.obj : $(ASM_SOURCE)/%.asm
+	$(ASM) $(ASFLAGS) $< -o $@
 
-$(REL_OBJECTS): $(RELEASE)/%.o: $(SRC)/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
+$(LIB):
+	mkdir -p ./lib
 
-$(OBJ):
-	mkdir -p build/asm
-	mkdir -p build/debug
-	mkdir -p build/release
+$(BUILD):
+	mkdir -p ./build
 
-$(BIN):
-	mkdir -p bin
+.PHONY: docker-container
+docker-container:
+	docker build -f "Dockerfile" -t "$(PROJECT)-dev" .
+.PHONY: docker-build
+docker-build:
+	docker run -v "$(shell pwd):/var/$(PROJECT)-dev/$(PROJECT)" -u "$(shell id -u):$(shell id -g)" "$(PROJECT)-dev" make
 
+.PHONY: clean
 clean:
-	rm -f bin/*
-	rm -f build/{asm,debug,release}/*
+	rm -fr ./lib/*
+	rm -fr ./build/*
 
+.PHONY: extra-clean
 extra-clean:
-	rm -fr bin
-	rm -fr build
+	rm -fr ./lib
+	rm -fr ./build
