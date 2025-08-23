@@ -1,0 +1,142 @@
+#ifndef   PATCHES_HEADER
+#define   PATCHES_HEADER
+
+#include <cstdint>
+#include <array>
+
+namespace patches {
+    template <std::size_t array_size>
+    struct instruction_set {
+        std::array<uint8_t, array_size> original; 
+        std::array<uint8_t, array_size> patch; 
+    };
+
+    const std::array<uint8_t, 6> health_original = {
+        0x2B, 0xC2,                              // sub eax, edx
+        0x89, 0x03,                              // mov dword ptr [ebx], eax
+        0x8B, 0xD8                               // mov ebx, eax
+    };
+
+    
+    constexpr std::array<uint8_t, 6> visibility_original = {
+        0x8B, 0x86, 0x18, 0x15, 0x00, 0x00       // mov eax, dword ptr [esi + 0x1518]
+    };  
+    constexpr std::array<uint8_t, 6> visibility_patch = {
+        0x90,                                    // nop
+        0x90,                                    // nop
+        0x90,                                    // nop
+        0x90,                                    // nop
+        0x90,                                    // nop
+        0x90,                                    // nop
+    };
+    constexpr instruction_set visibility_ins {
+        .original = visibility_original,
+        .patch    = visibility_patch
+    };
+
+
+    constexpr std::array<uint8_t, 6> noise_original = {
+        0x3B, 0xF8                               // cmp edi, eax
+    };
+    constexpr std::array<uint8_t, 6> noise_patch = {
+        0x39, 0xC0                               // cmp eax, eax
+    };
+    constexpr instruction_set noise_ins {
+        .original = noise_original,
+        .patch    = noise_patch
+    };
+
+
+    constexpr std::array<uint8_t, 2> main_ammo_original = {
+        0x4B,                                    // dec ebx
+        0x4F                                     // dec edi
+    }; 
+    constexpr std::array<uint8_t, 2> main_ammo_patch=  {
+        0x90,                                    // nop
+        0x90,                                    // nop
+    };
+    constexpr instruction_set main_ammo_ins {
+        .original = main_ammo_original,
+        .patch    = main_ammo_patch
+    };
+
+
+    constexpr std::array<uint8_t, 14> shotgun_ammo_original = {
+        0x49,                                    // dec ecx
+        0x89, 0x8F, 0x1C, 0x04, 0x00, 0x00,      // mov dword ptr [esi + 0x454], eax
+        0x8B, 0x8F, 0xFC, 0x03, 0x00, 0x00,      // mov eax, dword ptr [esi + 0x45C]
+        0x48                                     // dec eax
+    };
+    constexpr std::array<uint8_t, 14> shotgun_ammo_patch = {
+        0x90,                                    // nop
+        0x89, 0x8F, 0x1C, 0x04, 0x00, 0x00,      // mov dword ptr [esi + 0x454], eax
+        0x8B, 0x8F, 0xFC, 0x03, 0x00, 0x00,      // mov eax, dword ptr [esi + 0x45C]
+        0x90                                     // nop
+    };
+    constexpr instruction_set shotgun_ammo_ins {
+        .original = shotgun_ammo_original,
+        .patch    = shotgun_ammo_patch
+    };
+
+
+    constexpr std::array<uint8_t, 14> sniper_ammo_original = {
+        0x48,                                    // dec eax
+        0x89, 0x86, 0x54, 0x04, 0x00, 0x00,      // mov dword ptr [esi + 0x454], eax
+        0x8B, 0x86, 0x5C, 0x04, 0x00, 0x00,      // mov eax, dword  ptr [esi + 0x45C]
+        0x48                                     // dec eax
+    };
+    constexpr std::array<uint8_t, 14> sniper_ammo_patch = {
+        0x90,                                     // nop
+        0x89, 0x86, 0x54, 0x04, 0x00, 0x00,       // mov [esi + 0x454], eax
+        0x8B, 0x86, 0x5C, 0x04, 0x00, 0x00,       // mov eax, [esi + 0x45C]
+        0x90                                      // nop
+    };
+    constexpr instruction_set sniper_ammo_ins {
+        .original = sniper_ammo_original,
+        .patch    = sniper_ammo_patch
+    };
+
+
+    constexpr std::array<std::array<uint8_t, 6>, 6> recoil_originals = {{
+        {{ 0xD9, 0x9E, 0x2C, 0x05, 0x00, 0x00 }}, // fstp dword ptr [esi + 0x52C]
+        {{ 0xD9, 0x9E, 0x2C, 0x05, 0x00, 0x00 }}, // fstp dword ptr [esi + 0x52C]
+        {{ 0xD9, 0x9E, 0x2C, 0x05, 0x00, 0x00 }}, // fstp dword ptr [esi + 0x52C]
+        {{ 0xD9, 0x9E, 0x30, 0x05, 0x00, 0x00 }}, // fstp dword ptr [esi + 0x530]
+        {{ 0x89, 0x96, 0x30, 0x05, 0x00, 0x00 }}, // mov  dword ptr [esi + 0x530], edx
+        {{ 0x89, 0x8E, 0x34, 0x05, 0x00, 0x00 }}  // mov  dword ptr [esi + 0x534], ecx
+    }};
+    constexpr std::array< std::array<uint8_t, 6>, 6> recoil_patches = {{
+        {{ 0x89, 0x8E, 0x2C, 0x05, 0x00, 0x00 }}, // mov dword ptr [esi + 0x52C], ecx
+        {{ 0x89, 0x8E, 0x2C, 0x05, 0x00, 0x00 }}, // mov dword ptr [esi + 0x52C], ecx
+        {{ 0x89, 0x8E, 0x2C, 0x05, 0x00, 0x00 }}, // mov dword ptr [esi + 0x52C], ecx
+        {{ 0x89, 0x8E, 0x30, 0x05, 0x00, 0x00 }}, // mov dword ptr [esi + 0x530], ecx
+        {{ 0x89, 0x8E, 0x30, 0x05, 0x00, 0x00 }}, // mov dword ptr [esi + 0x530], ecx
+        {{ 0x89, 0xBE, 0x34, 0x05, 0x00, 0x00 }}  // mov dword ptr [esi + 0x534], edi
+    }};  
+
+
+    constexpr std::array<uint8_t, 2> rapid_fire_original = {
+        0x75, 0x47                                // jne short 0x47
+    };
+    constexpr std::array<uint8_t, 2> rapid_fire_patch = {
+        0x90,                                     // nop
+        0x90,                                     // nop
+    };
+    constexpr instruction_set rapid_fire_ins {
+        .original = rapid_fire_original,
+        .patch    = rapid_fire_patch
+    };
+
+    constexpr std::array<uint8_t, 6> alarm_original = {
+        0x0F, 0x85, 0x35, 0x03, 0x00, 0x00        // jne 0x33b
+    };
+    constexpr std::array<uint8_t, 6> alarm_patch = { 
+        0xE9, 0x36, 0x03, 0x00, 0x00,             // jmp 0x33b
+        0x90                                      // nop
+    };
+
+
+
+} // namespace patches
+
+#endif /* PATCHES_HEADER */

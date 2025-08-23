@@ -22,7 +22,7 @@ SOURCES         = $(wildcard $(SOURCE)/*.cpp)
 DEBUG_OBJECTS   = $(patsubst $(SOURCE)/%.cpp,$(BUILD)/%_d.o,$(SOURCES))
 RELEASE_OBJECTS = $(patsubst $(SOURCE)/%.cpp,$(BUILD)/%.o,$(SOURCES))
 
-ASM_SOURCE      = $(PROJECT)
+ASM_SOURCE      = $(PROJECT)/asm
 ASM_SOURCES     = $(wildcard $(ASM_SOURCE)/*.asm)
 ASM_OBJECTS     = $(patsubst $(ASM_SOURCE)/%.asm,$(BUILD)/%.obj,$(ASM_SOURCES))
 
@@ -33,7 +33,10 @@ MAKEFLAGS      += -j$(shell nproc)
 all: $(LIB) $(BUILD) $(PROJECT)
 $(PROJECT): release
 
+debug: $(LIB) $(BUILD)
 debug:   CFLAGS  += -O2 -g
+
+release: $(LIB) $(BUILD)
 release: CFLAGS  += -mtune=native -march=native -mavx512f -Ofast -fPIE -funsafe-math-optimizations -fomit-frame-pointer
 release: CFLAGS  += -funroll-loops -funsafe-loop-optimizations -funswitch-loops -floop-parallelize-all
 release: CFLAGS  += -finline-functions -falign-functions -falign-loops -falign-jumps -fno-function-sections

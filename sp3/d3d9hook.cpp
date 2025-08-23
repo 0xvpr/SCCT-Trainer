@@ -36,7 +36,8 @@ bool d3d9::get_device(void** vtable, size_t size) {
     D3DPRESENT_PARAMETERS d3dpp{};
     d3dpp.SwapEffect    = D3DSWAPEFFECT_DISCARD;
     d3dpp.hDeviceWindow = GetProcessWindow();
-    d3dpp.Windowed      = true;
+    d3dpp.Windowed      = false;
+
 
     while (d3dpp.hDeviceWindow != GetForegroundWindow()) {
         // Wait for window to be Foreground

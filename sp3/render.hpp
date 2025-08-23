@@ -11,7 +11,7 @@ namespace render {
  * @param void
  * @return void
  */
-void initializemenuitems(void);
+void initialize_menu_items(void);
 
 /**
  * Draw main UI.

@@ -1,8 +1,10 @@
-# Creator:    VPR
-# Created:    February 20th, 2022
-# Updated:    June 25th, 2023
+# Created by:   VPR
+# Created:      August 18th, 2025
 
-FROM ubuntu:22.04
+# Updated by:   VPR
+# Updated:      August 18th, 2025
+
+FROM ubuntu:24.04
 
 # Set env to avoid user input interruption during installation
 ENV TZ=America/New_York
@@ -22,4 +24,4 @@ RUN apt-get install -y --no-install-recommends \
 
 # Create working environment
 ENV HOME=/root
-WORKDIR /var/shitman3-dev/shitman3
+WORKDIR /var/sp3-dev/sp3

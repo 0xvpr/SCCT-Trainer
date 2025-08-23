@@ -3,9 +3,9 @@
  * Created:         August 18, 2021
  *
  * Updated by:      VPR
- * Updated:         December 7th, 2022
+ * Updated:         August 8th, 2025
  * 
- * Brief:           SCCT GUI
+ * Brief:           dookie code, don't replicate.
  * 
  * Disclaimer:      I claim no liability/responsibility for damages
  *                  associated with however this code is used.
@@ -16,54 +16,49 @@
 #include "events.hpp"
 #include "memory.hpp"
 
-bool bDisableEnemies = false; // Possible unecessary?
-bool bDisableAlarms  = false; // Possible unecessary?
-bool bSuperWeapons   = false; // Possible unecessary?
-bool bMaximizeMenu   = true;  // Possible unecessary?
-bool bGhostMode      = false; // Possible unecessary?
-bool bShutdown       = false; // Possible unecessary?
-bool bGodMode        = false; // Possible unecessary?
-bool bInit           = false; // Possible unecessary? 
+static bool bInit = false;
 
-unsigned int        total_doors_unlocked    = 0;
-unsigned int        n_entities_changed      = 0;
+std::uint32_t      total_doors_unlocked       = 0;
+std::uint32_t      n_entities_changed         = 0;
 
-uintptr_t           module_base_addr        = 0;
+uintptr_t          module_base_addr           = 0;
 
-void*               d3d9Device[119]         = { 0 };
-uint8_t             oEndScene_bytes[7]      = { 0 };
-tEndScene           oEndScene               = nullptr;
-LPDIRECT3DDEVICE9   pD3DDevice              = nullptr;
+void*              d3d9_device[119]           = { 0 };
+uint8_t            original_endscene_bytes[7] = { 0 };
 
-HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 pDevice) {
+d3d9::endscene_t   original_endscene          = nullptr;
+LPDIRECT3DDEVICE9  pD3DDevice                 = nullptr;
+
+HRESULT APIENTRY endscene_hook(LPDIRECT3DDEVICE9 pDevice) {
     if (!bInit) {
-        /*render_InitializeMenuItems();*/
-        /*render_CreateFont(pDevice, 16);*/
+        //render::initialize_menu_items();
+        //render::create_font(pDevice, 16);
 
         bInit = true;
     }
+    
     render::menu(pDevice);
-
-    return oEndScene(pDevice);
+    return original_endscene(pDevice);
 }
 
-DWORD WINAPI MainThread(HINSTANCE hInstance)
-{
+DWORD WINAPI MainThread(HINSTANCE hInstance) {
     module_base_addr = (uintptr_t)GetModuleHandle(nullptr);
 
-    if (GetD3D9Device(d3d9Device, sizeof(d3d9Device))) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpedantic"
-        memcpy(oEndScene_bytes, d3d9Device[42], sizeof(oEndScene_bytes));
-        oEndScene = (tEndScene)memory::tramp_hook((char *)d3d9Device[42], (char *)hkEndScene, 7);
-#pragma GCC diagnostic pop
+    if (d3d9::get_device(d3d9_device, sizeof(d3d9_device))) {
+        memcpy(original_endscene_bytes, d3d9_device[42], sizeof(original_endscene_bytes));
+        original_endscene = reinterpret_cast<d3d9::endscene_t>(
+            memory::trampoline_hook<sizeof original_endscene_bytes>(
+                reinterpret_cast<char *>(d3d9_device[d3d9::render_function_index]),
+                reinterpret_cast<char *>(endscene_hook)
+            )
+        );
     }
 
-    while (!(bShutdown = events::handle_keyboard())) {
+    while (!events::handle_keyboard()) {
         // Main Loop
     }
 
-    memory::patch(d3d9Device[42], oEndScene_bytes, sizeof(oEndScene_bytes));
+    memory::patch(d3d9_device[42], original_endscene_bytes);
     FreeLibraryAndExitThread(hInstance, 0);
     return TRUE;
 }

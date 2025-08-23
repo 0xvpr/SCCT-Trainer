@@ -2,13 +2,13 @@
 #include "drawing.hpp"
 #include "hacks.hpp"
 
-extern LPD3DXFONT g_font;
-extern bool bMaximizeMenu;
+LPD3DXFONT g_font;
+bool menu_is_max;
 
 namespace color {
 static constexpr D3DCOLOR LightGrey = D3DCOLOR_ARGB(255, 80, 80, 80);
 static constexpr D3DCOLOR DarkGrey  = D3DCOLOR_ARGB(255, 25, 25, 25);
-static constexpr D3DCOLOR White     = D3DCOLOR_ARGB(255, 255, 255, 255);
+//static constexpr D3DCOLOR White     = D3DCOLOR_ARGB(255, 255, 255, 255);
 static constexpr D3DCOLOR Black     = D3DCOLOR_ARGB(255, 0, 0, 0);
 static constexpr D3DCOLOR Green     = D3DCOLOR_ARGB(255, 10, 200, 10);
 //static constexpr D3DCOLOR color::Blue    = D3DCOLOR_ARGB(255, 0, 42, 255);
@@ -19,7 +19,7 @@ render::Resolution resolution = { 0, 0 };
 render::Coordinates coordinates = { 30, 25 };
 render::HackMenu hackMenu[MAX_MENU_ITEMS] = {  };
 
-void render_InitializeMenuItems() {
+void render::initialize_menu_items() {
     strcpy(hackMenu[GOD_MODE].name,         "1: God Mode");
     strcpy(hackMenu[GHOST_MODE].name,       "2: Ghost Mode");
     strcpy(hackMenu[SUPER_WEAPONS].name,    "3: Super Weapons");
@@ -28,24 +28,24 @@ void render_InitializeMenuItems() {
     strcpy(hackMenu[UNLOCK_ALL_DOORS].name, "6: Unlock All Doors");
 }
 
-void render_Menu(IDirect3DDevice9* d3dDevice) {
+void render::menu(IDirect3DDevice9* d3dDevice) {
     resolution = *((render::Resolution *)(0x0009D2A8));
 
     float factor = 1.0;
-    if (bMaximizeMenu) {
+    if (menu_is_max) {
         // Title Template
         draw::draw_filled_rect(coordinates.x, coordinates.y, 140, 100, color::DarkGrey, d3dDevice);
         draw::draw_border_box(coordinates.x, coordinates.y, 140, 100, 4, color::Black, d3dDevice);
 
         //TODO: Testing Text
-        if (g_font != NULL) {
-            draw::draw_text("Testing", 140, 20, 10, 10, color::White, g_font);
-        }
+        //if (g_font != NULL) {
+            //draw::draw_text("Testing", 140, 20, 10, 10, color::White, g_font);
+        //}
 
         // Row one
         int x1 = 20;
         int y1 = 15;
-        for (int i = 3; i < MAX_MENU_ITEMS; ++i) {
+        for (std::uint32_t i = 3; i < MAX_MENU_ITEMS; ++i) {
             // If hack is on we display the text colour in green
             draw::draw_filled_rect(coordinates.x + x1, coordinates.y + y1, 25, 20, hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3dDevice);
             draw::draw_border_box(coordinates.x + x1, coordinates.y + y1, 25, 20, 2, color::Black, d3dDevice);
@@ -56,7 +56,7 @@ void render_Menu(IDirect3DDevice9* d3dDevice) {
         // Row two
         int x2 = 20;
         int y2 = 55;
-        for (int i = 0; i < MAX_MENU_ITEMS - 3; ++i) {
+        for (std::uint32_t i = 0; i < MAX_MENU_ITEMS - 3; ++i) {
             // If hack is on we display the text colour in green
             draw::draw_filled_rect(coordinates.x + x2, coordinates.y + y2, 25, 20, hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3dDevice);
             draw::draw_border_box(coordinates.x + x2, coordinates.y + y2, 25, 20, 2, color::Black, d3dDevice);
@@ -73,7 +73,7 @@ void render_Menu(IDirect3DDevice9* d3dDevice) {
         // Row one
         int x1 = 35;
         int y1 = 25;
-        for (int i = 3; i < MAX_MENU_ITEMS; ++i)
+        for (std::uint32_t i = 3; i < MAX_MENU_ITEMS; ++i)
         {
             // If hack is on we display the text colour in green
             draw::draw_filled_rect(x1, y1, (int)(factor*20), (int)(factor*20), hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3dDevice);
@@ -85,7 +85,7 @@ void render_Menu(IDirect3DDevice9* d3dDevice) {
         // Row two
         int x2 = 35;
         int y2 = 35;
-        for (int i = 0; i < MAX_MENU_ITEMS - 3; ++i) {
+        for (std::uint32_t i = 0; i < MAX_MENU_ITEMS - 3; ++i) {
             // If hack is on we display the text colour in green
             draw::draw_filled_rect(x2, y2, (int)(factor*20), (int)(factor*20), hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3dDevice);
             draw::draw_border_box(x2, y2, (int)(factor*20), (int)(factor*20), 1, color::Black, d3dDevice);

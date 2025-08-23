@@ -1,57 +1,58 @@
-#ifndef _HACKS_H
-#define _HACKS_H
+#ifndef HACKS_HEADER
+#define HACKS_HEADER
 
-#ifndef WIN32_LEAN_AND_MEAN
-#   define WIN32_LEAN_AND_MEAN
-#endif // WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <tlhelp32.h>
-#include <stdbool.h>
+#include <cstdint>
 
-#define GOD_MODE         0x00000000
-#define GHOST_MODE       0x00000001
-#define SUPER_WEAPONS    0x00000002
-#define DISABLE_ALARMS   0x00000003
-#define DISABLE_ENEMIES  0x00000004
-#define UNLOCK_ALL_DOORS 0x00000005
-#define MAX_MENU_ITEMS   0x00000006
+constexpr std::uint32_t GOD_MODE         = 0x00000000;
+constexpr std::uint32_t GHOST_MODE       = 0x00000001;
+constexpr std::uint32_t SUPER_WEAPONS    = 0x00000002;
+constexpr std::uint32_t DISABLE_ALARMS   = 0x00000003;
+constexpr std::uint32_t DISABLE_ENEMIES  = 0x00000004;
+constexpr std::uint32_t UNLOCK_ALL_DOORS = 0x00000005;
+constexpr std::uint32_t MAX_MENU_ITEMS   = 0x00000006;
 
-#define DOOR_ALL_ACCESS  0x00000004
+constexpr std::uint32_t DOOR_ALL_ACCESS  = 0x00000004;
 
-#define PLAYER           0x110E8B50
-#define DOOR             0x110FDDD8
-#define NPC              0x110F88D8
+constexpr std::uint32_t PLAYER           = 0x110E8B50;
+constexpr std::uint32_t DOOR             = 0x110FDDD8;
+constexpr std::uint32_t NPC              = 0x110F88D8;
+
+namespace hacks {
 
 /**
- * Prevents the game from subtracting the player's HP 
- * while also enabling one shot kill for all other NPC's
+ * @brief        Enables or disables "God Mode" for the player.
  *
- * @param  bool bGodMode
- * @return void
- */
-void hack_GodMode(bool bGodMode);
+ * @description  When enabled, the player will not lose health, while all NPCs 
+ *               can be defeated in a single hit. This effectively grants the 
+ *               player invulnerability and offensive superiority.
+ *
+ * @param[in]    state (bool) Set to true to enable God Mode, false to disable it.
+ *
+ * @return       void
+**/
+void god_mode(bool state);
 
 /**
- * Prevents the visibility meter from rising above 0.001. 
+ * @brief        Prevents the visibility meter from rising above 0.001. 
  *
- * Cameras WILL still see you. Enemies with night vision 
- * Enemies WILL still hear you at 0 threshhold. 
- * 
- * Enemies WILL still drop your ass. 
+ * @description  Cameras WILL still see you.
+ *               Enemies with night vision may still see you.
+ *               Enemies WILL still hear you at 0 threshhold. 
  *
- * @param  bool bGhostMode
+ * @param[in]    state (bool) Set to true to enable Ghost Mode, false to disable it.
+ *
  * @return void
- */
-void hack_GhostMode(bool bInvisible);
+**/
+void ghost_mode(bool state);
 
 /**
  * Toggles: rapid fire, infinite ammo (if previously non-zero), 
  * no recoil, no spread, 
  *
- * @param  bool bSuperWeapons
+ * @param  bool state
  * @return void 
  */
-void hack_SuperWeapons(bool bSuperWeapons);
+void super_weapons(bool state);
 
 /**
  * Disable alarms
@@ -59,7 +60,7 @@ void hack_SuperWeapons(bool bSuperWeapons);
  * @param  bDisableAlarms
  * @return void
  */
-void hack_DisableAlarms(bool bDisableAlarms);
+void disable_alarms(bool state);
 
 /**
  * Reduces all enemies in the current level's hp 
@@ -72,7 +73,7 @@ void hack_DisableAlarms(bool bDisableAlarms);
  * @param  bool bDisableEnemies
  * @return (unsigned int)n_entities_changed
  */
-unsigned int hack_DisableEnemies(bool bDisableEnemies);
+unsigned int disable_enemies(bool state);
 
 /**
  * Unlock all of the doors in a level. 
@@ -80,6 +81,8 @@ unsigned int hack_DisableEnemies(bool bDisableEnemies);
  * @param  void 
  * @return (unsigned int)n_doors_unlocked
  */
-unsigned int hack_UnlockAllDoors(void);
+unsigned int unlock_all_doors();
 
-#endif /* _HACKS_H */
+} // namespace hacks
+
+#endif /* HACKS_HEADER */
