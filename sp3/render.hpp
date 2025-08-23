@@ -11,7 +11,7 @@ namespace render {
  * @param void
  * @return void
  */
-void initialize_menu_items(void);
+void initialize_menu_items();
 
 /**
  * Draw main UI.
@@ -20,11 +20,6 @@ void initialize_menu_items(void);
  * @return void
  */
 void menu(IDirect3DDevice9* pDevice);
-
-/**
- * TODO
-**/
-void create_font(LPDIRECT3DDEVICE9 pDevice, int size);
 
 struct HackMenu {
     bool bEnabled;

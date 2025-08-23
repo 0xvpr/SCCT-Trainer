@@ -4,12 +4,14 @@
 
 #include <windows.h>
 
-
-extern uintptr_t module_base_addr;
-
-extern unsigned int n_entities_changed;
-extern unsigned int total_doors_unlocked;
 extern bool menu_is_max;
+
+extern render::Resolution resolution;
+extern render::Coordinates coordinates;
+extern render::HackMenu hackMenu[MAX_MENU_ITEMS];
+
+unsigned int n_entities_changed;
+unsigned int total_doors_unlocked;
 
 bool bDisableEnemies;
 bool bDisableAlarms;
@@ -17,10 +19,6 @@ bool bSuperWeapons;
 bool bGhostMode;
 bool bShutdown;
 bool bGodMode;
-
-extern render::Resolution resolution;
-extern render::Coordinates coordinates;
-extern render::HackMenu hackMenu[MAX_MENU_ITEMS];
 
 bool events::handle_keyboard() {
     /* Toggle GodMode */

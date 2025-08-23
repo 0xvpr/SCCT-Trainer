@@ -38,11 +38,6 @@ bool d3d9::get_device(void** vtable, size_t size) {
     d3dpp.hDeviceWindow = GetProcessWindow();
     d3dpp.Windowed      = false;
 
-
-    while (d3dpp.hDeviceWindow != GetForegroundWindow()) {
-        // Wait for window to be Foreground
-    }
-
     IDirect3DDevice9* dummy_device_ptr = nullptr;
     HRESULT dummyDeviceCreated = IDirect3D9_CreateDevice(d3d_ptr, D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dpp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &dummy_device_ptr);
     if (dummyDeviceCreated != S_OK) {

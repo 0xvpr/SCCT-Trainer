@@ -6,7 +6,7 @@
 
 namespace offsets {
 
-constexpr uint32_t entity_list_base  = 0xA0DFEC;
+constexpr uint32_t game_world_base   = 0xA0DFEC;
 constexpr uint32_t weapon_base       = 0xA0F434;
 
 constexpr uint32_t invisibility_base = 0x27F12C;
@@ -19,7 +19,7 @@ constexpr uint32_t shotgun_ammo_base = 0x2FCFF0;
 constexpr uint32_t sniper_ammo_base  = 0x2FBC58;
 constexpr uint32_t rapid_fire_base   = 0x178FA2;
 
-constexpr std::array<uint16_t, 2> entity_list_pointers = {
+constexpr std::array<uint16_t, 2> game_world_pointers = {
     0x78, 0x5E4
 };
 constexpr std::array<uint16_t, 3> weapon_pointers = {

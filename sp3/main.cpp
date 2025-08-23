@@ -16,10 +16,6 @@
 #include "events.hpp"
 #include "memory.hpp"
 
-static bool bInit = false;
-
-std::uint32_t      total_doors_unlocked       = 0;
-std::uint32_t      n_entities_changed         = 0;
 
 uintptr_t          module_base_addr           = 0;
 
@@ -29,9 +25,10 @@ uint8_t            original_endscene_bytes[7] = { 0 };
 d3d9::endscene_t   original_endscene          = nullptr;
 LPDIRECT3DDEVICE9  pD3DDevice                 = nullptr;
 
+static bool bInit = false;
 HRESULT APIENTRY endscene_hook(LPDIRECT3DDEVICE9 pDevice) {
     if (!bInit) {
-        //render::initialize_menu_items();
+        render::initialize_menu_items();
         //render::create_font(pDevice, 16);
 
         bInit = true;
@@ -46,12 +43,7 @@ DWORD WINAPI MainThread(HINSTANCE hInstance) {
 
     if (d3d9::get_device(d3d9_device, sizeof(d3d9_device))) {
         memcpy(original_endscene_bytes, d3d9_device[42], sizeof(original_endscene_bytes));
-        original_endscene = reinterpret_cast<d3d9::endscene_t>(
-            memory::trampoline_hook<sizeof original_endscene_bytes>(
-                reinterpret_cast<char *>(d3d9_device[d3d9::render_function_index]),
-                reinterpret_cast<char *>(endscene_hook)
-            )
-        );
+        original_endscene = (d3d9::endscene_t)memory::trampoline_hook(d3d9_device[d3d9::render_function_index], endscene_hook);
     }
 
     while (!events::handle_keyboard()) {

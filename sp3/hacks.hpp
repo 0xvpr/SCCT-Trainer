@@ -3,19 +3,19 @@
 
 #include <cstdint>
 
-constexpr std::uint32_t GOD_MODE         = 0x00000000;
-constexpr std::uint32_t GHOST_MODE       = 0x00000001;
-constexpr std::uint32_t SUPER_WEAPONS    = 0x00000002;
-constexpr std::uint32_t DISABLE_ALARMS   = 0x00000003;
-constexpr std::uint32_t DISABLE_ENEMIES  = 0x00000004;
-constexpr std::uint32_t UNLOCK_ALL_DOORS = 0x00000005;
-constexpr std::uint32_t MAX_MENU_ITEMS   = 0x00000006;
+constexpr std::uint32_t  GOD_MODE         = 0x00000000;
+constexpr std::uint32_t  GHOST_MODE       = 0x00000001;
+constexpr std::uint32_t  SUPER_WEAPONS    = 0x00000002;
+constexpr std::uint32_t  DISABLE_ALARMS   = 0x00000003;
+constexpr std::uint32_t  DISABLE_ENEMIES  = 0x00000004;
+constexpr std::uint32_t  UNLOCK_ALL_DOORS = 0x00000005;
+constexpr std::uint32_t  MAX_MENU_ITEMS   = 0x00000006;
 
-constexpr std::uint32_t DOOR_ALL_ACCESS  = 0x00000004;
+constexpr std::uint32_t  DOOR_ALL_ACCESS  = 0x00000004;
 
-constexpr std::uint32_t PLAYER           = 0x110E8B50;
-constexpr std::uint32_t DOOR             = 0x110FDDD8;
-constexpr std::uint32_t NPC              = 0x110F88D8;
+constexpr std::uintptr_t PLAYER           = 0x110E8B50;
+constexpr std::uintptr_t DOOR             = 0x110FDDD8;
+constexpr std::uintptr_t NPC              = 0x110F88D8;
 
 namespace hacks {
 

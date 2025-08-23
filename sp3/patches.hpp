@@ -5,12 +5,6 @@
 #include <array>
 
 namespace patches {
-    template <std::size_t array_size>
-    struct instruction_set {
-        std::array<uint8_t, array_size> original; 
-        std::array<uint8_t, array_size> patch; 
-    };
-
     const std::array<uint8_t, 6> health_original = {
         0x2B, 0xC2,                              // sub eax, edx
         0x89, 0x03,                              // mov dword ptr [ebx], eax
@@ -27,23 +21,15 @@ namespace patches {
         0x90,                                    // nop
         0x90,                                    // nop
         0x90,                                    // nop
-        0x90,                                    // nop
-    };
-    constexpr instruction_set visibility_ins {
-        .original = visibility_original,
-        .patch    = visibility_patch
+        0x90                                     // nop
     };
 
 
-    constexpr std::array<uint8_t, 6> noise_original = {
+    constexpr std::array<uint8_t, 2> noise_original = {
         0x3B, 0xF8                               // cmp edi, eax
     };
-    constexpr std::array<uint8_t, 6> noise_patch = {
+    constexpr std::array<uint8_t, 2> noise_patch = {
         0x39, 0xC0                               // cmp eax, eax
-    };
-    constexpr instruction_set noise_ins {
-        .original = noise_original,
-        .patch    = noise_patch
     };
 
 
@@ -53,11 +39,7 @@ namespace patches {
     }; 
     constexpr std::array<uint8_t, 2> main_ammo_patch=  {
         0x90,                                    // nop
-        0x90,                                    // nop
-    };
-    constexpr instruction_set main_ammo_ins {
-        .original = main_ammo_original,
-        .patch    = main_ammo_patch
+        0x90                                     // nop
     };
 
 
@@ -73,10 +55,6 @@ namespace patches {
         0x8B, 0x8F, 0xFC, 0x03, 0x00, 0x00,      // mov eax, dword ptr [esi + 0x45C]
         0x90                                     // nop
     };
-    constexpr instruction_set shotgun_ammo_ins {
-        .original = shotgun_ammo_original,
-        .patch    = shotgun_ammo_patch
-    };
 
 
     constexpr std::array<uint8_t, 14> sniper_ammo_original = {
@@ -90,10 +68,6 @@ namespace patches {
         0x89, 0x86, 0x54, 0x04, 0x00, 0x00,       // mov [esi + 0x454], eax
         0x8B, 0x86, 0x5C, 0x04, 0x00, 0x00,       // mov eax, [esi + 0x45C]
         0x90                                      // nop
-    };
-    constexpr instruction_set sniper_ammo_ins {
-        .original = sniper_ammo_original,
-        .patch    = sniper_ammo_patch
     };
 
 
@@ -120,11 +94,7 @@ namespace patches {
     };
     constexpr std::array<uint8_t, 2> rapid_fire_patch = {
         0x90,                                     // nop
-        0x90,                                     // nop
-    };
-    constexpr instruction_set rapid_fire_ins {
-        .original = rapid_fire_original,
-        .patch    = rapid_fire_patch
+        0x90                                      // nop
     };
 
     constexpr std::array<uint8_t, 6> alarm_original = {
@@ -134,9 +104,6 @@ namespace patches {
         0xE9, 0x36, 0x03, 0x00, 0x00,             // jmp 0x33b
         0x90                                      // nop
     };
-
-
-
 } // namespace patches
 
 #endif /* PATCHES_HEADER */

@@ -31,11 +31,10 @@ MAKEFLAGS      += -j$(shell nproc)
 ### COMMENT IF YOU USE A TOASTER ###
 
 all: $(LIB) $(BUILD) $(PROJECT)
-$(PROJECT): $(LIB) $(BUILD)
-$(PROJECT): release
+$(PROJECT): debug release
 
 debug: $(LIB) $(BUILD)
-debug:   CFLAGS  += -O2 -g
+debug: CFLAGS  += -O2 -g
 
 release: $(LIB) $(BUILD)
 release: CFLAGS  += -mtune=native -march=native -mavx512f -Ofast -fPIE -funsafe-math-optimizations -fomit-frame-pointer
