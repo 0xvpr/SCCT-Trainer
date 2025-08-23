@@ -31,6 +31,7 @@ MAKEFLAGS      += -j$(shell nproc)
 ### COMMENT IF YOU USE A TOASTER ###
 
 all: $(LIB) $(BUILD) $(PROJECT)
+$(PROJECT): $(LIB) $(BUILD)
 $(PROJECT): release
 
 debug: $(LIB) $(BUILD)
@@ -59,9 +60,11 @@ $(RELEASE_OBJECTS): $(BUILD)/%.o : $(SOURCE)/%.cpp
 $(ASM_OBJECTS): $(BUILD)/%.obj : $(ASM_SOURCE)/%.asm
 	$(ASM) $(ASFLAGS) $< -o $@
 
+.PHONY: $(LIB)
 $(LIB):
 	mkdir -p ./lib
 
+.PHONY: $(BUILD)
 $(BUILD):
 	mkdir -p ./build
 
