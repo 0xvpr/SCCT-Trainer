@@ -30,13 +30,13 @@ ASM_OBJECTS     = $(patsubst $(ASM_SOURCE)/%.asm,$(BUILD)/%.obj,$(ASM_SOURCES))
 MAKEFLAGS      += -j$(shell nproc)
 ### COMMENT IF YOU USE A TOASTER ###
 
-all: $(LIB) $(BUILD) $(PROJECT)
-$(PROJECT): debug release
 
-debug: $(LIB) $(BUILD)
+all: $(PROJECT)
+$(PROJECT): debug
+
+
 debug: CFLAGS  += -O2 -g
 
-release: $(LIB) $(BUILD)
 release: CFLAGS  += -mtune=native -march=native -mavx512f -Ofast -fPIE -funsafe-math-optimizations -fomit-frame-pointer
 release: CFLAGS  += -funroll-loops -funsafe-loop-optimizations -funswitch-loops -floop-parallelize-all
 release: CFLAGS  += -finline-functions -falign-functions -falign-loops -falign-jumps -fno-function-sections
@@ -44,10 +44,12 @@ release: CFLAGS  += -fno-ident -fvisibility=hidden -fstrict-aliasing
 release: CFLAGS  += -DWIN32_LEAN_AND_MEAN -DVC_EXTRALEAN
 release: LDFLAGS += -s
 
-debug: $(ASM_OBJECTS) $(DEBUG_OBJECTS)
+debug: $(LIB)/$(PROJECT)_d.dll
+$(LIB)/$(PROJECT)_d.dll: $(LIB) $(BUILD) $(ASM_OBJECTS) $(DEBUG_OBJECTS)
 	$(LD) $(DEBUG_OBJECTS) $(ASM_OBJECTS) $(LDFLAGS) -o $(LIB)/$(PROJECT)_d.dll
 
-release: $(ASM_OBJECTS) $(RELEASE_OBJECTS)
+release: $(LIB)/$(PROJECT).dll
+$(LIB)/$(PROJECT).dll: $(LIB) $(BUILD) $(ASM_OBJECTS) $(RELEASE_OBJECTS)
 	$(LD) $(RELEASE_OBJECTS) $(ASM_OBJECTS) $(LDFLAGS) -o $(LIB)/$(PROJECT).dll
 
 $(DEBUG_OBJECTS): $(BUILD)/%_d.o : $(SOURCE)/%.cpp
@@ -59,13 +61,6 @@ $(RELEASE_OBJECTS): $(BUILD)/%.o : $(SOURCE)/%.cpp
 $(ASM_OBJECTS): $(BUILD)/%.obj : $(ASM_SOURCE)/%.asm
 	$(ASM) $(ASFLAGS) $< -o $@
 
-.PHONY: $(LIB)
-$(LIB):
-	mkdir -p ./lib
-
-.PHONY: $(BUILD)
-$(BUILD):
-	mkdir -p ./build
 
 .PHONY: docker-container
 docker-container:
@@ -73,6 +68,12 @@ docker-container:
 .PHONY: docker-build
 docker-build:
 	docker run -v "$(shell pwd):/var/$(PROJECT)-dev/$(PROJECT)" -u "$(shell id -u):$(shell id -g)" "$(PROJECT)-dev" make
+
+$(LIB):
+	mkdir -p ./lib
+
+$(BUILD):
+	mkdir -p ./build
 
 .PHONY: clean
 clean:
