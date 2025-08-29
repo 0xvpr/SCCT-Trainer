@@ -42,8 +42,8 @@ void render::menu(IDirect3DDevice9* d3d9_device) {
         //}
 
         // Row one
-        int x1 = 20;
-        int y1 = 15;
+        std::int32_t x1 = 20;
+        std::int32_t y1 = 15;
         for (std::uint32_t i = 3; i < MAX_MENU_ITEMS; ++i) {
             // If hack is on we display the text colour in green
             draw::draw_filled_rect(coordinates.x + x1, coordinates.y + y1, 25, 20, hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3d9_device);
@@ -53,8 +53,8 @@ void render::menu(IDirect3DDevice9* d3d9_device) {
             x1 += 40;
         }
         // Row two
-        int x2 = 20;
-        int y2 = 55;
+        std::int32_t x2 = 20;
+        std::int32_t y2 = 55;
         for (std::uint32_t i = 0; i < MAX_MENU_ITEMS - 3; ++i) {
             // If hack is on we display the text colour in green
             draw::draw_filled_rect(coordinates.x + x2, coordinates.y + y2, 25, 20, hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3d9_device);
@@ -66,31 +66,31 @@ void render::menu(IDirect3DDevice9* d3d9_device) {
     } else {
         factor = 0.25;
         // Title Template
-        draw::draw_filled_rect(30, 20, (int)(factor*140), (int)(factor*100), color::DarkGrey, d3d9_device);
-        draw::draw_border_box(30, 20, (int)(factor*140), (int)(factor*100), 2, color::Black, d3d9_device);
+        draw::draw_filled_rect(30, 20, (std::int32_t)(factor*140), (std::int32_t)(factor*100), color::DarkGrey, d3d9_device);
+        draw::draw_border_box(30, 20, (std::int32_t)(factor*140), (std::int32_t)(factor*100), 2, color::Black, d3d9_device);
 
         // Row one
-        int x1 = 35;
-        int y1 = 25;
+        std::int32_t x1 = 35;
+        std::int32_t y1 = 25;
         for (std::uint32_t i = 3; i < MAX_MENU_ITEMS; ++i)
         {
             // If hack is on we display the text colour in green
-            draw::draw_filled_rect(x1, y1, (int)(factor*20), (int)(factor*20), hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3d9_device);
-            draw::draw_border_box(x1, y1, (int)(factor*20), (int)(factor*20), 1, color::Black, d3d9_device);
+            draw::draw_filled_rect(x1, y1, (std::int32_t)(factor*20), (std::int32_t)(factor*20), hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3d9_device);
+            draw::draw_border_box(x1, y1, (std::int32_t)(factor*20), (std::int32_t)(factor*20), 1, color::Black, d3d9_device);
 
             //used to position the next item below
-            x1 += (int)(factor*40);
+            x1 += (std::int32_t)(factor*40);
         }
         // Row two
-        int x2 = 35;
-        int y2 = 35;
+        std::int32_t x2 = 35;
+        std::int32_t y2 = 35;
         for (std::uint32_t i = 0; i < MAX_MENU_ITEMS - 3; ++i) {
             // If hack is on we display the text colour in green
-            draw::draw_filled_rect(x2, y2, (int)(factor*20), (int)(factor*20), hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3d9_device);
-            draw::draw_border_box(x2, y2, (int)(factor*20), (int)(factor*20), 1, color::Black, d3d9_device);
+            draw::draw_filled_rect(x2, y2, (std::int32_t)(factor*20), (std::int32_t)(factor*20), hackMenu[i].bEnabled ? color::Green : color::LightGrey, d3d9_device);
+            draw::draw_border_box(x2, y2, (std::int32_t)(factor*20), (std::int32_t)(factor*20), 1, color::Black, d3d9_device);
 
             //used to position the next item
-            x2 += (int)(factor*40);
+            x2 += (std::int32_t)(factor*40);
         }
     }
 }

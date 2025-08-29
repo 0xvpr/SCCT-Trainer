@@ -4,7 +4,7 @@
 #include "patches.hpp"
 
 #include "assembly.hpp"
-#include "entity.hpp"
+#include "engine.hpp"
 #include "memory.hpp"
 
 #include <ranges>
@@ -12,7 +12,7 @@
 #include <windows.h>
 
 extern uintptr_t module_base_addr;
-extern unsigned int total_doors_unlocked;
+extern std::uint32_t total_doors_unlocked;
 
 void hacks::god_mode(bool state) {
     const auto health_op = module_base_addr + offsets::health_base;
@@ -76,24 +76,31 @@ void hacks::disable_alarms(bool state) {
     memory::patch(alarm_op, patch);
 }
 
-unsigned int hacks::disable_enemies(bool state) {
-    const GameWorld* game_world = (GameWorld *)(memory::find_dynamic_address(module_base_addr + offsets::game_world_base,
-                                                                                                offsets::game_world_pointers));
-    auto entity_list = game_world->entity_list_ptr;
-    auto entity_list_size = game_world->entity_list_size;
-
-    if (entity_list == nullptr) {
+std::uint32_t hacks::disable_enemies(bool state) {
+    const auto game_world = reinterpret_cast<engine::game_world_t *>(memory::find_dynamic_address(module_base_addr + offsets::game_world_base,
+                                                                                                                     offsets::game_world_pointers));
+    if (!game_world) {
         return 0;
     }
 
-    unsigned int total_entities_changed = 0;
+    auto entity_list = game_world->entity_list_ptr;
+    auto entity_list_size = game_world->entity_list_size;
+
+    if (entity_list == nullptr || !entity_list_size) {
+        return 0;
+    }
+
+    std::uint32_t total_entities_changed = 0;
     for (std::size_t i = 0; i < entity_list_size; ++i) {
-        Entity* entity = entity_list->entities[i].entity;
-        if (reinterpret_cast<uintptr_t>(entity->lpVtable) == NPC) {
+        auto& entity = *(entity_list[i]);
+
+        if (entity.type == NPC) {
+            engine::enemy_t& enemy = reinterpret_cast<engine::enemy_t &>(entity);
+
             if (state) {
-                entity->health = 0;
+                enemy.health = 0;
             } else {
-                entity->health = 150;
+                enemy.health = 150;
             }
 
             ++total_entities_changed;
@@ -103,28 +110,34 @@ unsigned int hacks::disable_enemies(bool state) {
     return total_entities_changed;
 }
 
-unsigned int hacks::unlock_all_doors() {
-    const GameWorld* game_world = (GameWorld *)(memory::find_dynamic_address(module_base_addr + offsets::game_world_base,
-                                                                                                offsets::game_world_pointers));
-    auto entity_list = game_world->entity_list_ptr;
-    auto entity_list_size = game_world->entity_list_size;
-
-    if (entity_list == nullptr) {
+std::uint32_t hacks::unlock_all_doors() {
+    const auto game_world = reinterpret_cast<engine::game_world_t *>(memory::find_dynamic_address(module_base_addr + offsets::game_world_base,
+                                                                                                                     offsets::game_world_pointers));
+    if (!game_world) {
         return 0;
     }
 
-    unsigned int local_total = 0;
-    unsigned int n_doors_unlocked = 0;
+    auto entity_list = game_world->entity_list_ptr;
+    auto entity_list_size = game_world->entity_list_size;
+
+    if (entity_list == nullptr || !entity_list_size) {
+        return 0;
+    }
+
+    std::uint32_t local_total = 0;
+    std::uint32_t n_doors_unlocked = 0;
     for (std::size_t i = 0; i < entity_list_size; ++i) {
-        Entity* entity = entity_list->entities[i].entity;
-        if (reinterpret_cast<uintptr_t>(entity->lpVtable) == NPC) {
-            Door* door = (Door *)entity;
-            if (door->access == 0) {
-                door->access = DOOR_ALL_ACCESS;
+        auto& entity = *(entity_list[i]);
+
+        if (entity.type == DOOR) {
+            engine::door_t& door = reinterpret_cast<engine::door_t &>(entity);
+
+            if (door.access == 0) {
+                door.access = DOOR_ALL_ACCESS;
                 ++n_doors_unlocked;
             }
 
-            if (door->access == DOOR_ALL_ACCESS) {
+            if (door.access == DOOR_ALL_ACCESS) {
                 ++local_total;
             }
 

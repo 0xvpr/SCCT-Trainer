@@ -3,13 +3,14 @@
  * Created:         August 18, 2021
  *
  * Updated by:      VPR
- * Updated:         August 8th, 2025
+ * Updated:         August 29th, 2025
  * 
  * Brief:           dookie code, don't replicate.
  * 
  * Disclaimer:      I claim no liability/responsibility for damages
  *                  associated with however this code is used.
 **/
+
 
 #include "d3d9hook.hpp"
 #include "render.hpp"
@@ -25,6 +26,7 @@ uint8_t            original_endscene_bytes[7] = { 0 };
 d3d9::endscene_t   original_endscene          = nullptr;
 LPDIRECT3DDEVICE9  pD3DDevice                 = nullptr;
 
+
 static bool bInit = false;
 HRESULT APIENTRY endscene_hook(LPDIRECT3DDEVICE9 pDevice) {
     if (!bInit) {
@@ -39,11 +41,11 @@ HRESULT APIENTRY endscene_hook(LPDIRECT3DDEVICE9 pDevice) {
 }
 
 DWORD WINAPI MainThread(HINSTANCE hInstance) {
-    module_base_addr = (uintptr_t)GetModuleHandle(nullptr);
+    module_base_addr = reinterpret_cast<uintptr_t>(GetModuleHandle(nullptr));
 
     if (d3d9::get_device(d3d9_device, sizeof(d3d9_device))) {
         memcpy(original_endscene_bytes, d3d9_device[42], sizeof(original_endscene_bytes));
-        original_endscene = (d3d9::endscene_t)memory::trampoline_hook(d3d9_device[d3d9::render_function_index], endscene_hook);
+        original_endscene = reinterpret_cast<d3d9::endscene_t>(memory::trampoline_hook(d3d9_device[d3d9::render_function_index], endscene_hook));
     }
 
     while (!events::handle_keyboard()) {

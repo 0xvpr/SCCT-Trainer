@@ -12,8 +12,8 @@
 namespace memory {
 
 namespace instructions {
-    constexpr std::uint8_t nop = 0x90;
-    constexpr std::uint8_t rel_jmp = 0xE9;
+    constexpr std::uint8_t  nop     = 0x90;
+    constexpr std::uint8_t  rel_jmp = 0xE9;
 } // namespace constants
 
 namespace constants {
@@ -22,21 +22,21 @@ namespace constants {
 
 namespace assembly {
     struct [[nodiscard, gnu::packed]] detour_block {
-        std::uint8_t rel_jmp:8;
-        std::int32_t relative_addr:32;
+        std::uint8_t        rel_jmp       :  8;
+        std::int32_t        relative_addr : 32;
     };
 
     template <std::size_t size>
     struct [[nodiscard, gnu::packed]] tramp_block {
-        std::uint8_t data[size];
-        std::uint8_t rel_jmp:8;
-        std::int32_t relative_addr:32;
+        std::uint8_t        data[size];
+        std::uint8_t        rel_jmp       :  8;
+        std::int32_t        relative_addr : 32;
     };
 } // namespace assembly
 
 template <typename T>
 concept address_type = requires {
-    ( std::is_integral_v<T> && (sizeof(T) == sizeof(uintptr_t)) ) || std::is_pointer_v<T>;
+    ( std::is_integral_v<T> && (sizeof(T) == sizeof(std::uintptr_t)) ) || std::is_pointer_v<T>;
 };
 
 template <class T>
@@ -50,18 +50,18 @@ concept function_pointer_type = requires { std::is_pointer_v<T> && std::is_funct
  *
  * @return: addr
 **/
-template < address_type     return_t = uintptr_t,
+template < address_type     return_t = std::uintptr_t,
            std::integral     array_t,
            std::size_t    array_size  > [[nodiscard, gnu::always_inline]]
-inline return_t find_dynamic_address(uintptr_t ptr, const std::array<array_t, array_size> offsets) {
+inline return_t find_dynamic_address(std::uintptr_t ptr, const std::array<array_t, array_size> offsets) {
     auto addr = ptr;
 
     for (const auto offset : offsets) {
-        if (addr == 0 || *(uintptr_t *)addr == 0) { 
+        if (addr == 0 || *(reinterpret_cast<std::uintptr_t *>(addr)) == 0) { 
             return 0;
         }
 
-        addr = *(uintptr_t *)addr;
+        addr = *(std::uintptr_t *)addr;
         addr += offset;
     }
 
@@ -76,17 +76,17 @@ inline return_t find_dynamic_address(uintptr_t ptr, const std::array<array_t, ar
  *
  * @return: addr
 **/
-template < address_type     return_t = uintptr_t,
+template < address_type     return_t = std::uintptr_t,
            std::integral     array_t,
            std::size_t    array_size  > [[nodiscard, gnu::always_inline]]
-inline return_t find_dynamic_address(uintptr_t ptr, const array_t (&offsets)[array_size]) {
+inline return_t find_dynamic_address(std::uintptr_t ptr, const array_t (&offsets)[array_size]) {
     auto addr = ptr;
 
     for (const auto offset : offsets) {
-        addr = *(uintptr_t *)addr;
+        addr = *(reinterpret_cast<std::uintptr_t *>(addr));
         addr += offset;
 
-        if (*(uintptr_t *)addr == 0) { 
+        if (*(reinterpret_cast<std::uintptr_t *>(addr)) == 0) { 
             return 0;
         }
     }
@@ -98,7 +98,7 @@ inline return_t find_dynamic_address(uintptr_t ptr, const array_t (&offsets)[arr
  * Byte replacement from source to destination.
  *
  * @template(s): typename T, size_t size
- * @param:       char* dst
+ * @param:       std::int8_t* dst
  * @param:       const std::array<T, size>& instructions
  *
  * @return: void
@@ -109,7 +109,7 @@ template < address_type       addr_t,
 inline bool patch(addr_t addr, const array_t (&instructions)[array_size])
 {
     DWORD oldprotect = 0;
-    LPVOID dst = (LPVOID)addr;
+    LPVOID dst = reinterpret_cast<LPVOID>(addr);
 
     VirtualProtect(dst, array_size, PAGE_EXECUTE_WRITECOPY, &oldprotect);
     memcpy(dst, instructions, array_size); 
@@ -122,7 +122,7 @@ inline bool patch(addr_t addr, const array_t (&instructions)[array_size])
  * Byte replacement from source to destination.
  *
  * @template(s): typename T, size_t size
- * @param:       char* dst
+ * @param:       std::int8_t* dst
  * @param:       const std::array<T, size>& instructions
  *
  * @return: void
@@ -133,7 +133,7 @@ template < address_type       addr_t,
 inline bool patch(addr_t addr, const std::array<array_t, array_size>& instructions)
 {
     DWORD oldprotect = 0;
-    LPVOID dst = (LPVOID)addr;
+    LPVOID dst = reinterpret_cast<LPVOID>(addr);
 
     VirtualProtect(dst, array_size, PAGE_EXECUTE_WRITECOPY, &oldprotect);
     memcpy(dst, instructions.data(), instructions.size()); 
@@ -146,7 +146,7 @@ inline bool patch(addr_t addr, const std::array<array_t, array_size>& instructio
  * Byte replacement from source to destination.
  *
  * @template(s): typename T, size_t size
- * @param:       char* dst
+ * @param:       std::int8_t* dst
  * @param:       const std::array<T, size>& instructions
  *
  * @return: void
@@ -155,7 +155,7 @@ template < std::size_t   N,
            address_type    addr_t  > [[gnu::always_inline]]
 inline bool nop_sled(addr_t addr) {
     DWORD oldprotect = 0;
-    LPVOID dst = (LPVOID)addr;
+    LPVOID dst = reinterpret_cast<LPVOID>(addr);
 
     VirtualProtect(dst, N, PAGE_EXECUTE_WRITECOPY, &oldprotect);
     memset(dst, instructions::nop, N); 
@@ -184,7 +184,7 @@ inline bool detour( target_addr_t   target_addr,
 
     memset((LPVOID)+target_addr, instructions::nop, size);
 
-    std::int32_t relative_addr = ((std::int32_t)+new_fptr - (std::int32_t)+target_addr) - constants::rel_jmp_offset;
+    std::int32_t relative_addr = static_cast<std::int32_t>((reinterpret_cast<std::uint32_t>(+new_fptr) - reinterpret_cast<std::uint32_t>(+target_addr) - memory::constants::rel_jmp_offset));
     auto* asm_block = reinterpret_cast<assembly::detour_block *>(+target_addr);
     asm_block->rel_jmp       = instructions::rel_jmp;
     asm_block->relative_addr = relative_addr;
@@ -198,10 +198,10 @@ inline bool detour( target_addr_t   target_addr,
  * Hooks into a function and detours the target function to another function, then jumps back.
  *
  * @template: size_t  size
- * @param:    char*   target_fptr
- * @param:    char*   tramp_fptr
+ * @param:    std::int8_t*   target_fptr
+ * @param:    std::int8_t*   tramp_fptr
  *
- * @return:   char*   original_address
+ * @return:   std::int8_t*   original_address
 **/
 template < function_pointer_type  target_fptr_t,
            function_pointer_type   tramp_fptr_t  > [[nodiscard, gnu::always_inline]]
@@ -210,13 +210,16 @@ inline std::uint8_t* trampoline_hook( target_fptr_t  target_fptr,
 {
     constexpr std::size_t size = 7;
 
-    std::uint8_t* gateway = (std::uint8_t *)VirtualAlloc(nullptr, size + memory::constants::rel_jmp_offset, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    std::uint8_t* gateway = reinterpret_cast<std::uint8_t *>( VirtualAlloc( nullptr,
+                                                                            size + memory::constants::rel_jmp_offset,
+                                                                            MEM_COMMIT | MEM_RESERVE,
+                                                                            PAGE_EXECUTE_READWRITE ) );
     memcpy(gateway, target_fptr, size);
 
-    std::int32_t gate_jmp_addr = (std::int32_t)(((uintptr_t)(+target_fptr) - (uintptr_t)+gateway) - memory::constants::rel_jmp_offset);
-    auto* asm_block = reinterpret_cast<assembly::tramp_block<size> *>(+gateway);
-    asm_block->rel_jmp = instructions::rel_jmp;
-    asm_block->relative_addr = gate_jmp_addr;
+    std::int32_t gate_jmp_addr = static_cast<std::int32_t>((reinterpret_cast<std::uintptr_t>(+target_fptr) - reinterpret_cast<std::uintptr_t>(+gateway) - memory::constants::rel_jmp_offset));
+    auto& asm_block = *(reinterpret_cast<assembly::tramp_block<size> *>(+gateway));
+    asm_block.rel_jmp = instructions::rel_jmp;
+    asm_block.relative_addr = gate_jmp_addr;
 
     DWORD old_protect = 0;
     VirtualProtect(gateway, size, PAGE_EXECUTE_READ, &old_protect);
@@ -232,20 +235,25 @@ inline std::uint8_t* trampoline_hook( target_fptr_t  target_fptr,
  * Hooks into a function and detours the target function to another function, then jumps back.
  *
  * @template: size_t  size
- * @param:    char*   target_fptr
- * @param:    char*   tramp_fptr
+ * @param:    std::int8_t*   target_fptr
+ * @param:    std::int8_t*   tramp_fptr
  *
- * @return:   char*   original_address
+ * @return:   std::int8_t*   original_address
 **/
 template <std::size_t size> [[nodiscard, gnu::always_inline]]
-inline std::uint8_t* trampoline_hook(char* target_fptr, char* tramp_fptr) requires( size >= constants::rel_jmp_offset) {
-    std::uint8_t* gateway = (std::uint8_t *)VirtualAlloc(nullptr, size + memory::constants::rel_jmp_offset, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+inline std::uint8_t* trampoline_hook( std::int8_t*  target_fptr,
+                                      std::int8_t*  tramp_fptr ) requires( size >= constants::rel_jmp_offset)
+{
+    std::uint8_t* gateway = reinterpret_cast<std::uint8_t *>( VirtualAlloc( nullptr,
+                                                                            size + memory::constants::rel_jmp_offset,
+                                                                            MEM_COMMIT | MEM_RESERVE,
+                                                                            PAGE_EXECUTE_READWRITE ) );
     memcpy(gateway, target_fptr, size);
 
-    std::int32_t gate_jmp_addr = (std::int32_t)((uintptr_t)(target_fptr - (uintptr_t)gateway) - memory::constants::rel_jmp_offset);
-    auto* asm_block = reinterpret_cast<assembly::tramp_block<size> *>(+gateway);
-    asm_block->rel_jmp = instructions::rel_jmp;
-    asm_block->relative_addr = gate_jmp_addr;
+    std::int32_t gate_jmp_addr = static_cast<std::int32_t>((reinterpret_cast<std::uintptr_t>(+target_fptr) - reinterpret_cast<std::uintptr_t>(+gateway) - memory::constants::rel_jmp_offset));
+    auto& asm_block = *(reinterpret_cast<assembly::tramp_block<size> *>(+gateway));
+    asm_block.rel_jmp = instructions::rel_jmp;
+    asm_block.relative_addr = gate_jmp_addr;
 
     DWORD old_protect = 0;
     VirtualProtect(gateway, size, PAGE_EXECUTE_READ, &old_protect);
@@ -269,10 +277,10 @@ inline std::uint8_t* trampoline_hook(char* target_fptr, char* tramp_fptr) requir
  * @return: Pointer of the pattern found, 0 otherwise.
 **/
 [[nodiscard]]
-std::uint8_t* find_pattern( unsigned char*  base_addr,
-                            std::size_t      img_size,
-                            unsigned char*    pattern,
-                            std::size_t             s  );
+std::uint8_t* find_pattern( std::uint8_t*  base_addr,
+                            std::size_t    img_size,
+                            std::uint8_t*  pattern,
+                            std::size_t    s  );
 
 } // namespace memory
 

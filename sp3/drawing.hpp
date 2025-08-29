@@ -4,6 +4,8 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#include <cstdint>
+
 namespace draw {
 
 namespace color {
@@ -16,9 +18,9 @@ namespace color {
     constexpr D3DCOLOR red        = D3DCOLOR_ARGB(255, 255, 0, 0);
 } // namespace color
 
-void draw_border_box(int x, int y, int w, int h, int thickness, D3DCOLOR Colour, LPDIRECT3DDEVICE9 d3dDevice);
-void draw_filled_rect(int x, int y, int w, int h, D3DCOLOR color, LPDIRECT3DDEVICE9 d3dDevice);
-void draw_text(LPCSTR text, int x, int y, int width, int height, D3DCOLOR color, LPD3DXFONT font);
+void draw_border_box(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h, std::int32_t thickness, D3DCOLOR Colour, LPDIRECT3DDEVICE9 d3dDevice);
+void draw_filled_rect(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h, D3DCOLOR color, LPDIRECT3DDEVICE9 d3dDevice);
+void draw_text(LPCSTR text, std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, D3DCOLOR color, LPD3DXFONT font);
 
 } // namespace draw
 

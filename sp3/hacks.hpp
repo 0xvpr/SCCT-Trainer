@@ -71,17 +71,17 @@ void disable_alarms(bool state);
  * mission.
  *
  * @param  bool bDisableEnemies
- * @return (unsigned int)n_entities_changed
+ * @return (std::uint32_t )n_entities_changed
  */
-unsigned int disable_enemies(bool state);
+std::uint32_t  disable_enemies(bool state);
 
 /**
  * Unlock all of the doors in a level. 
  *
  * @param  void 
- * @return (unsigned int)n_doors_unlocked
+ * @return (std::uint32_t )n_doors_unlocked
  */
-unsigned int unlock_all_doors();
+std::uint32_t  unlock_all_doors();
 
 } // namespace hacks
 

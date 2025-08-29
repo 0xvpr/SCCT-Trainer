@@ -2,6 +2,7 @@
 #define RENDER_HEADER
 
 #include <d3d9.h>
+#include <cstdint>
 
 namespace render {
 
@@ -19,21 +20,21 @@ void initialize_menu_items();
  * @param pDevice
  * @return void
  */
-void menu(IDirect3DDevice9* pDevice);
+void menu(LPDIRECT3DDEVICE9 pDevice);
 
 struct HackMenu {
-    bool bEnabled;
-    char name[64];
+    bool         bEnabled;
+    char         name[64];
 };
 
 struct Resolution {
-    int x;
-    int y;
+    std::int32_t x;
+    std::int32_t y;
 };
 
 struct Coordinates {
-    int x;
-    int y;
+    std::int32_t x;
+    std::int32_t y;
 };
 
 } // namespace render
