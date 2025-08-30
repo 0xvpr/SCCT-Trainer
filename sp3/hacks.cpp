@@ -92,9 +92,9 @@ std::uint32_t hacks::disable_enemies(bool state) {
 
     std::uint32_t total_entities_changed = 0;
     for (std::size_t i = 0; i < entity_list_size; ++i) {
-        auto& entity = *(entity_list[i]);
+        auto& entity = *entity_list[i];
 
-        if (entity.type == NPC) {
+        if (engine::tag_if_aligned(entity.object_tag) == engine::object_tag::npc) {
             engine::enemy_t& enemy = reinterpret_cast<engine::enemy_t &>(entity);
 
             if (state) {
@@ -127,9 +127,9 @@ std::uint32_t hacks::unlock_all_doors() {
     std::uint32_t local_total = 0;
     std::uint32_t n_doors_unlocked = 0;
     for (std::size_t i = 0; i < entity_list_size; ++i) {
-        auto& entity = *(entity_list[i]);
+        auto& entity = *entity_list[i];
 
-        if (entity.type == DOOR) {
+        if (engine::tag_if_aligned(entity.object_tag) == engine::object_tag::door) {
             engine::door_t& door = reinterpret_cast<engine::door_t &>(entity);
 
             if (door.access == 0) {

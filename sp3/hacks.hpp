@@ -13,10 +13,6 @@ constexpr std::uint32_t  MAX_MENU_ITEMS   = 0x00000006;
 
 constexpr std::uint32_t  DOOR_ALL_ACCESS  = 0x00000004;
 
-constexpr std::uintptr_t PLAYER           = 0x110E8B50;
-constexpr std::uintptr_t DOOR             = 0x110FDDD8;
-constexpr std::uintptr_t NPC              = 0x110F88D8;
-
 namespace hacks {
 
 /**

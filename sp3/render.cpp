@@ -2,12 +2,14 @@
 #include "drawing.hpp"
 #include "hacks.hpp"
 
+static LPD3DXFONT g_font;
+
 bool menu_is_max = true;
 
 namespace color {
 static constexpr D3DCOLOR LightGrey = D3DCOLOR_ARGB(255, 80, 80, 80);
 static constexpr D3DCOLOR DarkGrey  = D3DCOLOR_ARGB(255, 25, 25, 25);
-//static constexpr D3DCOLOR White     = D3DCOLOR_ARGB(255, 255, 255, 255);
+static constexpr D3DCOLOR White     = D3DCOLOR_ARGB(255, 255, 255, 255);
 static constexpr D3DCOLOR Black     = D3DCOLOR_ARGB(255, 0, 0, 0);
 static constexpr D3DCOLOR Green     = D3DCOLOR_ARGB(255, 10, 200, 10);
 //static constexpr D3DCOLOR color::Blue    = D3DCOLOR_ARGB(255, 0, 42, 255);
@@ -36,10 +38,10 @@ void render::menu(IDirect3DDevice9* d3d9_device) {
         draw::draw_filled_rect(coordinates.x, coordinates.y, 140, 100, color::DarkGrey, d3d9_device);
         draw::draw_border_box(coordinates.x, coordinates.y, 140, 100, 4, color::Black, d3d9_device);
 
-        //TODO: Testing Text
-        //if (g_font != NULL) {
-            //draw::draw_text("Testing", 140, 20, 10, 10, color::White, g_font);
-        //}
+        // TODO: Testing Text
+        if (g_font != nullptr) {
+            draw::draw_text("Testing", 140, 20, 10, 10, color::White, g_font);
+        }
 
         // Row one
         std::int32_t x1 = 20;
@@ -92,5 +94,22 @@ void render::menu(IDirect3DDevice9* d3d9_device) {
             //used to position the next item
             x2 += (std::int32_t)(factor*40);
         }
+    }
+}
+
+void render::create_font(LPDIRECT3DDEVICE9 device) {
+    if (!g_font) {
+        D3DXCreateFontA( device,                       // LPDIRECT3DDEVICE9
+                         20,                           // Height
+                         0,                            // Width
+                         FW_BOLD,                      // Weight
+                         0,                            // MIP Levels
+                         false,                        // Italic
+                         DEFAULT_CHARSET,              // Charset
+                         OUT_DEFAULT_PRECIS,           // Precision
+                         DEFAULT_QUALITY,              // Quality
+                         DEFAULT_PITCH | FF_DONTCARE,  // Pitch and Family
+                         "Arial Regular 20",           // Font name
+                         &g_font );                    // LPD3DXFONT
     }
 }

@@ -3,6 +3,7 @@
 
 #include <d3d9.h>
 #include <cstdint>
+#include <d3dx9.h>
 
 namespace render {
 
@@ -36,6 +37,8 @@ struct Coordinates {
     std::int32_t x;
     std::int32_t y;
 };
+
+void create_font(LPDIRECT3DDEVICE9);
 
 } // namespace render
 

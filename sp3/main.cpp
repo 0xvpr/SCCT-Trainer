@@ -31,7 +31,7 @@ static bool bInit = false;
 HRESULT APIENTRY endscene_hook(LPDIRECT3DDEVICE9 pDevice) {
     if (!bInit) {
         render::initialize_menu_items();
-        //render::create_font(pDevice, 16);
+        render::create_font(pDevice);
 
         bInit = true;
     }
